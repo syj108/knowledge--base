@@ -39,7 +39,8 @@ class IngestControllerTest {
         var stateService = new StateService(null) {
             @Override
             public void addSource(String sourceId, String title, String type,
-                                  String contentHash, String filePath) {
+                                  String contentHash, String filePath,
+                                  String assignedCategory) {
                 assertEquals("test-id-123", sourceId);
                 assertEquals("测试文本", title);
                 stateAdded[0] = true;
@@ -61,9 +62,9 @@ class IngestControllerTest {
 
         var controller = new IngestController(
                 null, textParser, null, new SourcePreprocessor(),
-                kbService, stateService, publisher);
+                kbService, stateService, null, publisher);
 
-        var request = new IngestRequest.TextIngestRequest("测试文本", "这是测试内容", "zh");
+        var request = new IngestRequest.TextIngestRequest("测试文本", "这是测试内容", "zh", null);
         var response = controller.ingestText(request);
 
         assertEquals(202, response.getStatusCode().value());

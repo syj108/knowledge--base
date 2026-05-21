@@ -17,7 +17,8 @@ public class PromptBuilder {
 
     // --- Pass 0: 候选提取 ---
 
-    public String buildExtractionSystemPrompt(Map<String, TemplateDef> templates) {
+    public String buildExtractionSystemPrompt(Map<String, TemplateDef> templates,
+                                              String assignedCategory) {
         StringBuilder sb = new StringBuilder();
         sb.append("""
                 你是一个知识沉淀专家。请分析提供的源内容，识别其中值得沉淀为独立知识页面的知识点。
@@ -49,7 +50,16 @@ public class PromptBuilder {
                 规则：
                 1. 默认为一个源生成一个完整的知识文档候选（包含模板的所有章节）
                 2. name 必须是从文档内容中识别出的核心产品名、系统名或技术名称，例如 "5G NR射频指纹识别系统"、"ECS弹性云服务器"。不要使用模板章节名（如"产品对外文档"）作为 name
-                3. category 必须按内容主题归类，不是模板名称。例如：关于 ECS 的内容归为 "ecs"，关于 SRS 的归为 "srs"，关于数据库的归为 "database"。使用简短的英文小写 kebab-case 作为分类名
+                """);
+
+        if (assignedCategory != null && !assignedCategory.isBlank()) {
+            sb.append("3. category 字段必须使用: \"").append(assignedCategory)
+                    .append("\"，不要自行决定分类。slug 前缀也必须使用该分类名\n");
+        } else {
+            sb.append("3. category 必须按内容主题归类，不是模板名称。例如：关于 ECS 的内容归为 \"ecs\"，关于 SRS 的归为 \"srs\"，关于数据库的归为 \"database\"。使用简短的英文小写 kebab-case 作为分类名\n");
+        }
+
+        sb.append("""
                 4. slug 使用全小写 kebab-case，格式为 "分类名/文档标题"
                 5. 只返回 JSON 数组，不要有任何其他解释文字
                 6. 如果源内容主题聚焦，只返回一个候选即可

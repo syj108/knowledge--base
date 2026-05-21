@@ -39,6 +39,8 @@ public class AgentState {
         private List<String> generatedPages = new ArrayList<>();
         @JsonProperty("split_suggested")
         private boolean splitSuggested;
+        @JsonProperty("assigned_category")
+        private String assignedCategory;
 
         public SourceRecord() {}
 
@@ -58,6 +60,8 @@ public class AgentState {
         public void setGeneratedPages(List<String> generatedPages) { this.generatedPages = generatedPages; }
         public boolean isSplitSuggested() { return splitSuggested; }
         public void setSplitSuggested(boolean splitSuggested) { this.splitSuggested = splitSuggested; }
+        public String getAssignedCategory() { return assignedCategory; }
+        public void setAssignedCategory(String assignedCategory) { this.assignedCategory = assignedCategory; }
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

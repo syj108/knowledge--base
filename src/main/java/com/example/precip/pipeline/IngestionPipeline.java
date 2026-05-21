@@ -73,9 +73,13 @@ public class IngestionPipeline {
 
             Map<String, TemplateDef> templates = templateLoader.loadTemplates();
 
+            // 读取用户指定的分类
+            String assignedCategory = stateService.getSourceRecord(sourceId).getAssignedCategory();
+
             // --- Pass 0: 候选提取 ---
             stateService.updateSourceStatus(sourceId, "extracting");
-            List<PageCandidate> candidates = extractionService.extractCandidates(source, templates);
+            List<PageCandidate> candidates = extractionService.extractCandidates(
+                    source, templates, assignedCategory);
             if (candidates.isEmpty()) {
                 log.warn("未从源 {} 中提取到候选", sourceId);
                 stateService.markFailed(sourceId);

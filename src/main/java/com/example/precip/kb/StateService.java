@@ -27,6 +27,12 @@ public class StateService {
 
     public synchronized void addSource(String sourceId, String title, String type,
                                        String contentHash, String filePath) throws IOException {
+        addSource(sourceId, title, type, contentHash, filePath, null);
+    }
+
+    public synchronized void addSource(String sourceId, String title, String type,
+                                       String contentHash, String filePath,
+                                       String assignedCategory) throws IOException {
         AgentState state = kbService.readState();
         SourceRecord record = new SourceRecord();
         record.setTitle(title);
@@ -35,6 +41,7 @@ public class StateService {
         record.setFilePath(filePath);
         record.setLastIngestedAt(Instant.now());
         record.setStatus("parsed");
+        record.setAssignedCategory(assignedCategory);
         state.getSources().put(sourceId, record);
         state.setUpdatedAt(Instant.now());
         state.getStats().setTotalSources(state.getSources().size());

@@ -4,9 +4,9 @@ import java.util.List;
 
 public class IngestRequest {
 
-    public record CodeIngestRequest(String gitUrl, String branch) {}
+    public record CodeIngestRequest(String gitUrl, String branch, String category) {}
 
-    public record TextIngestRequest(String title, String content, String language) {}
+    public record TextIngestRequest(String title, String content, String language, String category) {}
 
     public record SourceResponse(String sourceId, String status, String message) {}
 

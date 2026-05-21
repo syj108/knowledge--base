@@ -35,8 +35,9 @@ public class ExtractionService {
     }
 
     public List<PageCandidate> extractCandidates(SourceContent source,
-                                                  Map<String, TemplateDef> templates) {
-        String systemPrompt = promptBuilder.buildExtractionSystemPrompt(templates);
+                                                  Map<String, TemplateDef> templates,
+                                                  String assignedCategory) {
+        String systemPrompt = promptBuilder.buildExtractionSystemPrompt(templates, assignedCategory);
         String truncatedText = preprocessor.truncate(source.getRawText());
 
         SourceContent truncatedSource = new SourceContent();
@@ -52,9 +53,19 @@ public class ExtractionService {
             List<PageCandidate> candidates = llmClient.chatForJson(
                     systemPrompt, userMessage, new TypeReference<>() {});
 
-            // 设置 sourceId
+            // 设置 sourceId；若有指定分类则强制覆盖
             for (PageCandidate c : candidates) {
                 c.setSourceId(source.getSourceId());
+                if (assignedCategory != null && !assignedCategory.isBlank()) {
+                    c.setCategory(assignedCategory);
+                    // 修正 slug 前缀
+                    String slugName = c.getSlug();
+                    int slash = slugName.indexOf('/');
+                    if (slash >= 0) {
+                        slugName = slugName.substring(slash + 1);
+                    }
+                    c.setSlug(assignedCategory + "/" + slugName);
+                }
             }
 
             log.info("从源 [{}] 提取了 {} 个候选", source.getTitle(), candidates.size());

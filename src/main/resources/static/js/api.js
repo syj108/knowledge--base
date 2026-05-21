@@ -20,25 +20,38 @@ const API = {
         return fetch(`/api/sources/${id}/content`).then(r => r.json());
     },
 
-    uploadDocument(file) {
+    uploadDocument(file, category) {
         const form = new FormData();
         form.append('file', file);
+        if (category) form.append('category', category);
         return fetch('/api/sources/document', { method: 'POST', body: form }).then(r => r.json());
     },
 
-    submitText(title, content, language) {
+    submitText(title, content, language, category) {
         return fetch('/api/sources/text', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, content, language })
+            body: JSON.stringify({ title, content, language, category: category || null })
         }).then(r => r.json());
     },
 
-    submitCode(gitUrl, branch) {
+    submitCode(gitUrl, branch, category) {
         return fetch('/api/sources/code', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ gitUrl, branch })
+            body: JSON.stringify({ gitUrl, branch, category: category || null })
+        }).then(r => r.json());
+    },
+
+    listCategories() {
+        return fetch('/api/sources/categories').then(r => r.json());
+    },
+
+    createCategory(key, name, description) {
+        return fetch('/api/sources/categories', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key, name, description })
         }).then(r => r.json());
     },
 

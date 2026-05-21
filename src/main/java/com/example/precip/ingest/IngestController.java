@@ -4,9 +4,11 @@ import com.example.precip.ingest.IngestRequest.*;
 import com.example.precip.ingest.parser.CodeRepoParser;
 import com.example.precip.ingest.parser.DocumentParser;
 import com.example.precip.ingest.parser.TextParser;
+import com.example.precip.kb.CategoryService;
 import com.example.precip.kb.KnowledgeBaseService;
 import com.example.precip.kb.StateService;
 import com.example.precip.model.AgentState;
+import com.example.precip.model.CategoryDef;
 import com.example.precip.model.SourceContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +39,7 @@ public class IngestController {
     private final SourcePreprocessor preprocessor;
     private final KnowledgeBaseService kbService;
     private final StateService stateService;
+    private final CategoryService categoryService;
     private final ApplicationEventPublisher eventPublisher;
 
     public IngestController(DocumentParser documentParser,
@@ -45,6 +48,7 @@ public class IngestController {
                             SourcePreprocessor preprocessor,
                             KnowledgeBaseService kbService,
                             StateService stateService,
+                            CategoryService categoryService,
                             ApplicationEventPublisher eventPublisher) {
         this.documentParser = documentParser;
         this.textParser = textParser;
@@ -52,11 +56,14 @@ public class IngestController {
         this.preprocessor = preprocessor;
         this.kbService = kbService;
         this.stateService = stateService;
+        this.categoryService = categoryService;
         this.eventPublisher = eventPublisher;
     }
 
     @PostMapping(value = "/document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<SourceResponse> ingestDocument(@RequestPart("file") MultipartFile file) {
+    public ResponseEntity<SourceResponse> ingestDocument(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart(value = "category", required = false) String category) {
         try {
             String title = file.getOriginalFilename();
             byte[] bytes = file.getBytes();
@@ -71,9 +78,11 @@ public class IngestController {
                     content.getRawText().getBytes(java.nio.charset.StandardCharsets.UTF_8));
 
             // 更新状态并触发管道
+            String assignedCategory = (category != null && !category.isBlank()) ? category.trim() : null;
             stateService.addSource(content.getSourceId(), title,
                     content.getType().name(), content.getContentHash(),
-                    kbService.getSourceDir(content.getSourceId()).toString());
+                    kbService.getSourceDir(content.getSourceId()).toString(),
+                    assignedCategory);
 
             eventPublisher.publishEvent(new SourceIngestedEvent(this, content.getSourceId()));
 
@@ -99,8 +108,11 @@ public class IngestController {
             kbService.saveSourceFile(content.getSourceId(), "_content.txt",
                     content.getRawText().getBytes(java.nio.charset.StandardCharsets.UTF_8));
 
+            String assignedCategory = (request.category() != null && !request.category().isBlank())
+                    ? request.category().trim() : null;
             stateService.addSource(content.getSourceId(), content.getTitle(),
-                    content.getType().name(), content.getContentHash(), request.gitUrl());
+                    content.getType().name(), content.getContentHash(), request.gitUrl(),
+                    assignedCategory);
 
             eventPublisher.publishEvent(new SourceIngestedEvent(this, content.getSourceId()));
 
@@ -131,9 +143,12 @@ public class IngestController {
             kbService.saveSourceFile(content.getSourceId(), "_content.txt",
                     content.getRawText().getBytes(java.nio.charset.StandardCharsets.UTF_8));
 
+            String assignedCategory = (request.category() != null && !request.category().isBlank())
+                    ? request.category().trim() : null;
             stateService.addSource(content.getSourceId(), content.getTitle(),
                     content.getType().name(), content.getContentHash(),
-                    kbService.getSourceDir(content.getSourceId()).toString());
+                    kbService.getSourceDir(content.getSourceId()).toString(),
+                    assignedCategory);
 
             eventPublisher.publishEvent(new SourceIngestedEvent(this, content.getSourceId()));
 
@@ -201,6 +216,23 @@ public class IngestController {
             return ResponseEntity.ok(new SourceStatusResponse(
                     id, record.getStatus(), record.isSplitSuggested(), record.getGeneratedPages()));
         } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryDef>> listCategories() {
+        return ResponseEntity.ok(categoryService.listCategories());
+    }
+
+    @PostMapping("/categories")
+    public ResponseEntity<CategoryDef> createCategory(@RequestBody CategoryDef request) {
+        try {
+            CategoryDef created = categoryService.addCategory(
+                    request.key(), request.name(), request.description());
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (Exception e) {
+            log.error("创建类别失败", e);
             return ResponseEntity.internalServerError().build();
         }
     }

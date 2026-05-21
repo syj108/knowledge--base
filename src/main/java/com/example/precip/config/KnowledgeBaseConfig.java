@@ -61,6 +61,12 @@ public class KnowledgeBaseConfig {
             log.info("已创建 state.json");
         }
 
+        // 初始化 categories.json
+        if (Files.notExists(categoriesFile())) {
+            Files.writeString(categoriesFile(), "[]");
+            log.info("已创建 categories.json");
+        }
+
         // 复制默认模板到知识库
         copyDefaultTemplateIfEmpty();
 
@@ -134,5 +140,9 @@ public class KnowledgeBaseConfig {
 
     public Path indexFile() {
         return baseDir.resolve("index.md");
+    }
+
+    public Path categoriesFile() {
+        return baseDir.resolve("categories.json");
     }
 }

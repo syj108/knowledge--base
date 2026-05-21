@@ -10,6 +10,40 @@ const SourceUpload = {
                     <div class="tab" :class="{active: tab === 'code'}" @click="tab='code'">代码仓库</div>
                 </div>
 
+                <!-- 类别选择（通用） -->
+                <div class="form-group" style="margin-bottom: 16px; padding: 12px; background: #f7fafc; border-radius: 6px;">
+                    <label class="form-label" style="font-weight: 600;">所属类别</label>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <select class="form-select" v-model="selectedCategory" style="flex: 1;">
+                            <option value="">不指定（由 AI 自动分类）</option>
+                            <option v-for="cat in categories" :key="cat.key" :value="cat.key">
+                                {{ cat.name }}（{{ cat.key }}）
+                            </option>
+                            <option value="__new__">+ 新建类别...</option>
+                        </select>
+                    </div>
+                    <!-- 新建类别表单 -->
+                    <div v-if="selectedCategory === '__new__'" style="margin-top: 12px; padding: 12px; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;">
+                        <div class="form-group">
+                            <label class="form-label">类别标识（英文 kebab-case）</label>
+                            <input class="form-input" v-model="newCatKey" placeholder="例如: identity-service">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">类别名称（中文）</label>
+                            <input class="form-input" v-model="newCatName" placeholder="例如: 应用身份服务">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">描述</label>
+                            <input class="form-input" v-model="newCatDesc" placeholder="例如: EIAM、CIAM 等身份认证相关产品">
+                        </div>
+                        <button class="btn btn-primary" style="margin-top: 8px;"
+                                :disabled="!newCatKey.trim() || !newCatName.trim() || creatingCat"
+                                @click="createCategory">
+                            {{ creatingCat ? '创建中...' : '创建类别' }}
+                        </button>
+                    </div>
+                </div>
+
                 <!-- 文档上传 -->
                 <div v-if="tab === 'document'">
                     <div class="upload-zone"
@@ -95,10 +129,47 @@ const SourceUpload = {
             gitUrl: '',
             gitBranch: 'main',
             submitting: false,
-            result: null
+            result: null,
+            categories: [],
+            selectedCategory: '',
+            newCatKey: '',
+            newCatName: '',
+            newCatDesc: '',
+            creatingCat: false
         };
     },
+    created() {
+        this.loadCategories();
+    },
     methods: {
+        async loadCategories() {
+            try {
+                this.categories = await API.listCategories();
+            } catch (e) {
+                console.error('加载类别列表失败', e);
+            }
+        },
+        async createCategory() {
+            this.creatingCat = true;
+            try {
+                const cat = await API.createCategory(
+                    this.newCatKey.trim(), this.newCatName.trim(), this.newCatDesc.trim());
+                this.categories.push(cat);
+                this.selectedCategory = cat.key;
+                this.newCatKey = '';
+                this.newCatName = '';
+                this.newCatDesc = '';
+            } catch (e) {
+                alert('创建类别失败: ' + e.message);
+            }
+            this.creatingCat = false;
+        },
+        getEffectiveCategory() {
+            if (this.selectedCategory && this.selectedCategory !== '__new__') {
+                return this.selectedCategory;
+            }
+            return null;
+        },
         onDrop(e) {
             this.dragging = false;
             const files = e.dataTransfer.files;
@@ -111,7 +182,7 @@ const SourceUpload = {
             this.submitting = true;
             this.result = null;
             try {
-                this.result = await API.uploadDocument(this.selectedFile);
+                this.result = await API.uploadDocument(this.selectedFile, this.getEffectiveCategory());
             } catch (e) {
                 this.result = { status: 'error', message: '上传失败: ' + e.message };
             }
@@ -121,7 +192,8 @@ const SourceUpload = {
             this.submitting = true;
             this.result = null;
             try {
-                this.result = await API.submitText(this.textTitle, this.textContent, this.textLang);
+                this.result = await API.submitText(
+                    this.textTitle, this.textContent, this.textLang, this.getEffectiveCategory());
             } catch (e) {
                 this.result = { status: 'error', message: '提交失败: ' + e.message };
             }
@@ -131,7 +203,8 @@ const SourceUpload = {
             this.submitting = true;
             this.result = null;
             try {
-                this.result = await API.submitCode(this.gitUrl, this.gitBranch);
+                this.result = await API.submitCode(
+                    this.gitUrl, this.gitBranch, this.getEffectiveCategory());
             } catch (e) {
                 this.result = { status: 'error', message: '提交失败: ' + e.message };
             }
