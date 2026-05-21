@@ -16,6 +16,25 @@ const PageDetail = {
                 <div class="page-meta">
                     <div class="meta-title">页面信息</div>
                     <div class="meta-item">
+                        <div class="meta-label">标题</div>
+                        <div v-if="!editingTitle" style="display: flex; align-items: center; gap: 8px;">
+                            <span>{{ page.title }}</span>
+                            <button class="btn" style="font-size: 11px; padding: 2px 8px;"
+                                    @click="startEditTitle">编辑</button>
+                        </div>
+                        <div v-else style="display: flex; gap: 6px; align-items: center;">
+                            <input class="form-input" v-model="newTitle"
+                                   style="font-size: 13px; padding: 4px 8px; flex: 1;"
+                                   @keyup.enter="saveTitle" @keyup.escape="editingTitle = false">
+                            <button class="btn btn-primary" style="font-size: 11px; padding: 2px 8px;"
+                                    :disabled="!newTitle.trim() || savingTitle" @click="saveTitle">
+                                {{ savingTitle ? '...' : '保存' }}
+                            </button>
+                            <button class="btn" style="font-size: 11px; padding: 2px 8px;"
+                                    @click="editingTitle = false">取消</button>
+                        </div>
+                    </div>
+                    <div class="meta-item">
                         <div class="meta-label">分类</div>
                         <div>{{ page.category }}</div>
                     </div>
@@ -38,7 +57,7 @@ const PageDetail = {
         </div>
     `,
     data() {
-        return { page: null, notFound: false };
+        return { page: null, notFound: false, editingTitle: false, newTitle: '', savingTitle: false };
     },
     computed: {
         renderedHtml() {
@@ -64,6 +83,7 @@ const PageDetail = {
         async loadPage() {
             this.page = null;
             this.notFound = false;
+            this.editingTitle = false;
             const slugParts = this.$route.params.slug;
             const slug = Array.isArray(slugParts) ? slugParts.join('/') : (slugParts || '');
             if (!slug) { this.notFound = true; return; }
@@ -78,6 +98,26 @@ const PageDetail = {
                 console.error('加载页面失败', e);
                 this.notFound = true;
             }
+        },
+        startEditTitle() {
+            this.newTitle = this.page.title;
+            this.editingTitle = true;
+        },
+        async saveTitle() {
+            if (!this.newTitle.trim() || this.newTitle.trim() === this.page.title) {
+                this.editingTitle = false;
+                return;
+            }
+            this.savingTitle = true;
+            try {
+                const updated = await API.updatePageTitle(this.page.slug, this.newTitle.trim());
+                this.page.title = updated.title;
+                this.page.content = updated.content;
+                this.editingTitle = false;
+            } catch (e) {
+                alert('保存标题失败: ' + e.message);
+            }
+            this.savingTitle = false;
         }
     }
 };

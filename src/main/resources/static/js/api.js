@@ -64,6 +64,14 @@ const API = {
         return fetch(`/api/pages/${slug}`).then(r => r.json());
     },
 
+    updatePageTitle(slug, title) {
+        return fetch(`/api/pages/${slug}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title })
+        }).then(r => r.json());
+    },
+
     search(query) {
         return fetch(`/api/pages/search?q=${encodeURIComponent(query)}`).then(r => r.json());
     },

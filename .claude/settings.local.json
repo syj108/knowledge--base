@@ -15,7 +15,8 @@
       "Bash(pkill -f \"spring-boot:run\")",
       "WebFetch(domain:unpkg.com)",
       "Bash(rm -rf /Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/pages/*)",
-      "Bash(rm -rf /Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/*)"
+      "Bash(rm -rf /Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/*)",
+      "Bash(curl -s http://localhost:8080/js/views/KnowledgeBase.js)"
     ]
   }
 }

@@ -74,6 +74,48 @@ public class PageController {
         }
     }
 
+    @PatchMapping("/pages/{*slug}")
+    public ResponseEntity<PageDetail> updatePageTitle(@PathVariable String slug,
+                                                      @RequestBody Map<String, String> body) {
+        try {
+            if (slug.startsWith("/")) slug = slug.substring(1);
+            if (!kbService.pageExists(slug)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String newTitle = body.get("title");
+            if (newTitle == null || newTitle.isBlank()) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            String content = kbService.readPage(slug);
+            // 替换或插入一级标题
+            String[] lines = content.split("\n", -1);
+            boolean replaced = false;
+            StringBuilder sb = new StringBuilder();
+            for (String line : lines) {
+                if (!replaced && line.startsWith("# ")) {
+                    sb.append("# ").append(newTitle.trim()).append("\n");
+                    replaced = true;
+                } else {
+                    sb.append(line).append("\n");
+                }
+            }
+            if (!replaced) {
+                sb.insert(0, "# " + newTitle.trim() + "\n\n");
+            }
+            // 去掉末尾多余换行
+            String updatedContent = sb.toString().replaceAll("\n+$", "\n");
+            kbService.writePage(slug, updatedContent);
+
+            String category = extractCategory(slug);
+            return ResponseEntity.ok(new PageDetail(slug, newTitle.trim(), category, updatedContent));
+        } catch (IOException e) {
+            log.error("更新页面标题失败: {}", slug, e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @GetMapping("/graph")
     public ResponseEntity<GraphData> getGraph() {
         try {
