@@ -1,11 +1,45 @@
 {
-  "sources" : { },
+  "sources" : {
+    "3a9b75e5-a170-4dbb-bd37-2ff075208009" : {
+      "title" : "CIAM.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:6759b8c1382fe877a65a8f27a3f373d33e8773d53bd516fbaa171b47f84ae355",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/3a9b75e5-a170-4dbb-bd37-2ff075208009",
+      "last_ingested_at" : "2026-05-21T08:10:36.440992Z",
+      "generated_pages" : [ "ciam/aliyun-idaas-ciam" ],
+      "split_suggested" : false,
+      "assigned_category" : null
+    },
+    "69bcc14b-9bc4-4841-a8f6-45f8225aaa66" : {
+      "title" : "EIAM.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:81d09c75f4cb799c6ba6f8b9d7c5441a47f847d3773fceac40b35e77bd11e4b3",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/69bcc14b-9bc4-4841-a8f6-45f8225aaa66",
+      "last_ingested_at" : "2026-05-21T08:13:57.863780Z",
+      "generated_pages" : [ "identity/idaas-eiam" ],
+      "split_suggested" : false,
+      "assigned_category" : null
+    },
+    "b0cbf2ad-3ffb-4710-b454-d8aedceb5b7d" : {
+      "title" : "CIAM.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:6759b8c1382fe877a65a8f27a3f373d33e8773d53bd516fbaa171b47f84ae355",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/b0cbf2ad-3ffb-4710-b454-d8aedceb5b7d",
+      "last_ingested_at" : "2026-05-21T08:43:16.372231Z",
+      "generated_pages" : [ "IDaaS/aliyun-idaas-ciam" ],
+      "split_suggested" : false,
+      "assigned_category" : "IDaaS"
+    }
+  },
   "stats" : {
-    "total_sources" : 0,
-    "total_pages" : 0,
+    "total_sources" : 3,
+    "total_pages" : 3,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-21T03:38:08.793271Z",
-  "updated_at" : "2026-05-21T03:38:08.793271Z"
+  "updated_at" : "2026-05-21T08:43:16.372231Z"
 }

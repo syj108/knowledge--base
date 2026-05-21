@@ -1,5 +1,28 @@
 {
   "version" : 1,
-  "nodes" : { },
-  "edges" : [ ]
+  "nodes" : {
+    "ciam/aliyun-idaas-ciam" : {
+      "title" : "阿里云IDaaS CIAM",
+      "category" : "ciam",
+      "file" : "pages/ciam/aliyun-idaas-ciam.md",
+      "description" : null
+    },
+    "identity/idaas-eiam" : {
+      "title" : "IDaaS EIAM",
+      "category" : "identity",
+      "file" : "pages/identity/idaas-eiam.md",
+      "description" : null
+    },
+    "IDaaS/aliyun-idaas-ciam" : {
+      "title" : "阿里云IDaaS CIAM",
+      "category" : "IDaaS",
+      "file" : "pages/IDaaS/aliyun-idaas-ciam.md",
+      "description" : null
+    }
+  },
+  "edges" : [ {
+    "source" : "IDaaS/aliyun-idaas-ciam",
+    "target" : "ciam/aliyun-idaas-ciam",
+    "type" : "LINK"
+  } ]
 }
