@@ -56,7 +56,8 @@ const SourceDetail = {
                         {{ contentFileName }}
                     </span>
                 </div>
-                <div class="source-content-box">{{ sourceContent || '(空)' }}</div>
+                <div v-if="isMarkdown" class="markdown-body" v-html="renderedContent"></div>
+                <div v-else class="source-content-box">{{ sourceContent || '(空)' }}</div>
             </div>
 
             <div v-if="!detail" class="loading"><div class="spinner"></div></div>
@@ -71,6 +72,20 @@ const SourceDetail = {
             polling: false,
             pollTimer: null
         };
+    },
+    computed: {
+        isMarkdown() {
+            if (!this.contentFileName) return false;
+            return /\.(md|markdown|mdown|mkd)$/i.test(this.contentFileName);
+        },
+        renderedContent() {
+            if (!this.sourceContent) return '';
+            try {
+                return marked.parse(this.sourceContent);
+            } catch (e) {
+                return '<pre>' + this.sourceContent.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>';
+            }
+        }
     },
     created() { this.load(); },
     beforeUnmount() { this.stopPolling(); },

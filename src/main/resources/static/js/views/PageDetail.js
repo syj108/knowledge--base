@@ -9,41 +9,25 @@ const PageDetail = {
                 <span>{{ page ? page.title : '...' }}</span>
             </div>
 
-            <div class="page-detail-layout" v-if="page">
+            <div v-if="page">
+                <div class="page-title-bar">
+                    <div v-if="!editingTitle" class="page-title-display">
+                        <h1 class="page-title-text">{{ page.title }}</h1>
+                        <button class="btn btn-edit-title" @click="startEditTitle">编辑标题</button>
+                    </div>
+                    <div v-else class="page-title-edit">
+                        <input class="form-input" v-model="newTitle"
+                               @keyup.enter="saveTitle" @keyup.escape="editingTitle = false">
+                        <button class="btn btn-primary" style="white-space: nowrap;"
+                                :disabled="!newTitle.trim() || savingTitle" @click="saveTitle">
+                            {{ savingTitle ? '...' : '保存' }}
+                        </button>
+                        <button class="btn" style="white-space: nowrap;"
+                                @click="editingTitle = false">取消</button>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="markdown-body" v-html="renderedHtml"></div>
-                </div>
-                <div class="page-meta">
-                    <div class="meta-title">页面信息</div>
-                    <div class="meta-item">
-                        <div class="meta-label">标题</div>
-                        <div v-if="!editingTitle" style="display: flex; align-items: center; gap: 8px;">
-                            <span>{{ page.title }}</span>
-                            <button class="btn" style="font-size: 11px; padding: 2px 8px;"
-                                    @click="startEditTitle">编辑</button>
-                        </div>
-                        <div v-else style="display: flex; gap: 6px; align-items: center;">
-                            <input class="form-input" v-model="newTitle"
-                                   style="font-size: 13px; padding: 4px 8px; flex: 1;"
-                                   @keyup.enter="saveTitle" @keyup.escape="editingTitle = false">
-                            <button class="btn btn-primary" style="font-size: 11px; padding: 2px 8px;"
-                                    :disabled="!newTitle.trim() || savingTitle" @click="saveTitle">
-                                {{ savingTitle ? '...' : '保存' }}
-                            </button>
-                            <button class="btn" style="font-size: 11px; padding: 2px 8px;"
-                                    @click="editingTitle = false">取消</button>
-                        </div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">分类</div>
-                        <div>{{ page.category }}</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">标识</div>
-                        <div style="font-family: monospace; font-size: 12px; word-break: break-all;">
-                            {{ page.slug }}
-                        </div>
-                    </div>
                 </div>
             </div>
 

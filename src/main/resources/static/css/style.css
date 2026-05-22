@@ -79,6 +79,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 24px;
+    overflow: hidden;
 }
 
 /* ===== 统计卡片 ===== */
@@ -116,6 +117,7 @@ body {
     padding: 24px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     margin-bottom: 20px;
+    overflow-x: auto;
 }
 
 .card-title {
@@ -411,6 +413,9 @@ body {
 .markdown-body {
     line-height: 1.8;
     color: #2d3748;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .markdown-body h1 { font-size: 24px; margin: 24px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
@@ -444,9 +449,11 @@ body {
 }
 
 .markdown-body table {
-    width: 100%;
     border-collapse: collapse;
     margin: 12px 0;
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
 }
 
 .markdown-body th, .markdown-body td {
@@ -554,38 +561,49 @@ body {
 }
 
 /* ===== 页面详情布局 ===== */
-.page-detail-layout {
-    display: grid;
-    grid-template-columns: 1fr 260px;
-    gap: 24px;
+.page-title-bar {
+    margin-bottom: 16px;
 }
 
-.page-meta {
-    background: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    position: sticky;
-    top: 80px;
-    height: fit-content;
+.page-title-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.page-meta .meta-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #718096;
-    margin-bottom: 12px;
-    text-transform: uppercase;
+.page-title-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: break-word;
 }
 
-.page-meta .meta-item {
-    margin-bottom: 12px;
-    font-size: 14px;
-}
-
-.page-meta .meta-label {
-    color: #a0aec0;
+.btn-edit-title {
     font-size: 12px;
+    padding: 4px 10px;
+    color: #718096;
+    background: #edf2f7;
+    flex-shrink: 0;
+}
+
+.btn-edit-title:hover {
+    color: #2b6cb0;
+    background: #ebf8ff;
+}
+
+.page-title-edit {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.page-title-edit .form-input {
+    flex: 1;
+    min-width: 0;
+    font-size: 16px;
+    padding: 6px 12px;
 }
 
 /* ===== 加载状态 ===== */
@@ -622,8 +640,9 @@ body {
 /* ===== 响应式 ===== */
 @media (max-width: 768px) {
     .kb-layout { grid-template-columns: 1fr; }
-    .page-detail-layout { grid-template-columns: 1fr; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .navbar-search input { width: 160px; }
     .navbar-search input:focus { width: 200px; }
+    .page-title-display { flex-wrap: wrap; }
+    .page-title-edit { flex-wrap: wrap; }
 }
