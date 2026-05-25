@@ -20,25 +20,19 @@
       "description" : null
     },
     "IDaaS/aliyun-idaas-ciam" : {
-      "title" : "阿里云IDaaS CIAM",
-      "category" : "IDaaS",
-      "file" : "pages/IDaaS/aliyun-idaas-ciam.md",
-      "description" : null
-    },
-    "IDaaS/idaas-ciam" : {
       "title" : "IDaaS CIAM",
       "category" : "IDaaS",
-      "file" : "pages/IDaaS/idaas-ciam.md",
+      "file" : "pages/IDaaS/aliyun-idaas-ciam.md",
       "description" : null
     }
   },
   "edges" : [ {
-    "source" : "IDaaS/aliyun-idaas-ciam",
-    "target" : "ciam/aliyun-idaas-ciam",
-    "type" : "LINK"
-  }, {
     "source" : "IDaaS/idaas-eiam",
     "target" : "identity/idaas-eiam",
+    "type" : "LINK"
+  }, {
+    "source" : "IDaaS/aliyun-idaas-ciam",
+    "target" : "ciam/aliyun-idaas-ciam",
     "type" : "LINK"
   } ]
 }

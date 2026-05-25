@@ -51,17 +51,39 @@
       "content_hash" : "sha256:ff5f25d785d3b5b136b55d559e7b05a90fb5b0d5c824a2fc1df9d0d572db3722",
       "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/b7d36f22-f37d-4bfb-b5c2-50cd3342a852",
       "last_ingested_at" : "2026-05-25T03:21:58.559771Z",
-      "generated_pages" : [ "IDaaS/idaas-ciam" ],
+      "generated_pages" : [ ],
+      "split_suggested" : false,
+      "assigned_category" : "IDaaS"
+    },
+    "f7820069-0e91-49c3-97c6-932f96a0cefc" : {
+      "title" : "CIAM白皮书.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:ff5f25d785d3b5b136b55d559e7b05a90fb5b0d5c824a2fc1df9d0d572db3722",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/f7820069-0e91-49c3-97c6-932f96a0cefc",
+      "last_ingested_at" : "2026-05-25T06:07:16.703115Z",
+      "generated_pages" : [ ],
+      "split_suggested" : false,
+      "assigned_category" : "IDaaS"
+    },
+    "1ae63898-2a6f-4f2c-b9c6-5dd70bd9ef81" : {
+      "title" : "CIAM核心价值.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:c4c365c56a259bf03805cc888b7e88382c9d09cb417862ab36958c7a6eaa2b1f",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/1ae63898-2a6f-4f2c-b9c6-5dd70bd9ef81",
+      "last_ingested_at" : "2026-05-25T06:37:41.251162Z",
+      "generated_pages" : [ ],
       "split_suggested" : false,
       "assigned_category" : "IDaaS"
     }
   },
   "stats" : {
-    "total_sources" : 5,
-    "total_pages" : 5,
+    "total_sources" : 7,
+    "total_pages" : 4,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-21T03:38:08.793271Z",
-  "updated_at" : "2026-05-25T03:21:58.559771Z"
+  "updated_at" : "2026-05-25T06:37:41.251162Z"
 }
