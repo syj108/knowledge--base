@@ -69,6 +69,47 @@ public class KnowledgeBaseService {
         return slugs;
     }
 
+    public void movePage(String oldSlug, String newSlug) throws IOException {
+        Path source = config.pagesDir().resolve(oldSlug + ".md");
+        Path target = config.pagesDir().resolve(newSlug + ".md");
+        Files.createDirectories(target.getParent());
+        Files.move(source, target, StandardCopyOption.ATOMIC_MOVE);
+    }
+
+    public void deletePage(String slug) throws IOException {
+        Path file = config.pagesDir().resolve(slug + ".md");
+        Files.deleteIfExists(file);
+    }
+
+    public List<String> listPageSlugsInCategory(String categoryKey) throws IOException {
+        Path categoryDir = config.pagesDir().resolve(categoryKey);
+        if (Files.notExists(categoryDir) || !Files.isDirectory(categoryDir)) {
+            return new ArrayList<>();
+        }
+        List<String> slugs = new ArrayList<>();
+        try (Stream<Path> walk = Files.walk(categoryDir)) {
+            walk.filter(p -> p.toString().endsWith(".md"))
+                    .forEach(p -> {
+                        String relative = config.pagesDir().relativize(p).toString();
+                        String slug = relative.substring(0, relative.length() - 3)
+                                .replace(FileSystems.getDefault().getSeparator(), "/");
+                        slugs.add(slug);
+                    });
+        }
+        return slugs;
+    }
+
+    public void deleteCategoryDir(String categoryKey) throws IOException {
+        Path categoryDir = config.pagesDir().resolve(categoryKey);
+        if (Files.isDirectory(categoryDir)) {
+            try (Stream<Path> entries = Files.list(categoryDir)) {
+                if (entries.findAny().isEmpty()) {
+                    Files.delete(categoryDir);
+                }
+            }
+        }
+    }
+
     // --- 源文档存储（只读归档）---
 
     public Path saveSourceFile(String sourceId, String fileName, byte[] content) throws IOException {

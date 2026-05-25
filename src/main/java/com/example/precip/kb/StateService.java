@@ -90,6 +90,48 @@ public class StateService {
         }
     }
 
+    public synchronized void replaceSlugPrefix(String oldPrefix, String newPrefix) throws IOException {
+        AgentState state = kbService.readState();
+        for (SourceRecord record : state.getSources().values()) {
+            List<String> pages = record.getGeneratedPages();
+            if (pages != null) {
+                pages.replaceAll(slug -> {
+                    if (slug.startsWith(oldPrefix + "/")) {
+                        return newPrefix + slug.substring(oldPrefix.length());
+                    }
+                    return slug;
+                });
+            }
+        }
+        state.setUpdatedAt(Instant.now());
+        kbService.writeState(state);
+    }
+
+    public synchronized void movePageSlug(String oldSlug, String newSlug) throws IOException {
+        AgentState state = kbService.readState();
+        for (SourceRecord record : state.getSources().values()) {
+            List<String> pages = record.getGeneratedPages();
+            if (pages != null) {
+                pages.replaceAll(slug -> slug.equals(oldSlug) ? newSlug : slug);
+            }
+        }
+        state.setUpdatedAt(Instant.now());
+        kbService.writeState(state);
+    }
+
+    public synchronized void removePageSlugs(List<String> slugsToRemove) throws IOException {
+        AgentState state = kbService.readState();
+        for (SourceRecord record : state.getSources().values()) {
+            List<String> pages = record.getGeneratedPages();
+            if (pages != null) {
+                pages.removeAll(slugsToRemove);
+            }
+        }
+        state.setUpdatedAt(Instant.now());
+        updateStats(state);
+        kbService.writeState(state);
+    }
+
     public AgentState getState() throws IOException {
         return kbService.readState();
     }

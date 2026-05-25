@@ -55,6 +55,48 @@ const API = {
         }).then(r => r.json());
     },
 
+    // 分类管理
+    listCategoriesManage() {
+        return fetch('/api/categories').then(r => r.json());
+    },
+
+    getCategoryPages(key) {
+        return fetch(`/api/categories/${encodeURIComponent(key)}/pages`).then(r => r.json());
+    },
+
+    updateCategory(key, data) {
+        return fetch(`/api/categories/${encodeURIComponent(key)}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(r => {
+            if (!r.ok) return r.json().then(e => { throw new Error(e.error || '操作失败'); });
+            return r.json();
+        });
+    },
+
+    deleteCategory(key, options) {
+        return fetch(`/api/categories/${encodeURIComponent(key)}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(options)
+        }).then(r => {
+            if (!r.ok) return r.json().then(e => { throw new Error(e.error || '操作失败'); });
+            return r.json();
+        });
+    },
+
+    movePages(pageSlugs, targetCategoryKey) {
+        return fetch('/api/categories/move-pages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pageSlugs, targetCategoryKey })
+        }).then(r => {
+            if (!r.ok) return r.json().then(e => { throw new Error(e.error || '操作失败'); });
+            return r.json();
+        });
+    },
+
     // 知识页面
     listPages() {
         return fetch('/api/pages').then(r => r.json());

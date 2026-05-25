@@ -54,6 +54,57 @@ public class CategoryService {
         return newCat;
     }
 
+    public CategoryDef findByKey(String key) {
+        return listCategories().stream()
+                .filter(c -> c.key().equals(key))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public synchronized CategoryDef updateCategory(String oldKey, String newKey,
+                                                    String newName, String newDescription) throws IOException {
+        List<CategoryDef> categories = new ArrayList<>(doLoad());
+        int idx = -1;
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).key().equals(oldKey)) {
+                idx = i;
+                break;
+            }
+        }
+        if (idx < 0) {
+            throw new IllegalArgumentException("分类不存在: " + oldKey);
+        }
+        CategoryDef old = categories.get(idx);
+        String effectiveKey = (newKey != null && !newKey.isBlank()) ? newKey : old.key();
+        String effectiveName = (newName != null && !newName.isBlank()) ? newName : old.name();
+        String effectiveDesc = (newDescription != null) ? newDescription : old.description();
+
+        if (!effectiveKey.equals(oldKey)) {
+            boolean conflict = categories.stream().anyMatch(c -> c.key().equals(effectiveKey));
+            if (conflict) {
+                throw new IllegalArgumentException("分类 key 已存在: " + effectiveKey);
+            }
+        }
+
+        CategoryDef updated = new CategoryDef(effectiveKey, effectiveName, effectiveDesc);
+        categories.set(idx, updated);
+        doSave(categories);
+        cache.set(categories);
+        log.info("更新类别: {} → {} [{}]", oldKey, effectiveKey, effectiveName);
+        return updated;
+    }
+
+    public synchronized void deleteCategory(String key) throws IOException {
+        List<CategoryDef> categories = new ArrayList<>(doLoad());
+        boolean removed = categories.removeIf(c -> c.key().equals(key));
+        if (!removed) {
+            throw new IllegalArgumentException("分类不存在: " + key);
+        }
+        doSave(categories);
+        cache.set(categories);
+        log.info("删除类别: {}", key);
+    }
+
     private List<CategoryDef> doLoad() {
         Path file = config.categoriesFile();
         if (Files.notExists(file)) {
