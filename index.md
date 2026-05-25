@@ -1,6 +1,6 @@
 # 知识库索引
 
-该知识库聚焦于网络安全与身份管理领域，涵盖DDoS防护服务、通用知识库指南以及身份即服务（IDaaS）三大主题。整体规模精炼，共包含5篇核心文档，每类主题均提供基础概念与关键实践说明，适用于快速查阅与入门参考。
+该知识库聚焦于网络安全与身份管理领域的关键技术，涵盖分布式拒绝服务（DDoS）防护服务、Knora语义数据管理框架以及身份即服务（IDaaS）解决方案。共包含5篇专业文档，内容精炼，面向相关技术实践与系统集成场景。
 
 ---
 
@@ -9,9 +9,9 @@
 - [[DDoS-service/ddos-gao-fang|DDoS高防]]
 - [[DDoS-service/ddos-ji-chu-fang-hu|DDoS基础防护]]
 
-## knowledgeBase (1 篇)
+## knora (1 篇)
 
-- [[knowledgeBase/weknora|WeKnora]]
+- [[knora/weknora|WeKnora]]
 
 ## IDaaS (2 篇)
 

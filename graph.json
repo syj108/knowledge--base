@@ -19,9 +19,9 @@
       "file" : "pages/DDoS-service/ddos-ji-chu-fang-hu.md",
       "description" : null
     },
-    "knowledgeBase/weknora" : {
+    "knora/weknora" : {
       "title" : "WeKnora",
-      "category" : "knowledgeBase",
+      "category" : "knora",
       "file" : "pages/knora/weknora.md",
       "description" : null
     }
