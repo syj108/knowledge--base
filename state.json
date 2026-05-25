@@ -29,17 +29,28 @@
       "content_hash" : "sha256:6759b8c1382fe877a65a8f27a3f373d33e8773d53bd516fbaa171b47f84ae355",
       "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/b0cbf2ad-3ffb-4710-b454-d8aedceb5b7d",
       "last_ingested_at" : "2026-05-21T08:43:16.372231Z",
-      "generated_pages" : [ "IDaaS/aliyun-idaas-ciam" ],
+      "generated_pages" : [ "uncategorized/aliyun-idaas-ciam" ],
+      "split_suggested" : false,
+      "assigned_category" : "IDaaS"
+    },
+    "64570ebf-4b65-4b18-b162-bd343ceba111" : {
+      "title" : "EIAM.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:81d09c75f4cb799c6ba6f8b9d7c5441a47f847d3773fceac40b35e77bd11e4b3",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/64570ebf-4b65-4b18-b162-bd343ceba111",
+      "last_ingested_at" : "2026-05-22T08:47:36.343329Z",
+      "generated_pages" : [ "uncategorized/idaas-eiam" ],
       "split_suggested" : false,
       "assigned_category" : "IDaaS"
     }
   },
   "stats" : {
-    "total_sources" : 3,
-    "total_pages" : 3,
+    "total_sources" : 4,
+    "total_pages" : 4,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-21T03:38:08.793271Z",
-  "updated_at" : "2026-05-21T08:43:16.372231Z"
+  "updated_at" : "2026-05-25T02:38:29.960680Z"
 }

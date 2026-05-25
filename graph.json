@@ -13,16 +13,26 @@
       "file" : "pages/identity/idaas-eiam.md",
       "description" : null
     },
-    "IDaaS/aliyun-idaas-ciam" : {
+    "uncategorized/idaas-eiam" : {
+      "title" : "IDaaS EIAM",
+      "category" : "uncategorized",
+      "file" : "pages/IDaaS/idaas-eiam.md",
+      "description" : null
+    },
+    "uncategorized/aliyun-idaas-ciam" : {
       "title" : "阿里云IDaaS CIAM",
-      "category" : "IDaaS",
+      "category" : "uncategorized",
       "file" : "pages/IDaaS/aliyun-idaas-ciam.md",
       "description" : null
     }
   },
   "edges" : [ {
-    "source" : "IDaaS/aliyun-idaas-ciam",
+    "source" : "uncategorized/aliyun-idaas-ciam",
     "target" : "ciam/aliyun-idaas-ciam",
+    "type" : "LINK"
+  }, {
+    "source" : "uncategorized/idaas-eiam",
+    "target" : "identity/idaas-eiam",
     "type" : "LINK"
   } ]
 }
