@@ -1,6 +1,6 @@
 # 知识库索引
 
-该知识库聚焦于身份认证与管理领域，涵盖CIAM（客户身份和访问管理）及通用身份管理相关内容。目前共收录5篇文档，包括1篇关于identity、1篇关于ciam以及2篇未分类的补充材料。
+本知识库聚焦于身份与访问管理（IAM）相关的核心概念与技术，涵盖身份识别（Identity）、客户身份与访问管理（CIAM）以及身份即服务（IDaaS）三大主题。共收录5篇专业文档，内容简明实用，适合快速了解IAM领域关键术语与实践方向。
 
 ---
 
@@ -12,8 +12,9 @@
 
 - [[ciam/aliyun-idaas-ciam|阿里云IDaaS CIAM]]
 
-## uncategorized (2 篇)
+## IDaaS (3 篇)
 
-- [[uncategorized/idaas-eiam|IDaaS EIAM]]
-- [[uncategorized/aliyun-idaas-ciam|IDaaS CIAM]]
+- [[IDaaS/idaas-ciam|IDaaS CIAM]]
+- [[IDaaS/idaas-eiam|IDaaS EIAM]]
+- [[IDaaS/aliyun-idaas-ciam|IDaaS CIAM]]
 
