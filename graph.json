@@ -1,38 +1,24 @@
 {
   "version" : 1,
   "nodes" : {
-    "ciam/aliyun-idaas-ciam" : {
-      "title" : "阿里云IDaaS CIAM",
-      "category" : "ciam",
-      "file" : "pages/ciam/aliyun-idaas-ciam.md",
-      "description" : null
-    },
-    "identity/idaas-eiam" : {
-      "title" : "IDaaS EIAM",
-      "category" : "identity",
-      "file" : "pages/identity/idaas-eiam.md",
-      "description" : null
-    },
-    "IDaaS/idaas-eiam" : {
-      "title" : "IDaaS EIAM",
-      "category" : "IDaaS",
-      "file" : "pages/IDaaS/idaas-eiam.md",
-      "description" : null
-    },
     "IDaaS/aliyun-idaas-ciam" : {
       "title" : "IDaaS CIAM",
       "category" : "IDaaS",
       "file" : "pages/IDaaS/aliyun-idaas-ciam.md",
       "description" : null
+    },
+    "DDoS-service/ddos-gao-fang" : {
+      "title" : "DDoS高防",
+      "category" : "DDoS-service",
+      "file" : "pages/DDoS-service/ddos-gao-fang.md",
+      "description" : null
+    },
+    "DDoS-service/ddos-ji-chu-fang-hu" : {
+      "title" : "DDoS基础防护",
+      "category" : "DDoS-service",
+      "file" : "pages/DDoS-service/ddos-ji-chu-fang-hu.md",
+      "description" : null
     }
   },
-  "edges" : [ {
-    "source" : "IDaaS/idaas-eiam",
-    "target" : "identity/idaas-eiam",
-    "type" : "LINK"
-  }, {
-    "source" : "IDaaS/aliyun-idaas-ciam",
-    "target" : "ciam/aliyun-idaas-ciam",
-    "type" : "LINK"
-  } ]
+  "edges" : [ ]
 }

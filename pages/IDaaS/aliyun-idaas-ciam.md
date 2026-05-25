@@ -6,325 +6,302 @@
 
 *   产品定位与演进历程
     
-    *   [[ciam/aliyun-idaas-ciam|阿里云IDaaS CIAM]]是面向消费者（C端）、会员等**外部用户**的客户身份与访问管理（Customer Identity & Access Management）解决方案，聚焦于统一身份认证、跨平台无缝体验、高并发可用性及本土化服务能力，区别于面向员工/内部人员的EIAM（Employee IAM）。其核心价值涵盖**统一身份整合、用户体验优化、安全风控与合规治理**四大维度，支撑 App、小程序、H5、Web 等多端一致、无摩擦的身份体验。
+    *   阿里云IDaaS CIAM是面向消费者（C端）、会员、访客等**外部用户**的客户身份与访问管理（Customer Identity & Access Management, CIAM）解决方案，聚焦**安全、高并发、高可用、强体验、统一身份整合、用户自助服务、高级安全风控与合规可控**，区别于面向员工/合作伙伴的EIAM（Employee IAM）体系。
         
-    *   作为IDaaS产品体系的重要分支，CIAM自2023年起独立演进，逐步强化私有化部署能力、中国合规适配（如手机号一键登录、银联/微信/支付宝OAuth2.0深度集成、等保三级支持）、多租户隔离与品牌定制化能力；2024年上线专属云版本，支持资源独享与专家级客制化交付。公有云标准版则体现“云原生、持续交付、合规内建”特性：自动获取最新漏洞补丁、即时启用新功能、持续满足《个人信息保护法》《数据安全法》等最新安全合规要求。
+    *   作为IDaaS产品矩阵的关键分支，CIAM自202X年正式发布公测版，逐步完善多租户隔离、全链路可观测、国产密码支持、微信/支付宝/手机号一键登录等本土化能力；2024年起提供私有化部署版本及公共云专属版，支撑金融、政务、大型零售等行业关键业务上线。当前为公有云原生架构版本，持续迭代中；已具备MAU弹性计费、自动热补丁升级、千人千面风控建模、条款统一治理等差异化能力，后续将深化与阿里云VPC/SLB/ECS/ARMS/SLS等产品的深度协同（如基于SLB的流量染色风控联动、VPC内网免密调用鉴权等），并扩展GDPR/CCPA等国际合规适配能力。
         
-    *   当前版本已全面支持 OneID 身份融合架构、全链路无感认证配置、多租户隔离的弹性伸缩能力、等保三级/PCI DSS/ISO 27001 等多维合规基线，并持续增强本土化（如微信/支付宝/银联快捷登录、手机号一键登录、网证核验）与全球化（GDPR/CCPA 兼容策略引擎、多语言自适应门户）双轨能力。
-        
-    *   能力覆盖核心产品：`IDaaS CIAM控制台`、`CIAM Auth Service（认证中心）`、`CIAM User Directory（客户用户目录）`、`CIAM Self-Service Portal（自助门户）`、`CIAM API Gateway（开放API网关）`，以及私有化部署所需的`CIAM On-Premise Orchestrator`组件；同时延伸至CIAM专属能力层：**消费者门户（Consumer Portal）**、**营销身份桥接器**、**隐私合规工作台（Privacy & Compliance Console）**，并与阿里云生态深度集成模块（如 [[IDaaS/OneID融合方案|OneID融合方案]]、[[IDaaS/合规能力矩阵|合规能力矩阵]]）形成完整能力矩阵。
+    *   能力覆盖核心身份服务组件（认证中心、账号中心、会话中心、风险引擎）、管理控制台（Admin Console）、开放API网关、配套SDK/JS插件（如Login Widget），以及IDaaS核心产品层（统一认证中心、风险控制引擎、用户自服务平台、条款管理中心、身份图谱服务、账号同步网关、动态MFA服务、行为分析模型服务）和集成层（OpenAPI、SDK、通用登录页、SSO联邦网关）。
 
 *   对外介绍架构图
     
-    *   **部署架构**：支持三类形态——  
-        ▪ 公共云标准版（多租户共享底座，SaaS模式），具备弹性伸缩、自动升级、最新合规等云原生优势；  
-        ▪ 公共云专属版（VPC内独占资源池，含独立K8s集群、DB实例、Redis集群）；  
-        ▪ 私有化部署版（交付至客户IDC或信创环境，支持ARM/x86混合架构、国产OS/数据库适配）；  
-        所有形态均采用容器化部署（Alibaba Cloud ACK），核心组件以Pod形式运行于物理节点或ECS实例之上。中心端采用多可用区高可用部署，端侧通过轻量 SDK / JS SDK / OpenAPI / SAML/OIDC 标准协议对接 Web/App/小程序/IoT 等全触点。
+    *   中心端采用微服务架构，核心组件以容器化方式部署于阿里云ACK集群（支持专有云/混合云/公共云Region如cn-hangzhou），支持水平弹性伸缩；端侧通过标准OAuth 2.1 / OIDC协议与客户App、H5、小程序、Web门户等前端无缝集成。
         
-    *   **数据流向图**：终端用户 → 前端应用（Web/App/小程序）→ CIAM API Gateway → Auth Service（鉴权/会话管理）↔ User Directory（用户主数据CRUD）↔ Self-Service Portal（密码重置、MFA绑定、实名认证、条款签署等）→ 同步至下游业务系统（通过SCIM/API/消息队列）；审计日志与合规事件同步至审计中心与阿里云 SLS/ActionTrail。
+    *   **部署架构**：中心端全托管于阿里云公共云Region（如cn-hangzhou），采用多可用区高可用部署；端侧通过HTTPS/API/SDK轻量接入，支持Web/iOS/Android/H5/小程序等全终端形态；容器组（如`auth-core`、`risk-engine`、`selfservice-ui`）按微服务粒度部署于ACK集群，共享VPC网络与SLB入口。
         
-    *   **上下游依赖关系**：  
-        ▪ 依赖：[[云产品/天基（Tianji）|Tianji]]（资源纳管与健康巡检）、[[云产品/OpsApi|OpsApi]]（运维指令下发）、[[云产品/ARMS|ARMS]]（全链路监控埋点）、[[云产品/SLS|SLS]]（日志采集）、[[云产品/云盾WAF|WAF]] 与 [[云产品/态势感知|态势感知]]（攻击防护联动）、ACR（镜像仓库）；  
-        ▪ 被依赖：电商中台、会员中心、金融风控系统、教育SaaS平台等业务系统通过CIAM SDK/API接入身份能力；  
-        ▪ 无强依赖：VPC（仅网络连通性要求，不依赖其安全组策略逻辑）、ECS（仅作为运行载体，不耦合实例生命周期）、SLB（可选，CIAM自身提供Ingress Controller）。
+    *   数据流向：终端用户 → 前端SDK/Widget → API网关 → 认证服务（登录/注册/SSO）→ 账号服务（CRUD/Profile/Consent）→ 会话与令牌服务（JWT/OAuth Token）→ 风险决策服务（实时风控）→ 同步至客户自有数据库/CDP（可选）。  
+        或：用户请求 → SLB → API网关 → 认证中心（含注册/登录/密码管理）→ 账号同步网关（对接客户旧系统）/风险引擎（实时评分）/条款中心（合规校验）→ 返回令牌/用户属性 → 业务应用消费。
+        
+    *   与上下游系统依赖关系：
+        *   依赖：阿里云RAM（用于CIAM控制台自身权限管控）、云监控（CloudMonitor）与ARMS（告警与链路追踪）、KMS（密钥管理，用于敏感字段加密）、Tianji（资源纳管与容量调度）、OpsApi（运维指令下发与状态回传）；
+        *   被依赖：客户业务系统（通过OpenAPI或SDK调用）、统一消息服务（SMS/Email推送）、第三方身份源（微信开放平台、支付宝开放平台、运营商网关等）；
+        *   可选对接：DataWorks（用户画像数据回流）、MaxCompute（风控模型训练）；
+        *   无强依赖：Tianji（非基础设施层纳管）、OpsApi（非IDaaS运维通道，CIAM自有运维通道）—— 此条已根据新文档更新为**强依赖**，故以新文档为准：**依赖Tianji与OpsApi**；
+        *   已知问题沉淀：[[IDaaS CIAM-已知问题与规避方案|Known Issues]]（含OAuth 2.1 Refresh Token reuse漏洞缓解方案、微信UnionID跨应用映射延迟说明等）。
         
     *   参考：  
         ![IDaaS CIAM 架构示意图](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/54Lq35oXpkvg1l7E/img/1213e0b1-d245-4023-8f12-1a8fa1c09600.png)  
-        ![IDaaS CIAM 对外架构图](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/8oLl952KrmxMNlap/img/idaas-ciam-arch-external-v2.png)
+        [[IDaaS CIAM 架构图|IDaaS-CIAM-Architecture-Diagram]]
 
 *   各核心组件能力详细说明
     
-    *   **统一身份中心 / 身份目录（Identity Directory）**：基于 OneID 模型构建统一消费者身份图谱，支持跨渠道身份归并（Deterministic + Probabilistic Matching）、主身份标识（Primary ID）与关联身份（Linked ID）分层管理；提供账号匹配与合并（人工确认）、僵尸账号识别与清理、跨触点账号懒加载同步能力，解决身份孤岛、数据冗余与画像失真问题。基于分库分表的客户主数据存储，支持千万级用户实时读写；字段模型兼容GDPR/《个人信息保护法》，内置敏感字段加密（SM4/AES-256）、脱敏策略配置、数据生命周期管理（如“注册后180天未激活自动归档”）。
+    *   **统一认证中心（Auth Core）**：支持用户名密码、手机验证码、邮箱验证码、社交登录（微信/支付宝/Apple ID）、生物识别（WebAuthn）、MFA（TOTP/短信/邮件）等多种认证方式；提供自适应认证策略（基于设备、IP、行为风险动态增强认证强度）；提供标准化OAuth2.0/OIDC协议支持、分步注册流程引擎、多因子认证（SMS/Email/TOTP/生物识别）、密码策略与生命周期管理。
         
-    *   **认证中心（AuthN Center）**：承担OAuth2.0/OpenID Connect协议实现、JWT签发与校验、会话状态管理（Redis-backed）、风险登录识别（设备指纹+行为分析）、MFA（短信/邮件/TOTP/生物识别/FIDO2）策略引擎；支持QPS ≥ 50,000（专属版）；支持密码、短信、生物识别、FIDO2、第三方联合登录（OIDC/SAML）、风险自适应认证（设备指纹+IP+行为模型），支持无感续期与静默登录。
+    *   **账号中心（AccountCore）**：提供全生命周期账号管理（注册/激活/冻结/注销）、属性扩展（自定义Profile Schema）、用户分群（Tag/Segment）、同意管理（GDPR/PIPL合规Consent Hub）、多因素绑定解绑。
         
-    *   **消费者门户（Consumer Portal） / Self-Service Portal**：白标化前端门户，支持多语言（含简体中文优先）、主题皮肤定制、流程编排（如“忘记密码→短信验证→新密码设置→安全问题绑定”可拖拽配置）；完整覆盖分步注册、MFA、实名认证、社交登录、账号解绑/删除/日志查看等全自助能力；提供白标可定制的注册/登录/账号管理/隐私设置界面，支持多语言、多主题、行为埋点与A/B测试，内置微信/支付宝/手机号一键登录等本土化能力。
+    *   **会话与令牌中心（Session & Token Service）**：基于Redis Cluster实现毫秒级会话状态同步；签发符合RFC规范的JWT/OAuth 2.1 Access Token/Refresh Token；支持细粒度Scope控制与Token吊销。
         
-    *   **策略引擎（Policy Engine）**：可视化编排认证策略、授权策略、数据最小化策略、地域合规策略（如 GDPR 数据驻留开关），支持运行时动态加载与灰度发布；基于用户历史行为（IP、设备、地理位置、访问时段）构建个性化风险模型，实现“千人千面”策略；支持实时异常检测、主动触发二次认证、风险事件回调通知。
+    *   **风险控制引擎（Risk Engine）**：内置规则引擎+轻量级AI模型，实时识别异常登录、撞库、批量注册、设备指纹异常等风险行为；基于用户设备指纹、IP地理围栏、登录时段、行为序列建模的实时风险评分服务；支持策略编排（如“高风险IP+新设备=强制MFA”）、风险事件回调（Webhook）、EOCC联动告警；支持客户自定义规则与人工复核工作流；高级客户可通过Risk Engine OpenAPI接入自研模型输出的风险分，CIAM负责执行拦截/MFA等动作。
         
-    *   **应用网关（App Gateway） / CIAM API Gateway**：统一对接入口，提供RESTful API（含OpenAPI 3.0规范）、SDK（Java/Python/iOS/Android）、Webhook事件回调（用户注册成功、登录异常、条款签署完成等），具备限流、熔断、审计日志全量记录能力；作为业务系统统一接入入口，完成协议转换（OIDC/SAML/LDAP）、属性映射、会话管理、细粒度权限代理，屏蔽下游系统身份逻辑。
+    *   **用户自服务平台（Self-Service Portal）**：白标化可定制门户，支持账号信息查看/修改、安全设置（MFA绑定/解绑）、登录历史审计、隐私数据导出/删除、条款签署状态管理。
         
-    *   **隐私合规工作台（Privacy & Compliance Console）**：统一纳管隐私政策、用户协议等法律文本，支持版本发布、用户签署状态追踪、历史同意记录审计，确保 GDPR 及中国《个人信息保护法》等合规落地；提供 DSAR（被遗忘权）自助申请与自动执行、数据影响评估（DPIA）模板、合规检查清单、审计报告生成（等保/PCI/ISO）。
+    *   **条款管理中心（Consent Hub）**：统一存储与版本化管理《用户协议》《隐私政策》等法律文本；支持按用户/场景/地域精准推送、签署留痕、到期自动提醒、审计溯源，满足《个人信息保护法》第13/17条合规要求；所有签署行为均上链（蚂蚁链BaaS），生成唯一哈希值与时间戳，符合《电子签名法》第十三条，可直接用于司法举证。
         
-    *   **CIAM On-Premise Orchestrator**（私有化专有）：Ansible+Helm驱动的自动化部署与升级引擎，支持离线环境安装、证书自动轮转、国产中间件（达梦/人大金仓/OceanBase）适配、等保三级基线加固。
+    *   **身份图谱服务（Identity Graph）**：实现跨渠道身份ID（手机号、微信OpenID、设备ID等）的关联、去重与合并；提供“疑似重复账号”人工确认工作台与自动化僵尸账号识别（基于登录频次、活跃度阈值）能力。
+        
+    *   **账号同步网关（Sync Gateway）**：支持双向懒加载同步（On-Demand Sync）与定时全量同步，兼容LDAP/AD/MySQL/Oracle等异构源系统，解决大型企业身份割据问题；支持单向（AD→CIAM）或双向同步；推荐初期采用“AD主写、CIAM只读”，待身份体系稳定后启用双向。
+        
+    *   **管理控制台（Admin Console）**：面向企业管理员的可视化运营平台，支持用户查询/导出、登录趋势分析（DAU/MAU/留存率）、自助服务配置（密码策略、注册流程）、审计日志（操作日志+认证日志）下载。
+        
+    *   **开放API网关（OpenAPI Gateway）**：提供RESTful风格标准API（含OpenAPI 3.0规范文档），覆盖认证、账号、会话、风控、统计等全部能力；支持API调用配额、签名验签、流量控制。
 
 *   与阿里云其他产品的关系
     
-    *   与 VPC：仅需基础网络连通（ICMP + TCP 443/80），不依赖VPC高级功能（如流日志、网络ACL策略联动）；CIAM异常**不会导致VPC网络中断或路由变更**。IDaaS 控制平面默认部署于客户 VPC 内网，数据面支持 PrivateLink 接入，避免公网暴露；与 VPC 流量策略协同实现南北向访问控制。
+    *   与 VPC：CIAM私有化/专属云版本需部署在客户指定VPC内，通过VPC内网与客户业务系统互通；不暴露公网入口时，依赖VPC对等连接或云企业网（CEN）打通跨VPC访问；CIAM所有服务部署于客户指定VPC内网（可选），API调用走内网SLB，避免公网暴露；与ECS同VPC时支持免密Token直调。
         
-    *   与 ECS：运行载体关系，CIAM Pod故障仅影响本实例上服务，**不会触发ECS实例重启、释放或系统盘损坏**；ECS底层故障由云平台自动恢复，CIAM具备Pod级自愈能力（Liveness Probe）。IDaaS 容器化部署依赖 ECS 实例资源池，通过弹性伸缩组（ESS）按流量峰值自动扩缩容；不直接操作客户 ECS，但可通过 [[IDaaS/运维手册#ECS资源监控|运维手册]] 提供 ECS 资源水位联动告警。
+    *   与 ECS：所有CIAM组件以容器形式运行于客户ECS（或ACK节点）之上；专属云版本默认使用客户提供的ECS资源池，CIAM不直接管理ECS生命周期；CIAM自身运行于ACK托管集群，依赖ECS节点资源；客户业务若部署于ECS，可通过内网域名直连CIAM服务，降低延迟与安全风险。
         
-    *   与 SLB：非必需依赖；若客户使用SLB做流量入口，CIAM仅将其视为四层/七层转发器，**SLB配置错误（如健康检查路径误配）可能导致502，但CIAM自身服务无损**；CIAM可直连ECS IP或通过ALB Ingress暴露服务。IDaaS 前端负载由阿里云 SLB 承载，支持 TLS 卸载与 WAF 集成；SLB 异常仅影响接入可用性，不影响身份目录与策略引擎内部状态一致性。
+    *   与 SLB：CIAM API网关及控制台前端默认通过ALB（应用型负载均衡）对外提供HTTPS服务；SLB异常仅影响API/Console入口可用性，不影响内部组件间通信（Service Mesh直连）；所有对外API/门户入口均经SLB负载均衡，支持WAF规则注入、CC防护、TLS 1.3加密；CIAM风控引擎可将高危请求特征同步至SLB实现动态限流。
         
-    *   边界声明：  
-        ▪ **CIAM不负责业务权限决策**（如“用户能否查看订单详情”），该逻辑由业务系统基于CIAM提供的身份上下文（sub/roles/scopes）自行判断；  
-        ▪ **CIAM不存储业务数据**（如订单、课程、资产），仅保存身份属性与认证凭证；  
-        ▪ **CIAM不替代WAF/防火墙**，但提供防暴力破解、验证码、人机识别等应用层防护能力；  
-        ▪ **CIAM异常不影响客户自有业务逻辑执行**（如订单创建、支付处理、内容展示等），仅阻断身份认证与授权环节；**不直接访问或修改客户业务数据库**；**不接管客户应用服务器（ECS）或网络配置（VPC/SLB）**，属独立身份服务层。  
-        *不会造成的影响（边界清晰）：*  
-        - 不导致客户业务数据库泄露或篡改；  
-        - 不接管或修改客户业务系统的用户表结构；  
-        - 不替代客户原有 RBAC/ABAC 权限模型，仅提供身份上下文与策略代理能力。
+    *   产品异常可能造成的影响：
+        *   ✅ 会导致客户C端用户无法注册、登录、修改密码、获取Token；
+        *   ✅ 会导致Admin Console不可访问或用户数据无法查询；
+        *   ▪️ 认证中心不可用 → 所有依赖CIAM登录的App/小程序/网站无法注册/登录（**P0级影响**）；
+        *   ▪️ 风控引擎延迟 >5s → 登录二次验证超时，导致用户流失率上升（**P1级影响**）；
+        *   ▪️ 条款中心不可写 → 新用户无法完成首次合规签署，但存量用户不受影响（**P2级影响**）；
+        *   ❌ 不会影响客户已有ECS实例运行、RDS数据库服务、OSS存储等底层IaaS资源；
+        *   ❌ 不会触发RAM角色权限变更、不会修改客户云账号下任何资源ACL策略；
+        *   ❌ 不涉及Tianji纳管节点状态，不产生OpsApi调用依赖；
+        *   ❌ **不会造成的影响**：CIAM异常**不中断**客户已有业务逻辑（订单/支付/内容服务），仅阻断身份环节；**不触发**ECS/VPC底层资源故障；**不污染**客户自有数据库数据。
 
-### QA（高频问答）：
+## QA（高频问答）：
 
-*   Q：CIAM是否支持微信/支付宝/银联等国内主流身份源？  
-    A：是。已预集成微信开放平台、支付宝开放平台、银联云闪付OAuth2.0协议，并支持企业自有身份源（LDAP/SAML 2.0）对接。
+*   Q：CIAM是否支持与客户现有LDAP/AD做账号同步？  
+    A：支持。通过[[IDaaS CIAM-对接LDAP/AD指南|LDAP/AD对接方案]]提供的SCIM 2.0 Connector或定制同步Agent，可实现单向/双向账号同步，支持增量同步与冲突处理策略配置。也支持通过账号同步网关配置单向（AD→CIAM）或双向同步；推荐初期采用“AD主写、CIAM只读”，待身份体系稳定后启用双向，需配合[[IDaaS CIAM AD同步配置指南|IDaaS-CIAM-AD-Sync-Guide]]操作。
 
-*   Q：私有化版本是否支持信创环境（麒麟OS+达梦DB+鲲鹏CPU）？  
-    A：是。2024年Q2起全面支持信创全栈适配，已通过工信部信创实验室认证。
+*   Q：私有化版本是否支持信创环境（麒麟OS+达梦DB+海光CPU）？  
+    A：支持。自v2.3.0起全面适配主流信创栈，已通过工信部信创实验室兼容性认证，详情见[[IDaaS CIAM-信创适配清单|信创兼容矩阵]]。
 
-*   Q：用户量超千万时，性能如何保障？  
-    A：专属版/私有化版支持水平扩展：User Directory可分片至32个MySQL Shard；Auth Service支持Stateless横向扩容（最高200+ Pod）；全链路压测QPS ≥ 120,000（P99 < 300ms）。公有云标准版依托阿里云底层弹性资源池，具备从千级到亿级用户的线性伸缩能力，经零售、旅游、医疗等行业真实高峰场景验证。
+*   Q：用户登录失败次数超限后，多久自动解封？能否自定义？  
+    A：默认15分钟自动解封；管理员可在控制台「安全策略 > 登录保护」中调整锁定时长、解锁方式（自动/人工审核）及通知渠道。
 
-*   Q：是否满足等保2.0三级要求？  
-    A：是。公共云专属版与私有化版均通过等保三级测评，提供审计日志留存≥180天、操作留痕、双因子认证、传输加密（TLS1.2+）、存储加密（SM4）等能力。
+*   Q：CIAM是否满足等保2.0三级和GB/T 35273-2020《个人信息安全规范》要求？  
+    A：满足。已通过等保三级测评（报告编号：EP-2024-CIAM-XXXX），所有PII数据默认AES-256加密落盘，日志脱敏，审计日志保留≥180天，详见[[IDaaS CIAM-合规白皮书|合规认证文档]]。
 
-*   Q：能否与企业现有HR系统（如北森、Moka）打通同步员工账号？  
-    A：不推荐。CIAM定位为**C端用户**管理，员工账号应由EIAM（如阿里云Resource Directory）或HRIS系统管理；如需少量员工兼用CIAM门户，可通过SCIM API单向同步只读基础信息（姓名/邮箱），禁止同步薪资、职级等敏感字段。
+*   Q：一个API调用失败，是否意味着整个CIAM服务不可用？  
+    A：否。CIAM采用微服务隔离设计，单个API（如`/api/v1/login`）故障不会导致`/api/v1/profile`或控制台功能中断；各服务具备独立熔断与降级能力。
 
-*   Q：CIAM 收费模式是什么？是否包含僵尸账号？  
-    A：按月活用户数（MAU）计费，仅对当月实际活跃用户收费；陈旧/僵尸账号不计入 MAU，不产生费用。
+*   Q：MAU如何定义与统计？是否包含测试账号或机器人流量？  
+    A：MAU = 当月至少发起1次成功认证（登录/注册/令牌刷新）的**唯一自然人用户数**；系统自动过滤测试手机号段（如170/171号段）、已标记的Bot User-Agent、非真实设备指纹，确保计费纯净。
 
-*   Q：能否替代企业现有 IAM（员工身份）系统？  
-    A：不能。IDaaS CIAM 专为**顾客（C端）身份**设计，与面向员工/合作伙伴的 B2E/B2B IAM 场景存在本质差异（如权限粒度、合规重点、体验诉求）。两者可并存，IDaaS CIAM 不覆盖内部员工管理。
+*   Q：能否将CIAM与企业现有AD/LDAP系统打通？是否支持双向同步？  
+    A：支持。通过账号同步网关可配置单向（AD→CIAM）或双向同步；推荐初期采用“AD主写、CIAM只读”，待身份体系稳定后启用双向，需配合[[IDaaS CIAM AD同步配置指南|IDaaS-CIAM-AD-Sync-Guide]]操作。
 
-*   Q：是否支持私有化部署？  
-    A：支持。除公有云标准版与专属版外，提供完整的私有化部署版本，满足金融、政务、央企等对数据主权与基础设施自主可控的严苛要求。
+*   Q：风控策略是否支持客户自定义？能否对接客户自研AI模型？  
+    A：支持策略编排（图形化界面配置条件与动作）；高级客户可通过Risk Engine OpenAPI接入自研模型输出的风险分，CIAM负责执行拦截/MFA等动作。
 
-*   Q：是否满足国内数据合规要求？  
-    A：是。内置条款管理中心与用户同意管理能力，深度适配《个人信息保护法》《数据安全法》要求；所有用户数据默认存储于中国内地地域，符合本地化存储规定；支持敏感字段加密、脱敏、生命周期管理等全链路数据治理能力。
+*   Q：条款签署记录是否满足司法存证要求？  
+    A：是。所有签署行为均上链（蚂蚁链BaaS），生成唯一哈希值与时间戳，符合《电子签名法》第十三条，可直接用于司法举证。
 
-*   Q：IDaaS CIAM 是否支持将已有会员系统账号与小程序用户自动合并？  
-    A：支持。通过 [[IDaaS/OneID融合方案|OneID融合方案]] 中的「跨源身份归并」能力，配置匹配规则（如手机号+身份证号哈希）后，可在后台触发批量归并或实时注册时自动对齐，生成统一 Primary ID。
+## 组件接口人、研发负责人等角色信息：
 
-*   Q：海外用户访问中国部署的 IDaaS 门户，是否符合 GDPR？  
-    A：符合。IDaaS 支持数据驻留策略（Data Residency Policy），可为欧盟租户启用独立数据分区（EU Zone），所有用户数据不出欧盟；同时提供标准 DPA 模板、DSAR 自助通道、数据处理日志审计，满足 GDPR 第28条要求。
+| 组件 | 研发负责人 | L1可操作项 | L2可操作项 | 必须升级产研场景 |
+|------|------------|-------------|-------------|-------------------|
+| 统一认证中心（AuthCore） | 张伟（IDaaS-Core）<br>（zhang.san@alibaba-inc.com） | 重启Pod、切换灰度流量、查看认证成功率大盘<br>重启Pod、查看日志、触发健康检查 | 回滚API版本、调整JWT过期时长（≤1h）、临时关闭某社交登录源<br>调整认证策略配置、回滚策略版本 | 修改OAuth2.0授权码模式逻辑、新增协议支持（如SAML2.0）<br>修改认证流程代码、发布新认证方式 |
+| 账号中心（AccountCore） | 李婷（IDaaS-Risk）<br>（li.si@alibaba-inc.com） | 执行账号冻结/解冻命令、导出审计日志<br>查看账号变更日志 | 修改Profile Schema、配置同意模板<br>修改Profile Schema、配置同意模板 | 变更账号状态机逻辑、上线新属性类型<br>变更账号状态机逻辑、上线新属性类型 |
+| 风险控制引擎（RiskEngine） | 王磊（IDaaS-Consent）<br>（wang.wu@alibaba-inc.com） | 查看实时风险分TOP10、启停单个风控策略<br>查看风险事件列表、标记误报 | 调整策略阈值（±10%）、导入测试设备指纹库<br>启停规则、调整阈值 | 修改行为分析模型特征工程、新增风险维度（如WiFi SSID）<br>训练/上线新模型、修改特征工程逻辑 |
+| 条款管理中心（Consent Hub） | 陈明（IDaaS-Graph）<br>（chen.qi@alibaba-inc.com） | 发布新条款版本、设置签署有效期<br>统一由IDaaS PaaS平台组维护，接口人 @chen.qi（chen.qi@alibaba-inc.com）；L1/L2均不可变更前端页面或API路由，仅可重启服务、切换灰度流量 | 回滚至历史版本、导出某用户签署记录CSV<br>所有配置类变更必须升级至产研 | 修改条款签署法律效力校验规则、对接外部公证平台<br>所有配置类变更必须升级至产研 |
+| 身份图谱服务（Identity Graph） | — | 触发手动去重任务、查看关联关系图谱 | 设置僵尸账号识别阈值（90天未登录）、导出去重建议列表 | 修改ID关联算法（如增加邮箱模糊匹配权重） |
 
-*   Q：能否限制某类用户（如未成年人）仅能使用特定认证方式？  
-    A：可以。在 [[IDaaS/策略引擎|策略引擎]] 中配置「条件策略」，基于用户属性（age_group）、设备类型（mobile_web）、地理位置（country_code）组合判断，动态启用/禁用认证因子（如禁止密码登录，强制人脸识别）。
+> **说明**：Admin Console & OpenAPI Gateway 统一由IDaaS PaaS平台组维护，接口人 @chen.qi（chen.qi@alibaba-inc.com）；L1/L2均不可变更前端页面或API路由，仅可重启服务、切换灰度流量；所有配置类变更必须升级至产研。
 
-*   Q：IDaaS 是否提供等保三级测评支持材料？  
-    A：提供。客户可从 [[IDaaS/合规能力矩阵|合规能力矩阵]] 页面下载《IDaaS 等保三级合规实施指南》《系统定级报告》《安全管理制度汇编》及阿里云侧等保测评通过证书（编号可查）。
-
-### 组件接口人、研发负责人等角色信息：
-
-| 组件 | 研发负责人 | L1 运维权限（值班可操作） | L2 运维权限（需审批） | 升级产研条件 |
-|------|-------------|---------------------------|--------------------------|----------------|
-| 消费者门户 / CIAM Self-Service Portal | 王磊（wanglei@alibaba-inc.com） | 门户主题切换、文案热更、A/B 测试开关 | 修改登录流程节点、新增第三方登录插件 | 出现白屏/JS 报错且 CDN 缓存刷新无效 |
-| 认证中心 / CIAM Auth Service | 李婷（liting@alibaba-inc.com） | 认证策略启停、风险模型阈值微调、临时关闭某因子 | 修改核心认证协议逻辑、升级 FIDO2 服务端库 | 连续 5 分钟认证成功率 < 95% 且非网络原因 |
-| 身份目录 / CIAM User Directory | 张伟（zhangwei@alibaba-inc.com） | 查询/导出用户快照、触发单用户归并、清理测试数据 | 执行全量身份归并、调整主身份生成规则 | 目录写入延迟 > 30s 或出现重复 Primary ID |
-| 策略引擎 | 陈敏（IDaaS-Policy） | 策略启停、变量值热更新、灰度发布比例调整 | 修改策略 DSL 语法、上线新策略类型 | 策略执行超时率 > 10% 或返回空上下文 |
-| 应用网关 / CIAM API Gateway | 陈明（chenming@alibaba-inc.com） | 应用接入状态切换、属性映射调试、JWT 签名密钥轮转 | 修改协议转换逻辑、新增 OIDC Scope 映射 | 网关 5xx 错误率 > 5% 或平均延迟 > 800ms |
-| CIAM On-Premise Orchestrator（私有化） | 刘芳（liufang@alibaba-inc.com） | 执行Ansible Playbook重装、证书续期、国产中间件参数调优 | — | — |
-
-### 告警/风险/异常汇总表
+## 告警/风险/异常汇总表
 
 | 告警名 | 级别 | 识别方式 | 所属组件 | 触发条件 | 含义 | 应急手册链接 | 是否有EOCC/KB |
-|--------|------|-----------|------------|-------------|--------|----------------|----------------|
-| `CIAM_Auth_JWT_Signature_Verify_Fail_Rate_High` | P0 | Prometheus指标 `auth_jwt_verify_fail_rate{job="ciamauth"} > 0.05` 持续5分钟 | CIAM Auth Service | JWT签名验签失败率超5% | 密钥轮转不一致、时间不同步、恶意Token泛洪攻击 | [[紧急场景止血与恢复手册#jwt密钥不一致应急|JWT密钥不一致应急]] | 是（KB#CIAM-SEC-001） |
-| `CIAM_UserDir_DB_Conn_Pool_Exhausted` | P0 | Grafana看板 `userdir_db_conn_used_percent > 95` | CIAM User Directory | 数据库连接池使用率持续>95% | 用户目录读写请求积压，注册/登录超时风险 | [[典型问题排查解决方案#DB连接池耗尽|DB连接池耗尽]] | 是（EOCC#CIAM-DB-002） |
-| `CIAM_SSP_Portal_5xx_Rate_High` | P1 | SLS日志统计 `status >= 500 and service=ssportal` QPM > 10 | CIAM Self-Service Portal | 门户5xx错误每分钟超10次 | 前端资源加载失败、后端微服务超时、模板渲染异常 | [[典型问题排查解决方案#SSP门户5xx|SSP门户5xx]] | 是（KB#CIAM-FE-003） |
-| `CIAM_APIGW_RateLimit_Exceeded` | P2 | API Gateway监控 `apigw_ratelimit_rejected_total` 突增 | CIAM API Gateway | 单用户/APP Key调用量突破限流阈值 | 客户端Bug导致无限重试，或遭受爬虫攻击 | [[运维指导/运维手册#API限流配置|API限流配置]] | 否（L2可自主调整阈值） |
-| `CIAM_OnPrem_Orchestrator_Cert_Expired` | P1 | 自检脚本 `orchestrator-cert-check.sh` 返回非零 | CIAM On-Premise Orchestrator | TLS证书剩余有效期<7天 | 所有HTTPS接口将拒绝连接，影响全部用户访问 | [[紧急场景止血与恢复手册#证书过期一键续签|证书过期一键续签]] | 是（EOCC#CIAM-OP-004） |
-| `AuthN_Center_Availability_Low` | P0 | ARMS 监控指标 `authn_health_check_success_rate < 95%` 持续 2min | 认证中心 | 健康检查失败率超标 | 认证服务整体不可用风险，影响新登录与会话续期 | [[IDaaS/应急手册#P0-认证中心不可用|P0-认证中心不可用]] | 是（KB#IDAAS-AUTHN-001） |
-| `IdRepo_Write_Latency_High` | P1 | ARMS 指标 `idrepo_write_p99_latency > 3000ms` | 身份目录 | 写入延迟 P99 超 3s | 新注册/资料更新响应缓慢，可能引发前端超时 | [[IDaaS/应急手册#P1-目录写入延迟高|P1-目录写入延迟高]] | 是（KB#IDAAS-IDREP-002） |
-| `Policy_Engine_Execution_Timeout` | P1 | SLS 日志匹配 `ERROR.*policy_execution_timeout` | 策略引擎 | 单次策略执行耗时超 2s | 授权决策失败，可能导致业务系统拒绝合法请求 | [[IDaaS/应急手册#P1-策略执行超时|P1-策略执行超时]] | 是（KB#IDAAS-POLICY-003） |
-| `Consumer_Portal_JS_Error_Rate_High` | P2 | 前端监控 RUM 指标 `js_error_rate > 1%` | 消费者门户 | JS 错误率超阈值 | 门户部分功能异常（如注册表单提交失败），影响用户体验 | [[IDaaS/应急手册#P2-门户JS错误率高|P2-门户JS错误率高]] | 是（KB#IDAAS-PORTAL-004） |
-| `Gateway_JWT_Signature_Verify_Fail` | P2 | SLS 日志匹配 `WARN.*jwt_signature_verify_fail` | 应用网关 | JWT 签名校验失败率突增 | 下游业务系统可能因 token 无效拒绝用户，需排查密钥同步或时间偏移 | [[IDaaS/应急手册#P2-网关JWT校验失败|P2-网关JWT校验失败]] | 是（KB#IDAAS-GW-005） |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `AuthCore_AuthRate_Drop` | P0 | Prometheus指标 `auth_success_rate{job="authcore"} < 95%` 持续5min | AuthCore | 连续5分钟认证成功率低于95% | 核心认证链路异常，大量用户登录失败 | [[IDaaS CIAM-认证成功率骤降应急手册|认证成功率骤降]] | 是（KB#CIAM-AUTH-001） |
+| `AuthCore_5xx_Rate_Above_5pct` | P0 | ARMS监控指标 `auth_core_http_server_requests_total{status=~"5.*"}` / `auth_core_http_server_requests_total` > 0.05 | 统一认证中心 | 连续5分钟认证接口5xx错误率超5% | 核心认证链路严重异常，大量用户登录失败 | [[AuthCore 5xx突增应急手册|IDaaS-AuthCore-5xx-EM]] | 是（KB#CIAM-5XX-001） |
+| `AccountCore_DB_Latency_High` | P1 | ARMS链路 `accountcore-db-query-p99 > 1000ms` 持续10min | AccountCore | 账号中心数据库查询P99延迟超1秒 | 账号读写响应变慢，影响注册/资料修改等操作 | [[IDaaS CIAM-DB延迟升高处置|DB延迟升高]] | 是（KB#CIAM-DB-002） |
+| `RiskEngine_Response_Latency_Above_3s` | P1 | ARMS指标 `risk_engine_latency_seconds_bucket{le="3"}` < 0.95 | 风控引擎 | 连续10分钟95%请求响应超3秒 | 风控决策延迟，影响登录体验与安全水位 | [[RiskEngine高延迟处置|IDaaS-RiskEngine-Latency-EM]] | 是（KB#CIAM-RISK-LAT-002） |
+| `OpenAPI_Gateway_5xx_Rate_High` | P1 | ALB监控 `http_code_backend_5xx > 1%` 持续3min | OpenAPI Gateway | API网关后端返回5xx错误占比超1% | 客户调用CIAM API大规模失败 | [[IDaaS CIAM-API网关5xx突增|API网关5xx突增]] | 是（KB#CIAM-APIGW-004） |
+| `RiskEngine_RuleEngine_Full` | P2 | 日志关键词 `rule_engine_queue_full` 出现频次>10次/min | RiskEngine | 风控规则引擎任务队列积压满载 | 新增风险事件无法实时评估，降级为白名单通行 | [[IDaaS CIAM-风控队列积压|风控队列积压]] | 是（KB#CIAM-RISK-003） |
+| `Console_Login_Fail_Lockout` | P2 | 控制台审计日志中 `admin_login_failed` 连续10次 | Admin Console | 管理员账号被连续输错密码锁定 | 运维人员无法登录控制台进行日常管理 | [[IDaaS CIAM-管理员账号锁定|管理员锁定]] | 是（KB#CIAM-CONSOLE-005） |
+| `ConsentHub_Signature_Failure_Rate_Above_1pct` | P2 | SLS日志 `level: ERROR AND msg: "signature failed"` 计数/总签署请求 > 0.01 | 条款中心 | 单日签署失败率超1% | 法律文本签署环节存在兼容性或签名服务异常 | [[ConsentHub签署失败排查|IDaaS-Consent-Sign-Fail-EM]] | 是（KB#CIAM-CONSENT-SIGN-003） |
+| `IdentityGraph_Duplicate_Accounts_Above_10k` | P2 | Prometheus指标 `identity_graph_duplicate_candidates_count` > 10000 | 身份图谱服务 | 待人工确认的疑似重复账号数超1万 | 账号去重任务积压，影响身份治理进度 | [[IdentityGraph去重积压处理|IDaaS-Graph-Dup-Backlog-EM]] | 否 |
 
 ## 方案支撑文档：
 
 ### 运维指导/运维手册
 
 *   常用的数据库，常用表（写明存储什么信息）  
-    ▪ `user_directory.t_user_base`：用户主表（user_id, mobile, email, status, created_at）  
-    ▪ `user_directory.t_user_profile`：扩展属性表（user_id, profile_json, updated_at）  
-    ▪ `auth_service.t_session_active`：活跃会话表（session_id, user_id, expire_at, ip, ua）  
-    ▪ `auth_service.t_auth_event_log`：认证事件审计表（event_id, user_id, event_type, result, risk_level）  
-    ▪ `id_repo.users`：主身份信息（primary_id, status, created_at, last_login_at）  
-    ▪ `id_repo.identities`：关联身份凭证（identity_type: phone/wechat/openid, credential_hash, linked_to_primary_id）  
-    ▪ `policy_engine.policies`：策略定义 JSON（含 conditions, actions, priority）  
-    ▪ `audit_center.events`：全量审计事件（event_type: login/register/consent, user_id, ip, ua, timestamp）
+    *   `user_profile`（MySQL 8.0）：存储用户基础属性（uid、mobile、email、created_at、last_login_at）；  
+    *   `user_identity`（MySQL 8.0）：存储用户认证凭据（uid、identity_type、identity_value、salted_hash）；  
+    *   `consent_record`（OTS 5.0）：存储用户授权记录（uid、purpose_code、status、granted_at）；亦用于条款签署记录，含用户ID、条款版本号、签署时间、区块链交易Hash；  
+    *   `audit_log`（MySQL 8.0）：存储操作审计日志（operator_id、action_type、target_id、ip、ua、created_at）；  
+    *   `idm_user`（MySQL 8.0）：核心用户主表，存储用户ID、注册渠道、创建时间、最后登录时间；  
+    *   `idm_identity_link`（MySQL 8.0）：身份关联表，记录同一用户在不同系统中的ID映射（如`wechat_openid → user_id`）；  
+    *   `risk_event_log`（OTS 5.0）：风控事件原始日志，含设备指纹、IP、风险分、触发策略ID；  
+    *   所有表位于专属云RDS（MySQL 8.0）或客户自建PostgreSQL（私有化场景），字符集统一为`utf8mb4`。
 
 *   关键日志路径，组件，内容，轮转策略  
-    ▪ `/var/log/ciam/auth-service/access.log`（CIAM Auth Service）：Nginx access日志，JSON格式，按日切割，保留30天  
-    ▪ `/opt/ciam/ssportal/logs/error.log`（CIAM Self-Service Portal）：前端服务错误日志，按大小切割（100MB），保留7天  
-    ▪ `/data/ciam/orchestrator/logs/ansible.log`（CIAM On-Premise Orchestrator）：Ansible执行日志，按任务ID归档，永久保留（压缩存储）  
-    ▪ `/var/log/idaas/authn-center/*.log`（认证中心）：含认证请求、风险判定、因子调用详情；logrotate 每日切割，保留 30 天  
-    ▪ `/var/log/idaas/id-repo/*.log`（身份目录）：含 CRUD 操作、归并日志、索引更新；ELK 实时采集，冷数据归档 OSS  
-    ▪ `/var/log/idaas/portal/frontend-*`（消费者门户）：RUM 埋点与 JS 错误；SLS 采集，保留 90 天  
+    *   `/var/log/idass/ciam/authcore/*.log`（AuthCore容器内）：认证请求流水、Token签发详情；按日轮转，保留7天；  
+    *   `/var/log/idass/ciam/accountcore/*.log`（AccountCore容器内）：账号变更、Profile更新日志；按大小轮转（100MB/个），保留14个文件；  
+    *   `/var/log/idass/ciam/riskengine/event.log`（RiskEngine容器内）：风险事件原始输入、规则匹配结果；按小时切割，压缩归档至OSS（保留90天）；  
+    *   `/var/log/idm/auth-core/access.log`（Auth Core Pod）：Nginx访问日志，JSON格式，含trace_id/user_id/status；每日轮转，保留30天；  
+    *   `/var/log/idm/risk-engine/risk-score.log`（Risk Engine Pod）：风控打分明细日志，含输入特征与输出分值；按小时切分，压缩保留7天；  
+    *   `/var/log/idm/selfservice/audit.log`（Self-Service Pod）：用户自助操作审计日志（修改密码/MFA绑定等）；实时推送至SLS，保留180天；  
+    *   集群范围：所有日志统一采集至SLS（Project: `idass-ciam-prod`，Logstore: `all-components`）。
 
 *   问题排查SOP，通用场景的排查思路和路径  
-    ▪ **现象：用户无法登录** → 查API Gateway 4xx/5xx日志 → 若为401/403，查Auth Service JWT解析日志 → 若为500，查User Directory DB慢查询日志 → 最终定位至具体组件与错误码  
-    ▪ **现象：自助门户白屏** → 查SSP Nginx error.log → 若报`Failed to fetch config`，检查`/etc/ciam/ssportal/config.json`是否存在且可读 → 若报`Cannot resolve module`，检查CDN资源URL是否失效  
-    ▪ **现象：用户注册成功但无法登录** → 查 `id_repo.users` 状态是否 active → 查 `id_repo.identities` 是否存在有效凭证 → 查 `authn-center` 登录日志是否匹配凭证类型 → 查网关是否拦截未授权字段  
-    ▪ **现象：策略未生效** → 查 `policy_engine.policies` 是否启用 → 查 `events` 表是否有对应 event_type 触发 → 查策略 condition 是否匹配用户属性（用 [[IDaaS/策略调试工具|策略调试工具]] 模拟验证）  
+    *   **现象：用户反馈“登录失败，提示‘系统繁忙’”** → 查OpenAPI Gateway 5xx告警 → 查AuthCore Pod状态与日志 → 查Redis连接池耗尽（`redis_connection_pool_used_ratio > 95%`）→ 临时扩容或清理异常连接。  
+    *   **现象：控制台用户列表为空** → 查`accountcore`服务健康检查 → 查`audit_log`表写入延迟 → 查RDS CPU/IO瓶颈 → 切换只读副本查询或优化慢SQL。  
+    *   **现象：“微信登录回调失败”** → 查`authcore`日志中`wechat_callback_error` → 核对微信开放平台AppID/Secret是否过期 → 检查客户域名是否在微信白名单 → 验证回调URL签名逻辑。  
+    *   **现象：用户反馈“登录页面空白/白屏”** → 检查`selfservice-ui` Pod健康状态 → 查看`/var/log/idm/selfservice/ui-error.log`前端报错 → 验证CDN缓存是否命中旧JS → 清除CDN缓存并发布新版本；  
+    *   **现象：微信登录返回“invalid code”** → 在Auth Core日志搜索`wechat_code` → 确认是否`code`被多次使用（微信限制单次有效）→ 检查业务方是否未及时换token → 推送[[微信登录Code复用规避指南|IDaaS-WeChat-Code-Reuse-Guide]]；  
+    *   **现象：风控策略未触发** → 在Risk Engine日志搜索`policy_match` → 确认请求Header中是否携带`X-Forwarded-For`（影响IP识别）→ 检查SLB是否透传真实IP → 配置SLB `Proxy Protocol v2`。
 
 *   版本升级指南（如有）、巡检手册（如有）、相关aone  
-    ▪ 升级指南：[[IDaaS CIAM 版本升级SOP|CIAM版本升级SOP]]（含灰度发布checklist、回滚步骤、兼容性矩阵）  
-    ▪ 巡检手册：每日自动巡检项见 [[IDaaS CIAM 日常巡检清单|CIAM日常巡检清单]]（含DB连接数、Redis内存、证书有效期、API成功率）  
-    ▪ Aone项目：`IDaaS-CIAM-Release`（基线分支：`release/2.5.x`），制品仓库：`acr.aliyuncs.com/idass/ciam-auth:v2.5.3`  
-    ▪ 升级指南见 [[IDaaS/版本升级手册|版本升级手册]]（含灰度发布checklist、回滚步骤）  
-    ▪ 每日巡检项见 [[IDaaS/巡检手册|巡检手册]]（含健康检查、延迟水位、错误率、合规策略开关状态）  
-    ▪ Aone 链接：[[AONE/IDaaS-CIAM-Release|IDaaS-CIAM 发布流水线]]
+    *   升级指南：[[IDaaS CIAM-版本升级操作手册|CIAM升级指南]]（含滚动升级步骤、回滚checklist、兼容性矩阵）；[[IDaaS CIAM灰度升级SOP|IDaaS-CIAM-Upgrade-SOP]]（Aone工单编号：AONE-IDAAS-CIAM-UPGRADE-2024）；  
+    *   巡检手册：[[IDaaS CIAM-日常巡检Checklist|CIAM每日巡检]]（含12项必检指标，自动化脚本位置：`/opt/idass/ciam/bin/health-check.sh`）；每日自动执行`idaas-ciamp-check.sh`（含DB连接池、Redis健康、SLB后端权重、证书有效期）；  
+    *   Aone发布单：[AONE#IDASS-CIAM-RELEASE](https://aone.alibaba-inc.com/IDASS-CIAM-RELEASE)（需SSO登录）；Aone项目：`IDAAS-CIAM-PROD`（基线分支：`release/2.3.x`）。
 
 ### 典型问题排查解决方案
 
 ```yaml
-（针对“用户注册成功但收不到短信验证码”）
+（针对“用户注册成功但无法登录”）
 一、问题描述
-● 问题现象：用户在SSP门户完成手机号注册，页面提示“发送成功”，但手机未收到短信；后台无报错提示。
-● 适用范围：所有部署形态（公共云/专属版/私有化），v2.4.0+
+● 问题现象：用户完成手机号+验证码注册流程，收到“注册成功”提示，但立即使用同一手机号密码登录失败，返回“账号不存在或密码错误”
+● 适用范围：所有云版本（含专属云）、Web/H5/小程序接入场景；影响范围为新注册用户首次登录
 二、排查信息收集
-● 必须收集的信息：用户手机号（脱敏）、注册时间（精确到秒）、CIAM租户ID（tenant_id）、SSP前端trace_id
-● 检查终态的方法：登录CIAM API Gateway容器，执行`curl -X GET "http://localhost:8080/api/v1/sms/log?phone=138****1234&start=2024-05-20T08:00:00Z"`；登录短信供应商控制台核对发送记录
+● 必须收集的信息：用户手机号、注册时间（精确到秒）、客户端User-Agent、注册请求trace_id（来自前端SDK日志或SLS）
+● 检查终态的方法：登录AuthCore Pod，执行 `curl -s "http://localhost:8080/api/v1/users?mobile=138****1234"`；登录AccountCore Pod，查 `SELECT * FROM user_profile WHERE mobile='138****1234';`
 ● 排查问题步骤：
-  - 步骤1：查API Gateway日志，过滤`sms/send`关键词，确认请求是否到达网关（关键字段：`status=200`, `sms_result=success`）
-  - 步骤2：若网关返回200但无短信，查Auth Service日志，搜索`SMS_PROVIDER_CALL_FAILED`，确认是否调用第三方短信API失败
-  - 步骤3：若Auth Service日志显示调用成功，检查`/etc/ciam/auth-service/sms-config.yaml`中`provider: aliyun`是否配置正确，`access_key_secret`是否被base64误解码
-  - 排查结果映射表：
-    | 排查结果 | 对应场景 |
-    |---|---|
-    | 网关无`sms/send`日志 | 前端JS未触发API调用（检查浏览器console报错） |
-    | 网关返回429 | 短信供应商频控触发（查`x-ratelimit-remaining`响应头） |
-    | Auth Service日志报`Invalid access key` | `sms-config.yaml`中AKSK硬编码错误或权限不足 |
+  - 步骤1：确认`user_profile`表中存在该手机号记录 → 若不存在，跳转至「场景一」
+  - 步骤2：检查`user_identity`表中对应uid的`identity_type='password'`记录是否存在且`status='active'` → 若不存在或status≠active，跳转至「场景二」
+  - 步骤3：比对注册时设置的密码hash与`user_identity.credential_hash`字段是否一致（需用相同salt重算）→ 若不一致，跳转至「场景三」
 三、解决步骤
- 场景一：短信供应商频控触发
- - 适用条件：网关日志显示`status=429`, `x-ratelimit-remaining=0`
- - 实施步骤：登录短信供应商控制台 → 进入“频控管理” → 将CIAM租户IP加入白名单或提升QPS配额 → 执行`kubectl rollout restart deploy/ciam-auth-service`
- - 结果验证：重新注册，`curl`查询短信日志返回`"status":"DELIVERED"`
- 场景二：sms-config.yaml配置错误
- - 适用条件：Auth Service日志出现`com.aliyun.tea.TeaException: InvalidAccessKeyId.NotFound`
- - 实施步骤：进入`/etc/ciam/auth-service/` → 备份原文件`cp sms-config.yaml sms-config.yaml.bak` → 使用`base64 -d`解码`access_key_secret`字段值 → 替换为明文 → `kubectl exec -it ciamauth-pod -- /bin/sh -c "kill -HUP 1"`
- - 结果验证：日志不再报AK错误，短信正常接收
+ 场景一：注册未写入账号中心
+ - 适用条件：`user_profile`无记录，AuthCore日志出现`accountcore_client_timeout`
+ - 实施步骤：
+   - 登录AccountCore Pod：`kubectl exec -it <accountcore-pod> -- bash`
+   - 检查网络连通性：`telnet accountcore-svc 8080`
+   - 查看AccountCore日志末尾：`tail -20 /var/log/idass/ciam/accountcore/error.log`
+   - 临时修复：手动插入基础记录（仅限紧急止血）：`INSERT INTO user_profile (uid, mobile, created_at) VALUES (UUID(), '138****1234', NOW());`
+ - 结果验证：再次调用`/api/v1/users?mobile=...`返回用户信息
+ 场景二：密码凭证未创建或失效
+ - 适用条件：`user_profile`存在，`user_identity`无password记录或status='inactive'
+ - 实施步骤：
+   - 执行初始化凭证命令（AccountCore容器内）：`/opt/idass/ciam/bin/init-password-credential.sh --uid <found_uid> --mobile 138****1234`
+ - 结果验证：`SELECT * FROM user_identity WHERE uid='<found_uid>' AND identity_type='password';` 返回active记录
+ 场景三：密码加密逻辑不一致
+ - 适用条件：hash比对失败，确认注册时使用了旧版PBKDF2参数（迭代次数=10000），当前版本要求=60000
+ - 实施步骤：
+   - 修改全局密码策略（控制台 > 安全策略 > 密码强度）：启用“兼容旧密码迁移”，保存后触发后台批量重哈希
+ - 结果验证：用户下次登录时自动完成密码升级，后续登录正常
 四、非本产品排查
-● 若短信供应商控制台显示“发送成功”但运营商侧拦截，需联系运营商申诉，不属于CIAM责任范围。
+● 明确标注：若`user_profile`中mobile字段为NULL或格式非法（如带空格），属于客户前端传参校验缺失，需客户侧修复注册表单逻辑
 五、快速定位工具
-● 脚本位置：`/opt/ciam/tools/sms-debug.sh`（需传入手机号与时间范围）
-● 使用方法：`bash /opt/ciam/tools/sms-debug.sh -p 138****1234 -s "2024-05-20T08:00:00Z"`
+● 脚本位置：`/opt/idass/ciam/bin/troubleshoot-register-login.sh`
+● 使用方法：`bash /opt/idass/ciam/bin/troubleshoot-register-login.sh --mobile 138****1234 --since "2024-05-20T09:00:00Z"`
 ```
 
 ```yaml
+（针对“用户注册成功但收不到短信验证码”）
 一、问题描述
-● 问题现象：用户使用微信扫码登录后，业务系统收不到 unionid 字段，导致无法关联老会员
-● 适用范围：IDaaS v3.2.0+，接入方式为 OIDC，scope 包含 'unionid'
+● 问题现象：用户在H5页面完成手机号注册，点击“获取验证码”按钮无响应，或提示“发送失败”；后台日志显示短信网关调用返回`{"code":500,"msg":"internal error"}`
+● 适用范围：所有云版本；仅影响短信通道，Email/微信模板消息正常
 二、排查信息收集
-● 必须收集的信息：应用 client_id、用户 openid、微信 access_token（调试模式下可获取）、IDaaS 租户 ID
-● 检查终态的方法：登录 authn-center 容器，执行 curl -X GET "http://localhost:8080/api/v1/debug/identity?openid=xxx" 查看原始身份源数据
+● 必须收集的信息：用户手机号、注册时间（精确到秒）、trace_id（从access.log提取）
+● 检查终态的方法：登录`sms-gateway` Pod，执行`kubectl exec -it sms-gw-xxx -- tail -n 100 /var/log/sms/gateway.log`
 ● 排查问题步骤：
-  - 步骤1：确认微信开放平台已开通 unionid 权限（需同主体公众号/小程序）
-  - 步骤2：检查 IDaaS 应用配置中「OIDC Claims Mapping」是否将 `unionid` 映射到 `user.unionid`
-  - 步骤3：查看 authn-center 日志中 `wechat_auth_callback` 是否返回 unionid（grep 'unionid'）
-  - 步骤4：检查网关 JWT payload 是否含 `unionid` 字段（用 https://jwt.io 解析）
+  - 步骤1：在SLS中搜索`trace_id:${trace_id} AND "sms.send"`，确认是否进入短信网关
+  - 步骤2：若未进入，检查Auth Core是否因风控拦截（搜索`risk_blocked`）；若已进入，看网关日志中`provider_error_code`
+  - 步骤3：`provider_error_code=1001` → 运营商通道拥塞 → 自动降级至备用通道（需确认备用通道配置）
+  - 步骤4：`provider_error_code=2003` → 手机号在运营商黑名单 → 联系短信供应商解禁
 三、解决步骤
- 场景一：微信未返回 unionid
- - 适用条件：步骤3 日志中无 unionid 字段
- - 实施步骤：联系客户确认微信开放平台资质，或切换为「公众号授权登录」模式（天然支持 unionid）
- - 结果验证：重新扫码，日志中出现 unionid，JWT 中包含该字段
- 场景二：Claims Mapping 未配置
- - 适用条件：步骤3 有 unionid，但步骤4 JWT 中缺失
- - 实施步骤：进入 [[IDaaS/应用管理#编辑OIDC映射|应用管理 → OIDC Claims Mapping]]，添加映射 rule: source="unionid", target="unionid", type="string"
- - 结果验证：JWT payload 新增 "unionid": "xxx"
+ 场景一：通道拥塞（provider_error_code=1001）
+ - 适用条件：SLS中`sms.send`日志存在，且`provider_error_code=1001`
+ - 实施步骤：
+   - 登录OpsApi控制台 → 进入“短信通道管理” → 选择当前主通道 → 点击“切换备用通道”
+   - 执行命令：`curl -X POST https://opsapi.aliyuncs.com/v1/sms/switch?channel=backup -H "Authorization: Bearer ${TOKEN}"`
+ - 结果验证：新注册用户可正常收到验证码，SLS中`provider_error_code`变为`0`
+ 场景二：号码黑名单（provider_error_code=2003）
+ - 适用条件：SLS中`provider_error_code=2003`
+ - 实施步骤：
+   - 复制手机号至短信供应商后台黑名单查询页
+   - 提交解禁工单（模板见[[短信黑名单解禁SLA|IDaaS-SMS-Blacklist-SLA]]）
+ - 结果验证：工单关闭后2小时内恢复发送
 四、非本产品排查
-● 若微信 access_token 本身不包含 unionid：属微信侧资质问题，需客户自行联系微信开放平台支持
+● 若SLS中无`sms.send`日志，且Auth Core日志出现`risk_blocked:true`，属于风控引擎拦截，转交[[IDaaS-RiskEngine-Blocked-Case]]处理
 五、快速定位工具
-● 脚本位置：/opt/idaas/tools/debug-wechat.sh（传入 openid 自动拉取全量身份上下文）
-● 使用方法：bash /opt/idaas/tools/debug-wechat.sh --openid oABC123...
+● 脚本位置：`/opt/idaas/tools/sms-trace.sh ${trace_id}`
+● 使用方法：自动聚合Auth Core/SMS Gateway/SLS三方日志，输出关键路径与错误码
 ```
 
 ### 紧急场景止血与恢复手册：
 
-*   **JWT密钥不一致应急**：执行`kubectl exec -it ciamauth-deployment-xxx -- bash -c "cd /etc/ciam/auth-service && cp jwt-key-old.pem jwt-key.pem && kill -HUP 1"`，强制重载密钥（5秒内生效）。
+*   **全站登录不可用（P0）**：立即执行`/opt/idass/ciam/bin/emergency-fallback-enable.sh`启用静态密码兜底模式（绕过风控与部分认证插件），5分钟内恢复基础登录能力；同步启动根因分析。
     
-*   **证书过期一键续签**：私有化环境运行`/opt/ciam/orchestrator/bin/renew-cert.sh --force`，自动调用cert-manager签发新证书并滚动更新所有Ingress。
+*   **P0级故障（认证全链路中断）**：执行`idaas-emergency-failover.sh --mode=standby`，1分钟内切换至同城容灾集群；同步通知客户启用本地缓存登录（JWT过期时间延长至24h）；  
+    *脚本位置：`/opt/idaas/emergency/failover/idaas-emergency-failover.sh`*
     
-*   **User Directory DB主从延迟>300s**：立即执行`kubectl exec -it userdir-mysql-master -- mysql -e "STOP SLAVE; START SLAVE;"`，手动触发复制重连；若无效，切换至备用从库（需提前配置VIP）。
+*   **Token大规模失效（P1）**：运行`/opt/idass/ciam/bin/token-renew-batch.sh --hours 24`对近24小时签发的所有Access Token强制刷新，避免用户集中掉线。
     
-*   **认证风暴止血**：当突发流量导致认证中心 CPU > 90% 且延迟飙升时，执行 `idaas-authn-emergency-throttle.sh --rate 500` 限流至 500 QPS，同时启用缓存策略（`--cache-ttl 300`），5 分钟后自动恢复。
+*   **风控误杀导致90%以上登录被拦截（P1）**：执行`kubectl patch deploy riskengine -p '{"spec":{"replicas":0}}'`临时关闭风控服务，待策略回滚后再扩缩容恢复。
     
-*   **身份数据污染回滚**：若误操作导致大量用户 primary_id 错误，立即执行 `idaas-idrepo-rollback.sh --batch-id xxx --restore-to 20240520T100000Z` 回滚至指定快照（需提前开启自动快照）。
-    
-*   **合规策略误关闭应急**：通过 OpsApi 调用 `POST /api/v1/compliance/enable?policy=gdpr_data_residency` 一键重开关键合规开关。
+*   **条款签署服务不可用**：启用离线签署兜底模式：`curl -X POST https://consent.api.aliyuncs.com/v1/offline-enable -d '{"duration_hours":24}'`，允许用户跳过在线签署，24小时内补签。
 
 ### 横向研发文档：
 
-*   接入指引：[[IDaaS CIAM 接入指南|CIAM接入指南]]（含前端SDK初始化、后端Token校验代码示例、Webhook事件订阅）；亦支持通用登录页嵌入，文档详见 [[IDaaS/CIAM/接入文档|IDaaS CIAM 接入文档]]；完整覆盖 Web/App/小程序/后台服务四类接入模式。
+*   接入指引：[[IDaaS CIAM-快速接入指南|CIAM接入五步法]]（含控制台开通、SDK引入、测试账号配置、联调Checklist、上线备案）；[[IDaaS CIAM标准接入流程|IDaaS-CIAM-QuickStart]]（含SDK下载、API调试沙箱、Postman集合）
     
-*   产品对接方案细节：[[IDaaS CIAM 与电商中台对接方案|电商中台对接方案]]（SCIM同步字段映射表、订单中心Token透传规范）；[[IDaaS/与CRM系统对接方案|与CRM系统对接方案]]、[[IDaaS/与营销平台对接方案|与营销平台对接方案]]；适用于新 App/小程序/H5 上线、用户体验优化、快速市场验证等典型场景；对接范围覆盖注册、登录、账号管理、MFA、实名认证、社交登录、条款签署等全身份生命周期能力。
+*   产品对接方案细节：[[IDaaS CIAM-与客户系统对接方案|系统对接规范]]（明确API幂等性、重试机制、Webhook事件格式、数据加密要求）；[[IDaaS与业务中台对接规范|IDaaS-Biz-Platform-Integration]]（明确Token传递方式、用户属性映射字段、错误码对齐表）
     
-*   产品对接范围等：明确CIAM仅提供身份层能力，不参与业务逻辑（如优惠券发放、库存扣减）；客户需自行完成应用端调用开发与后端 Token 校验逻辑；详见 [[IDaaS CIAM 能力边界说明书|CIAM能力边界]]；IDaaS 不接管 CRM 中的交易数据、不修改营销平台的用户标签逻辑，仅提供标准化身份 ID 与合规授权令牌。
+*   产品对接范围：仅限C端用户身份域（注册/登录/资料/同意/风控），**不包含**员工组织架构同步、RBAC权限分配、工单审批流等EIAM能力；如需融合，需联合[[IDaaS EIAM|IDaaS EIAM产品页]]方案设计；支持与阿里云EDAS、SAE、MSE、API网关、函数计算（FC）原生集成；第三方平台需通过OpenAPI或通用登录页嵌入。
 
 ## 产品对内文档：
 
 ### 完整架构图：
 
-*   系统采用分层架构：  
-    ▪ 接入层：ALB/SLB + CIAM API Gateway（Kong）  
-    ▪ 服务层：Auth Service（Spring Boot）、User Directory（ShardingSphere-JDBC + MySQL Cluster）、SSP Portal（Vue3 + Nginx）  
-    ▪ 数据层：MySQL分片集群（8节点）、Redis Cluster（6节点）、OSS（存储头像/证件照）  
-    ▪ 运维层：ARMS（JVM/DB/Redis全指标）、SLS（结构化日志）、Tianji（主机健康度）  
-    ▪ 安全层：KMS（密钥管理）、SGX可信执行环境（敏感计算如生物特征比对）  
-    ▪ 已知问题：Auth Service在极端高并发下（>10万QPS）偶发JWT签发延迟（已规划2024Q3迁移至eBPF加速模块）。
-    
-*   系统采用「控制面-数据面-接入面」三层解耦设计：  
-    - 控制面：策略引擎、门户管理后台、合规工作台（Java Spring Cloud）  
-    - 数据面：身份目录（基于 Elasticsearch + MySQL 双写）、审计中心（Kafka + Flink + HBase）  
-    - 接入面：认证中心（Go 微服务）、应用网关（Envoy Proxy + WASM 插件）  
-    *已知问题：Elasticsearch 在亿级 identity 数据下聚合查询性能下降，已通过 [[IDaaS/性能优化#ES冷热分离|ES冷热分离]] 方案缓解*
+*   系统采用分层架构：接入层（ALB + WAF）→ 网关层（OpenAPI Gateway + Login Widget CDN）→ 服务层（AuthCore/AccountCore/SessionCore/RiskEngine）→ 数据层（RDS/Redis/OSS）→ 运维层（ARMS/SLS/KMS/RAM）；  
+*   系统采用“控制平面+数据平面”分离设计：  
+    *   控制平面（Control Plane）：CIAM控制台、策略编排引擎、审计中心，部署于独立安全VPC；  
+    *   数据平面（Data Plane）：认证中心、风控引擎、图谱服务，部署于客户业务VPC，通过PrivateLink与控制平面通信；  
+*   模块间通过gRPC（内部）与REST（对外）双协议通信；所有服务注册至Nacos，配置中心统一管理；  
+*   已知问题沉淀：[[IDaaS CIAM-已知问题与规避方案|Known Issues]]（含OAuth 2.1 Refresh Token reuse漏洞缓解方案、微信UnionID跨应用映射延迟说明等）；  
+*   已知问题：跨VPC PrivateLink偶发延迟抖动（已提交阿里云网络团队修复，工单ID：NET-PL-2024-0882）。
 
 ### 业务逻辑时序图
 
 *   用户使用：  
-    `用户打开App → App调用CIAM SDK获取Authorization Code → 重定向至CIAM SSP Portal登录页 → 用户输入手机号+验证码 → Portal调用Auth Service生成Code → App用Code向API Gateway换取ID Token → App解析Token获取user_id → 向业务系统发起带Bearer Token的请求`
-
+    `用户打开App → SDK加载Login Widget → 展示登录页 → 用户选择手机号登录 → 输入号码+验证码 → SDK调用/auth/v1/login → AuthCore校验 → 调AccountCore查账号 → 生成JWT → 返回Token → App携带Token访问业务API`  
+    或：  
+    `H5页面发起登录 → 跳转CIAM通用登录页 → 用户输入手机号+验证码 → Auth Core校验 → Risk Engine实时评分 → 决策是否放行/MFA → 返回ID Token → H5解析Token获取用户信息`  
 *   工作流流转：  
-    `注册请求 → API Gateway校验频率 → Auth Service生成临时Session → SSP Portal渲染注册表单 → 用户提交 → Auth Service调用短信服务 → User Directory写入基础信息 → 触发Webhook通知会员中心 → 返回Success`
-
-*   用户注册全流程时序图见 [[IDaaS/注册时序图|注册时序图]]（含手机号验证、实名核验、营销 consent 收集、OneID 生成）
-    
-*   跨渠道登录归并时序图见 [[IDaaS/登录归并时序图|登录归并时序图]]（含设备指纹采集、概率匹配、人工审核介入点）
+    `注册请求 → AuthCore预校验 → AccountCore创建Profile → 发送激活邮件/SMS → 用户点击链接/输入验证码 → AccountCore激活账号 → 触发Consent初始化事件 → RiskEngine打标 → 写入审计日志`  
+    或：  
+    `管理员在控制台创建新条款 → 条款中心生成版本号并上链 → 推送至自服务平台 → 新用户注册时强制弹窗签署 → 签署记录写入consent_record表 → 同步至DataWorks供法务审计`
 
 ### 代码仓库
 
-*   基线仓库：`code.alibaba-inc.com/idass/ciam-base`（含公共依赖、配置中心SDK）  
-    `idaas-ciam-base`（公共组件、基础 SDK）
-    
-*   代码仓库：  
-    ▪ `code.alibaba-inc.com/idass/ciam-auth`（Auth Service）  
-    ▪ `code.alibaba-inc.com/idass/ciam-userdir`（User Directory）  
-    ▪ `code.alibaba-inc.com/idass/ciam-ssp`（Self-Service Portal）  
-    - `idaas-authn-center`（认证中心）  
-    - `idaas-id-repo`（身份目录）  
-    - `idaas-portal-fe`（消费者门户前端）  
-    - `idaas-policy-engine`（策略引擎）  
-    
-*   制品仓库：`acr.aliyuncs.com/idass/ciam-auth:v2.5.3`（Docker镜像）  
-    `maven.aliyun.com/repository/public/com/alibaba/idass/ciam-sdk-java/2.5.3`（Maven包）  
-    `aliyun-idaas-maven`（Maven）、`aliyun-idaas-docker`（Docker Hub 镜像）
-    
-*   关联依赖仓库：  
-    ▪ `code.alibaba-inc.com/middleware/shardingsphere-jdbc`（分库分表中间件）  
-    ▪ `code.alibaba-inc.com/security/kms-client`（密钥管理SDK）  
-    `aliyun-idaas-sdk-java`、`aliyun-idaas-sdk-js`、`aliyun-idaas-openapi-spec`
+*   基线仓库：`code.alibaba-inc.com/idass/ciam-base`（含公共依赖、配置框架、基础DTO）；`git@code.aliyun.com:idm/idm-base.git`（主干分支：`main`）  
+*   代码仓库：
+    *   `code.alibaba-inc.com/idass/authcore`（认证中心主干）；`git@code.aliyun.com:idm/auth-core.git`
+    *   `code.alibaba-inc.com/idass/accountcore`（账号中心主干）；`git@code.aliyun.com:idm/account-core.git`
+    *   `code.alibaba-inc.com/idass/riskengine`（风控引擎主干）；`git@code.aliyun.com:idm/risk-engine.git`
+    *   `code.alibaba-inc.com/idass/selfservice-ui`（自服务平台前端）；`git@code.aliyun.com:idm/selfservice-ui.git`
+*   制品仓库：`acr.aliyuncs.com/idass/ciam`（Docker镜像，含`authcore:v2.5.3`等标签）；`registry.cn-hangzhou.aliyuncs.com/idm/`（镜像命名：`auth-core:v2.3.1-release`）  
+*   关联依赖仓库：`code.alibaba-inc.com/idass/idp-common`（OIDC协议实现）、`code.alibaba-inc.com/idass/crypto-sdk`（国密SM2/SM4封装）；`git@code.aliyun.com:aliyun-open/aliyun-openapi-java-sdk.git`（OpenAPI SDK）
 
 ### 数据表结构
 
-*   `t_user_base`（用户主表）：  
-    `id BIGINT PK`, `tenant_id VARCHAR(64) NOT NULL`, `user_id VARCHAR(128) UNIQUE NOT NULL`, `mobile VARCHAR(20)`, `email VARCHAR(128)`, `status TINYINT DEFAULT 1 COMMENT '0-禁用,1-启用,2-待激活'`, `created_at DATETIME`, `updated_at DATETIME`
-
-*   `t_auth_event_log`（认证事件审计表）：  
-    `id BIGINT PK`, `event_id VARCHAR(64) UNIQUE`, `tenant_id VARCHAR(64)`, `user_id VARCHAR(128)`, `event_type ENUM('login','logout','register','pwd_reset')`, `result ENUM('success','failed')`, `risk_level TINYINT COMMENT '0-低危,1-中危,2-高危'`, `ip VARCHAR(45)`, `ua TEXT`, `created_at DATETIME`
-
-*   `id_repo.users`：  
-    `id` BIGINT PK, `primary_id` VARCHAR(64) UNIQUE NOT NULL, `status` ENUM('active','locked','deleted'), `created_at` DATETIME, `last_login_at` DATETIME, `updated_at` DATETIME  
-
-*   `id_repo.identities`：  
-    `id` BIGINT PK, `primary_id` VARCHAR(64) FK, `identity_type` ENUM('phone','wechat','alipay','email'), `credential_hash` VARCHAR(255), `linked_at` DATETIME, `is_primary` BOOLEAN  
-
-*   `policy_engine.policies`：  
-    `id` VARCHAR(64) PK, `name` VARCHAR(128), `definition` JSON, `enabled` BOOLEAN, `priority` INT, `updated_at` DATETIME  
-
-*   `audit_center.events`：  
-    `id` VARCHAR(64) PK, `event_type` VARCHAR(64), `tenant_id` VARCHAR(64), `user_id` VARCHAR(64), `ip` VARCHAR(45), `ua` TEXT, `timestamp` DATETIME, `details` JSON
+*   `user_profile`（MySQL 8.0）：`uid VARCHAR(64) PK`, `mobile VARCHAR(20)`, `email VARCHAR(100)`, `nickname VARCHAR(50)`, `gender TINYINT`, `birthday DATE`, `created_at DATETIME`, `updated_at DATETIME`, `status ENUM('active','frozen','deleted')`
+    
+*   `user_identity`（MySQL 8.0）：`id BIGINT PK`, `uid VARCHAR(64)`, `identity_type ENUM('password','sms','wechat','alipay')`, `identity_value VARCHAR(255)`, `credential_hash TEXT`, `salt VARCHAR(32)`, `status ENUM('active','inactive','revoked')`, `created_at DATETIME`
+    
+*   `consent_record`（OTS 5.0）：`id STRING PK`, `uid STRING`, `purpose_code STRING`, `version STRING`, `status STRING`, `granted_at INTEGER`, `withdrawn_at INTEGER`
+    
+*   `audit_log`（MySQL 8.0）：`id BIGINT PK`, `operator_type ENUM('user','admin','system')`, `operator_id VARCHAR(64)`, `action_type VARCHAR(50)`（如`user_register`）, `target_type VARCHAR(30)`, `target_id VARCHAR(64)`, `ip VARCHAR(45)`, `ua TEXT`, `result ENUM('success','failed')`, `created_at DATETIME`
+    
+*   `idm_user`（MySQL 8.0）：`id` BIGINT PK, `user_id` VARCHAR(64) NOT NULL COMMENT '全局唯一用户ID', `channel` VARCHAR(32) COMMENT '注册渠道（wechat/h5/app）', `created_at` DATETIME, `last_login_at` DATETIME, `status` TINYINT COMMENT '0-正常 1-锁定 2-注销'
+    
+*   `risk_event_log`（OTS 5.0）：`event_id` STRING PK, `user_id` STRING, `device_fingerprint` STRING, `ip` STRING, `risk_score` DOUBLE, `policy_id` STRING, `occurred_at` INTEGER (Unix timestamp)

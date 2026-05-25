@@ -1,89 +1,67 @@
 {
   "sources" : {
-    "3a9b75e5-a170-4dbb-bd37-2ff075208009" : {
+    "f63038f5-81fb-4dec-b313-74d34251326f" : {
       "title" : "CIAM.md",
       "type" : "DOCUMENT",
       "status" : "completed",
       "content_hash" : "sha256:6759b8c1382fe877a65a8f27a3f373d33e8773d53bd516fbaa171b47f84ae355",
-      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/3a9b75e5-a170-4dbb-bd37-2ff075208009",
-      "last_ingested_at" : "2026-05-21T08:10:36.440992Z",
-      "generated_pages" : [ "ciam/aliyun-idaas-ciam" ],
-      "split_suggested" : false,
-      "assigned_category" : null
-    },
-    "69bcc14b-9bc4-4841-a8f6-45f8225aaa66" : {
-      "title" : "EIAM.md",
-      "type" : "DOCUMENT",
-      "status" : "completed",
-      "content_hash" : "sha256:81d09c75f4cb799c6ba6f8b9d7c5441a47f847d3773fceac40b35e77bd11e4b3",
-      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/69bcc14b-9bc4-4841-a8f6-45f8225aaa66",
-      "last_ingested_at" : "2026-05-21T08:13:57.863780Z",
-      "generated_pages" : [ "identity/idaas-eiam" ],
-      "split_suggested" : false,
-      "assigned_category" : null
-    },
-    "b0cbf2ad-3ffb-4710-b454-d8aedceb5b7d" : {
-      "title" : "CIAM.md",
-      "type" : "DOCUMENT",
-      "status" : "completed",
-      "content_hash" : "sha256:6759b8c1382fe877a65a8f27a3f373d33e8773d53bd516fbaa171b47f84ae355",
-      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/b0cbf2ad-3ffb-4710-b454-d8aedceb5b7d",
-      "last_ingested_at" : "2026-05-21T08:43:16.372231Z",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/f63038f5-81fb-4dec-b313-74d34251326f",
+      "last_ingested_at" : "2026-05-25T07:04:49.610712Z",
       "generated_pages" : [ "IDaaS/aliyun-idaas-ciam" ],
       "split_suggested" : false,
       "assigned_category" : "IDaaS"
     },
-    "64570ebf-4b65-4b18-b162-bd343ceba111" : {
+    "f187de2e-cf81-4f35-ad3c-e6d5e96a6e06" : {
       "title" : "EIAM.md",
       "type" : "DOCUMENT",
       "status" : "completed",
       "content_hash" : "sha256:81d09c75f4cb799c6ba6f8b9d7c5441a47f847d3773fceac40b35e77bd11e4b3",
-      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/64570ebf-4b65-4b18-b162-bd343ceba111",
-      "last_ingested_at" : "2026-05-22T08:47:36.343329Z",
-      "generated_pages" : [ "IDaaS/idaas-eiam" ],
-      "split_suggested" : false,
-      "assigned_category" : "IDaaS"
-    },
-    "b7d36f22-f37d-4bfb-b5c2-50cd3342a852" : {
-      "title" : "CIAM白皮书.md",
-      "type" : "DOCUMENT",
-      "status" : "completed",
-      "content_hash" : "sha256:ff5f25d785d3b5b136b55d559e7b05a90fb5b0d5c824a2fc1df9d0d572db3722",
-      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/b7d36f22-f37d-4bfb-b5c2-50cd3342a852",
-      "last_ingested_at" : "2026-05-25T03:21:58.559771Z",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/f187de2e-cf81-4f35-ad3c-e6d5e96a6e06",
+      "last_ingested_at" : "2026-05-25T07:04:41.826271Z",
       "generated_pages" : [ ],
       "split_suggested" : false,
       "assigned_category" : "IDaaS"
     },
-    "f7820069-0e91-49c3-97c6-932f96a0cefc" : {
+    "72c8bf15-7c53-4398-b482-9f263c81863b" : {
+      "title" : "DDoS基础防护.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:42d65f75449c1488e242058f89dee6ba068d894ce2260128d079fc55319376ff",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/72c8bf15-7c53-4398-b482-9f263c81863b",
+      "last_ingested_at" : "2026-05-25T07:09:29.400788Z",
+      "generated_pages" : [ "DDoS-service/ddos-ji-chu-fang-hu" ],
+      "split_suggested" : true,
+      "assigned_category" : "DDoS-service"
+    },
+    "472b8f32-61f1-40a6-ba5d-e9ff26087418" : {
+      "title" : "DDoS高防.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:66069d63d73ed7e637ec9469bb4896f7753e07d0ec0bf2cac4018654079cc807",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/472b8f32-61f1-40a6-ba5d-e9ff26087418",
+      "last_ingested_at" : "2026-05-25T07:07:00.862965Z",
+      "generated_pages" : [ "DDoS-service/ddos-gao-fang" ],
+      "split_suggested" : false,
+      "assigned_category" : "DDoS-service"
+    },
+    "d623d091-9c1a-4cad-b532-621372c70115" : {
       "title" : "CIAM白皮书.md",
       "type" : "DOCUMENT",
       "status" : "completed",
       "content_hash" : "sha256:ff5f25d785d3b5b136b55d559e7b05a90fb5b0d5c824a2fc1df9d0d572db3722",
-      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/f7820069-0e91-49c3-97c6-932f96a0cefc",
-      "last_ingested_at" : "2026-05-25T06:07:16.703115Z",
-      "generated_pages" : [ ],
-      "split_suggested" : false,
-      "assigned_category" : "IDaaS"
-    },
-    "1ae63898-2a6f-4f2c-b9c6-5dd70bd9ef81" : {
-      "title" : "CIAM核心价值.md",
-      "type" : "DOCUMENT",
-      "status" : "completed",
-      "content_hash" : "sha256:c4c365c56a259bf03805cc888b7e88382c9d09cb417862ab36958c7a6eaa2b1f",
-      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/1ae63898-2a6f-4f2c-b9c6-5dd70bd9ef81",
-      "last_ingested_at" : "2026-05-25T06:37:41.251162Z",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/d623d091-9c1a-4cad-b532-621372c70115",
+      "last_ingested_at" : "2026-05-25T07:17:05.550300Z",
       "generated_pages" : [ ],
       "split_suggested" : false,
       "assigned_category" : "IDaaS"
     }
   },
   "stats" : {
-    "total_sources" : 7,
-    "total_pages" : 4,
+    "total_sources" : 5,
+    "total_pages" : 3,
     "total_links" : 0
   },
   "kb_version" : 1,
-  "created_at" : "2026-05-21T03:38:08.793271Z",
-  "updated_at" : "2026-05-25T06:37:41.251162Z"
+  "created_at" : "2026-05-25T07:02:44.285743Z",
+  "updated_at" : "2026-05-25T07:17:05.550300Z"
 }
