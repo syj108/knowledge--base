@@ -114,6 +114,26 @@ const API = {
         }).then(r => r.json());
     },
 
+    updatePageContent(slug, content) {
+        return fetch(`/api/pages/${slug}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content })
+        }).then(r => {
+            if (!r.ok) return r.json().then(e => { throw new Error(e.error || '更新失败'); });
+            return r.json();
+        });
+    },
+
+    deletePage(slug) {
+        return fetch(`/api/pages/${slug}`, {
+            method: 'DELETE'
+        }).then(r => {
+            if (!r.ok) return r.json().then(e => { throw new Error(e.error || '删除失败'); });
+            return r.json();
+        });
+    },
+
     search(query) {
         return fetch(`/api/pages/search?q=${encodeURIComponent(query)}`).then(r => r.json());
     },

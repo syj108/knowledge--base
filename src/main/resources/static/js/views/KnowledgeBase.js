@@ -64,7 +64,11 @@ const KnowledgeBase = {
                     <div class="page-grid">
                         <div class="page-card" v-for="p in filteredPages" :key="p.slug"
                              @click="$router.push('/kb/' + p.slug)">
-                            <div class="page-title">{{ p.title }}</div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div class="page-title" style="flex: 1;">{{ p.title }}</div>
+                                <button class="page-delete-btn" title="删除页面"
+                                        @click.stop="confirmDeletePage(p)">&#10005;</button>
+                            </div>
                             <div class="page-slug">{{ p.slug }}</div>
                             <div class="page-summary">{{ p.summary }}</div>
                         </div>
@@ -73,6 +77,24 @@ const KnowledgeBase = {
             </div>
 
             <div v-if="!loaded" class="loading"><div class="spinner"></div></div>
+
+            <!-- 删除页面确认弹窗 -->
+            <div v-if="pageDeleteModal.visible" class="modal-overlay" @click.self="pageDeleteModal.visible = false">
+                <div class="modal-box" style="width: 400px;">
+                    <h3 style="margin: 0 0 8px; font-size: 16px; color: #e53e3e;">删除知识页面</h3>
+                    <p style="color: #718096; font-size: 14px; margin-bottom: 16px;">
+                        确定要删除页面「{{ pageDeleteModal.title }}」吗？此操作不可撤销。
+                    </p>
+                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                        <button class="btn" @click="pageDeleteModal.visible = false">取消</button>
+                        <button class="btn" style="background: #e53e3e; color: white;"
+                                :disabled="pageDeleteModal.deleting"
+                                @click="doDeletePage">
+                            {{ pageDeleteModal.deleting ? '删除中...' : '确认删除' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <!-- 编辑分类弹窗 -->
             <div v-if="editModal.visible" class="modal-overlay" @click.self="editModal.visible = false">
@@ -225,6 +247,9 @@ const KnowledgeBase = {
             showNewCatForm: false, newCatKey: '', newCatName: '', newCatDesc: '', creatingCat: false,
             hoveredCategory: '',
             categoryDefs: [],
+            pageDeleteModal: {
+                visible: false, slug: '', title: '', deleting: false
+            },
             editModal: {
                 visible: false, tab: 'info',
                 categoryKey: '', newKey: '', name: '', description: '',
@@ -374,6 +399,24 @@ const KnowledgeBase = {
                 deleting: false
             };
         },
+        // --- 删除页面 ---
+        confirmDeletePage(page) {
+            this.pageDeleteModal = {
+                visible: true, slug: page.slug, title: page.title, deleting: false
+            };
+        },
+        async doDeletePage() {
+            this.pageDeleteModal.deleting = true;
+            try {
+                await API.deletePage(this.pageDeleteModal.slug);
+                this.pageDeleteModal.visible = false;
+                await this.loadPages();
+            } catch (e) {
+                alert('删除页面失败: ' + e.message);
+            }
+            this.pageDeleteModal.deleting = false;
+        },
+
         async doDeleteCategory() {
             this.deleteModal.deleting = true;
             try {

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * 知识页面 REST 控制器：页面列表、详情、搜索、图谱。
+ * 知识页面 REST 控制器：页面列表、详情、编辑、删除、搜索、图谱。
  */
 @RestController
 @RequestMapping("/api")
@@ -20,10 +20,15 @@ public class PageController {
 
     private final KnowledgeBaseService kbService;
     private final SearchService searchService;
+    private final StateService stateService;
+    private final IndexGenerator indexGenerator;
 
-    public PageController(KnowledgeBaseService kbService, SearchService searchService) {
+    public PageController(KnowledgeBaseService kbService, SearchService searchService,
+                          StateService stateService, IndexGenerator indexGenerator) {
         this.kbService = kbService;
         this.searchService = searchService;
+        this.stateService = stateService;
+        this.indexGenerator = indexGenerator;
     }
 
     @GetMapping("/pages")
@@ -113,6 +118,61 @@ public class PageController {
         } catch (IOException e) {
             log.error("更新页面标题失败: {}", slug, e);
             return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PutMapping("/pages/{*slug}")
+    public ResponseEntity<?> updatePageContent(@PathVariable String slug,
+                                                @RequestBody Map<String, String> body) {
+        try {
+            if (slug.startsWith("/")) slug = slug.substring(1);
+            if (!kbService.pageExists(slug)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String content = body.get("content");
+            if (content == null) {
+                return ResponseEntity.badRequest().body(Map.of("error", "内容不能为空"));
+            }
+
+            kbService.writePage(slug, content);
+            String title = extractTitle(content, slug);
+            String category = extractCategory(slug);
+            return ResponseEntity.ok(new PageDetail(slug, title, category, content));
+        } catch (IOException e) {
+            log.error("更新页面内容失败: {}", slug, e);
+            return ResponseEntity.internalServerError().body(Map.of("error", "更新失败"));
+        }
+    }
+
+    @DeleteMapping("/pages/{*slug}")
+    public ResponseEntity<?> deletePage(@PathVariable String slug) {
+        try {
+            if (slug.startsWith("/")) slug = slug.substring(1);
+            final String pageSlug = slug;
+            if (!kbService.pageExists(pageSlug)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            kbService.deletePage(pageSlug);
+            stateService.removePageSlugs(List.of(pageSlug));
+
+            // 从图谱中移除节点和相关边
+            GraphData graph = kbService.readGraphData();
+            graph.getNodes().remove(pageSlug);
+            graph.getEdges().removeIf(e -> pageSlug.equals(e.getSource()) || pageSlug.equals(e.getTarget()));
+            kbService.writeGraphData(graph);
+
+            // 清理空目录
+            String category = extractCategory(pageSlug);
+            kbService.deleteCategoryDir(category);
+
+            indexGenerator.regenerate();
+
+            return ResponseEntity.ok(Map.of("message", "页面已删除"));
+        } catch (IOException e) {
+            log.error("删除页面失败: {}", slug, e);
+            return ResponseEntity.internalServerError().body(Map.of("error", "删除失败"));
         }
     }
 

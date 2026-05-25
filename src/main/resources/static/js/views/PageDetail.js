@@ -11,23 +11,39 @@ const PageDetail = {
 
             <div v-if="page">
                 <div class="page-title-bar">
-                    <div v-if="!editingTitle" class="page-title-display">
+                    <div class="page-title-display">
                         <h1 class="page-title-text">{{ page.title }}</h1>
-                        <button class="btn btn-edit-title" @click="startEditTitle">编辑标题</button>
-                    </div>
-                    <div v-else class="page-title-edit">
-                        <input class="form-input" v-model="newTitle"
-                               @keyup.enter="saveTitle" @keyup.escape="editingTitle = false">
-                        <button class="btn btn-primary" style="white-space: nowrap;"
-                                :disabled="!newTitle.trim() || savingTitle" @click="saveTitle">
-                            {{ savingTitle ? '...' : '保存' }}
-                        </button>
-                        <button class="btn" style="white-space: nowrap;"
-                                @click="editingTitle = false">取消</button>
+                        <button v-if="!editing" class="btn btn-edit-title" @click="startEdit">编辑</button>
+                        <button v-else class="btn btn-edit-title" style="color: #2b6cb0; background: #ebf8ff;"
+                                @click="cancelEdit">退出编辑</button>
                     </div>
                 </div>
-                <div class="card">
+
+                <!-- 查看模式 -->
+                <div v-if="!editing" class="card">
                     <div class="markdown-body" v-html="renderedHtml"></div>
+                </div>
+
+                <!-- 编辑模式 -->
+                <div v-else class="card">
+                    <div class="content-editor">
+                        <div class="editor-toolbar">
+                            <span style="font-size: 13px; color: #718096;">Markdown 编辑（标题即内容首行 # 标题）</span>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn" style="font-size: 13px; padding: 4px 12px;"
+                                        @click="cancelEdit">取消</button>
+                                <button class="btn btn-primary" style="font-size: 13px; padding: 4px 12px;"
+                                        :disabled="saving" @click="save">
+                                    {{ saving ? '保存中...' : '保存' }}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="editor-split">
+                            <textarea class="editor-textarea" v-model="editContent"
+                                      @input="updatePreview"></textarea>
+                            <div class="editor-preview markdown-body" v-html="previewHtml"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -41,22 +57,16 @@ const PageDetail = {
         </div>
     `,
     data() {
-        return { page: null, notFound: false, editingTitle: false, newTitle: '', savingTitle: false };
+        return {
+            page: null, notFound: false,
+            editing: false, editContent: '', saving: false,
+            previewHtml: ''
+        };
     },
     computed: {
         renderedHtml() {
             if (!this.page) return '';
-            try {
-                let html = marked.parse(this.page.content || '');
-                html = html.replace(/\[\[([a-z0-9][a-z0-9\-\/]*)\|([^\]]+)\]\]/g,
-                    '<a href="#/kb/$1" class="wiki-link">$2</a>');
-                html = html.replace(/\[\[([a-z0-9][a-z0-9\-\/]*)\]\]/g,
-                    '<a href="#/kb/$1" class="wiki-link">$1</a>');
-                return html;
-            } catch (e) {
-                console.error('Markdown渲染失败', e);
-                return '<pre>' + (this.page.content || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>';
-            }
+            return this.renderMarkdown(this.page.content || '');
         }
     },
     created() { this.loadPage(); },
@@ -64,10 +74,23 @@ const PageDetail = {
         '$route.params': { handler() { this.loadPage(); }, deep: true }
     },
     methods: {
+        renderMarkdown(content) {
+            try {
+                let html = marked.parse(content);
+                html = html.replace(/\[\[([a-z0-9][a-z0-9\-\/]*)\|([^\]]+)\]\]/g,
+                    '<a href="#/kb/$1" class="wiki-link">$2</a>');
+                html = html.replace(/\[\[([a-z0-9][a-z0-9\-\/]*)\]\]/g,
+                    '<a href="#/kb/$1" class="wiki-link">$1</a>');
+                return html;
+            } catch (e) {
+                console.error('Markdown渲染失败', e);
+                return '<pre>' + content.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>';
+            }
+        },
         async loadPage() {
             this.page = null;
             this.notFound = false;
-            this.editingTitle = false;
+            this.editing = false;
             const slugParts = this.$route.params.slug;
             const slug = Array.isArray(slugParts) ? slugParts.join('/') : (slugParts || '');
             if (!slug) { this.notFound = true; return; }
@@ -83,25 +106,28 @@ const PageDetail = {
                 this.notFound = true;
             }
         },
-        startEditTitle() {
-            this.newTitle = this.page.title;
-            this.editingTitle = true;
+        startEdit() {
+            this.editContent = this.page.content || '';
+            this.previewHtml = this.renderMarkdown(this.editContent);
+            this.editing = true;
         },
-        async saveTitle() {
-            if (!this.newTitle.trim() || this.newTitle.trim() === this.page.title) {
-                this.editingTitle = false;
-                return;
-            }
-            this.savingTitle = true;
+        cancelEdit() {
+            this.editing = false;
+        },
+        updatePreview() {
+            this.previewHtml = this.renderMarkdown(this.editContent);
+        },
+        async save() {
+            this.saving = true;
             try {
-                const updated = await API.updatePageTitle(this.page.slug, this.newTitle.trim());
-                this.page.title = updated.title;
+                const updated = await API.updatePageContent(this.page.slug, this.editContent);
                 this.page.content = updated.content;
-                this.editingTitle = false;
+                this.page.title = updated.title;
+                this.editing = false;
             } catch (e) {
-                alert('保存标题失败: ' + e.message);
+                alert('保存失败: ' + e.message);
             }
-            this.savingTitle = false;
+            this.saving = false;
         }
     }
 };

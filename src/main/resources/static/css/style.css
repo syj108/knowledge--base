@@ -729,6 +729,85 @@ body {
 
 .radio-option input[type="radio"] { accent-color: #2b6cb0; }
 
+/* ===== 内容编辑器 ===== */
+.content-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 12px;
+}
+
+.editor-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    min-height: 500px;
+}
+
+.editor-textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    padding: 12px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.editor-textarea:focus {
+    border-color: #2b6cb0;
+    box-shadow: 0 0 0 3px rgba(43,108,176,0.1);
+}
+
+.editor-preview {
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #f7fafc;
+    overflow-y: auto;
+    max-height: 600px;
+}
+
+/* ===== 页面卡片删除按钮 ===== */
+.page-delete-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: #cbd5e0;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    opacity: 0;
+}
+
+.page-card:hover .page-delete-btn {
+    opacity: 1;
+}
+
+.page-delete-btn:hover {
+    background: #fed7d7;
+    color: #e53e3e;
+}
+
 /* ===== 响应式 ===== */
 @media (max-width: 768px) {
     .kb-layout { grid-template-columns: 1fr; }
@@ -737,4 +816,5 @@ body {
     .navbar-search input:focus { width: 200px; }
     .page-title-display { flex-wrap: wrap; }
     .page-title-edit { flex-wrap: wrap; }
+    .editor-split { grid-template-columns: 1fr; }
 }
