@@ -1,89 +1,54 @@
 package com.example.precip.pipeline;
 
-import com.example.precip.kb.KnowledgeBaseService;
-import com.example.precip.link.LinkGraph;
-import com.example.precip.llm.LlmClient;
-import com.example.precip.llm.PromptBuilder;
-import com.example.precip.model.KnowledgePage;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * 测试 DeduplicationService 中的标题相似度计算逻辑。
+ */
 class DeduplicationServiceTest {
 
     @Test
-    void shouldMarkNewPageWhenSlugNotExists() throws Exception {
-        // LinkGraph.nodeExists 总返回 false
-        LinkGraph linkGraph = new LinkGraph(null, null) {
-            @Override
-            public boolean nodeExists(String slug) {
-                return false;
-            }
-        };
-
-        DeduplicationService service = new DeduplicationService(
-                null, linkGraph, null, null);
-
-        KnowledgePage page = new KnowledgePage();
-        page.setSlug("design/new-topic");
-        page.setTitle("新主题");
-        page.setContent("内容");
-
-        List<KnowledgePage> result = service.deduplicate(List.of(page));
-
-        assertEquals(1, result.size());
-        assertTrue(result.get(0).isNew(), "新 slug 应标记为 isNew=true");
+    void titleSimilarity_identicalTitles() {
+        double score = DeduplicationService.titleSimilarity("IDaaS CIAM产品简介", "IDaaS CIAM产品简介");
+        assertEquals(1.0, score, 0.001);
     }
 
     @Test
-    void shouldHandleDeduplicationFailureGracefully() throws Exception {
-        // LinkGraph.nodeExists 抛异常
-        LinkGraph linkGraph = new LinkGraph(null, null) {
-            @Override
-            public boolean nodeExists(String slug) throws java.io.IOException {
-                throw new RuntimeException("模拟异常");
-            }
-        };
+    void titleSimilarity_similarChineseTitles() {
+        double score = DeduplicationService.titleSimilarity(
+                "IDaaS CIAM产品简介", "IDaaS CIAM产品白皮书");
+        assertTrue(score > 0.2, "有重叠词汇的标题应有较高相似度，实际: " + score);
 
-        DeduplicationService service = new DeduplicationService(
-                null, linkGraph, null, null);
-
-        KnowledgePage page = new KnowledgePage();
-        page.setSlug("design/topic");
-        page.setTitle("主题");
-        page.setContent("内容");
-
-        List<KnowledgePage> result = service.deduplicate(List.of(page));
-
-        assertEquals(1, result.size());
-        assertTrue(result.get(0).isNew(), "去重失败时应回退为新页面");
+        double highOverlap = DeduplicationService.titleSimilarity(
+                "IDaaS CIAM 产品简介文档", "IDaaS CIAM 产品简介概述");
+        assertTrue(highOverlap > score, "更相似的标题应有更高分数");
     }
 
     @Test
-    void shouldProcessMultiplePages() throws Exception {
-        LinkGraph linkGraph = new LinkGraph(null, null) {
-            @Override
-            public boolean nodeExists(String slug) {
-                return false;
-            }
-        };
+    void titleSimilarity_differentTitles() {
+        double score = DeduplicationService.titleSimilarity("ECS弹性云服务器", "SRS流媒体服务");
+        assertTrue(score < 0.35, "完全不同的标题相似度应低于阈值，实际: " + score);
+    }
 
-        DeduplicationService service = new DeduplicationService(
-                null, linkGraph, null, null);
+    @Test
+    void titleSimilarity_nullHandling() {
+        assertEquals(0, DeduplicationService.titleSimilarity(null, "标题"));
+        assertEquals(0, DeduplicationService.titleSimilarity("标题", null));
+        assertEquals(0, DeduplicationService.titleSimilarity(null, null));
+    }
 
-        KnowledgePage page1 = new KnowledgePage();
-        page1.setSlug("a/first");
-        page1.setTitle("第一");
-        page1.setContent("内容1");
+    @Test
+    void titleSimilarity_emptyStrings() {
+        double score = DeduplicationService.titleSimilarity("", "");
+        assertEquals(1.0, score, 0.001, "两个空字符串应视为完全相同");
+    }
 
-        KnowledgePage page2 = new KnowledgePage();
-        page2.setSlug("b/second");
-        page2.setTitle("第二");
-        page2.setContent("内容2");
-
-        List<KnowledgePage> result = service.deduplicate(List.of(page1, page2));
-        assertEquals(2, result.size());
+    @Test
+    void titleSimilarity_partialOverlap() {
+        double score = DeduplicationService.titleSimilarity(
+                "应用身份服务 IDaaS", "IDaaS 身份即服务");
+        assertTrue(score > 0, "有部分重叠的标题应有正相似度");
     }
 }

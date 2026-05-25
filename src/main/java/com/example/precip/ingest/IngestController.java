@@ -181,25 +181,25 @@ public class IngestController {
             if (!Files.isDirectory(sourceDir)) {
                 return ResponseEntity.notFound().build();
             }
-            // 优先读取提取的纯文本
+            // 优先读取原始源文件（非 _ 前缀），以便前端可按文件类型渲染
+            try (Stream<Path> files = Files.list(sourceDir)) {
+                Path originalFile = files
+                        .filter(Files::isRegularFile)
+                        .filter(p -> !p.getFileName().toString().startsWith("_"))
+                        .findFirst().orElse(null);
+                if (originalFile != null) {
+                    String content = Files.readString(originalFile, StandardCharsets.UTF_8);
+                    String fileName = originalFile.getFileName().toString();
+                    return ResponseEntity.ok(Map.of("content", content, "fileName", fileName));
+                }
+            }
+            // 回退：读取 _content.txt（纯文本提取结果）
             Path contentFile = sourceDir.resolve("_content.txt");
             if (Files.exists(contentFile)) {
                 String content = Files.readString(contentFile, StandardCharsets.UTF_8);
                 return ResponseEntity.ok(Map.of("content", content, "fileName", "_content.txt"));
             }
-            // 回退：尝试读取非元数据文件
-            try (Stream<Path> files = Files.list(sourceDir)) {
-                Path firstFile = files
-                        .filter(Files::isRegularFile)
-                        .filter(p -> !p.getFileName().toString().startsWith("_"))
-                        .findFirst().orElse(null);
-                if (firstFile == null) {
-                    return ResponseEntity.ok(Map.of("content", "", "fileName", ""));
-                }
-                String content = Files.readString(firstFile, StandardCharsets.UTF_8);
-                String fileName = firstFile.getFileName().toString();
-                return ResponseEntity.ok(Map.of("content", content, "fileName", fileName));
-            }
+            return ResponseEntity.ok(Map.of("content", "", "fileName", ""));
         } catch (Exception e) {
             log.error("读取源文档内容失败: {}", id, e);
             return ResponseEntity.internalServerError().build();

@@ -3,6 +3,20 @@ const KnowledgeBase = {
         <div>
             <h2 style="margin-bottom: 20px; color: #2d3748;">知识库</h2>
 
+            <!-- 去重审核通知 -->
+            <div v-if="pendingDedupReviews.length > 0" class="alert alert-info" style="display: flex; align-items: center; justify-content: space-between;">
+                <span>有 <strong>{{ pendingDedupReviews.length }}</strong> 个知识页面需要去重审核</span>
+                <button class="btn btn-primary" style="font-size: 13px; padding: 4px 12px;"
+                        @click="dedupModal.visible = true">立即审核</button>
+            </div>
+
+            <!-- 去重处理中提示 -->
+            <div v-if="resolvingDedupReviews.length > 0" class="alert alert-info"
+                 style="display: flex; align-items: center; gap: 8px; background: #f0fff4; border-color: #c6f6d5;">
+                <div class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></div>
+                <span style="color: #276749;">正在处理 {{ resolvingDedupReviews.length }} 个去重审核决策...</span>
+            </div>
+
             <div v-if="loaded && pages.length === 0" class="card empty-state">
                 <div class="empty-icon">&#128218;</div>
                 <div class="empty-text">知识库暂无内容</div>
@@ -172,6 +186,57 @@ const KnowledgeBase = {
                 </div>
             </div>
 
+            <!-- 去重审核弹窗 -->
+            <div v-if="dedupModal.visible" class="modal-overlay" @click.self="dedupModal.visible = false">
+                <div class="modal-box" style="width: 600px;">
+                    <h3 style="margin: 0 0 16px; font-size: 16px;">去重审核</h3>
+                    <div v-if="pendingDedupReviews.length === 0" style="text-align: center; padding: 20px; color: #a0aec0;">
+                        暂无待审核记录
+                    </div>
+                    <div v-else>
+                        <div v-for="(review, idx) in pendingDedupReviews" :key="review.id"
+                             style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+                            <div style="display: flex; gap: 16px; margin-bottom: 12px;">
+                                <div style="flex: 1;">
+                                    <div style="font-size: 12px; color: #718096; margin-bottom: 4px;">新生成页面</div>
+                                    <div style="font-weight: 600; color: #2d3748;">{{ review.newPageTitle }}</div>
+                                    <div style="font-size: 12px; color: #a0aec0;">{{ review.newPageCategory }}/{{ review.newPageSlug }}</div>
+                                    <div style="font-size: 13px; color: #4a5568; margin-top: 4px; max-height: 60px; overflow: hidden;">{{ review.newPageSummary }}</div>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 12px; color: #718096; margin-bottom: 4px;">已有相似页面</div>
+                                    <div style="font-weight: 600; color: #2d3748;">{{ review.existingPageTitle }}</div>
+                                    <div style="font-size: 12px; color: #a0aec0;">{{ review.existingPageCategory }}/{{ review.existingPageSlug }}</div>
+                                    <div style="font-size: 13px; color: #4a5568; margin-top: 4px; max-height: 60px; overflow: hidden;">{{ review.existingPageSummary }}</div>
+                                </div>
+                            </div>
+                            <div style="background: #f7fafc; border-radius: 4px; padding: 8px 12px; margin-bottom: 12px; font-size: 13px;">
+                                <span style="font-weight: 600; color: #2b6cb0;">AI 建议：</span>
+                                <span :style="{color: review.suggestion === 'merge' ? '#276749' : '#b7791f'}">
+                                    {{ review.suggestion === 'merge' ? '合并' : '不确定' }}
+                                </span>
+                                <span style="color: #718096; margin-left: 8px;">{{ review.reason }}</span>
+                            </div>
+                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                <button class="btn" style="font-size: 13px; padding: 4px 12px;"
+                                        :disabled="dedupModal.resolving"
+                                        @click="resolveDedupReview(review.id, 'separate')">
+                                    保留独立
+                                </button>
+                                <button class="btn btn-primary" style="font-size: 13px; padding: 4px 12px;"
+                                        :disabled="dedupModal.resolving"
+                                        @click="resolveDedupReview(review.id, 'merge')">
+                                    合并到已有页面
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+                        <button class="btn" @click="dedupModal.visible = false">关闭</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- 删除分类弹窗 -->
             <div v-if="deleteModal.visible" class="modal-overlay" @click.self="deleteModal.visible = false">
                 <div class="modal-box">
@@ -247,6 +312,8 @@ const KnowledgeBase = {
             showNewCatForm: false, newCatKey: '', newCatName: '', newCatDesc: '', creatingCat: false,
             hoveredCategory: '',
             categoryDefs: [],
+            dedupReviews: [],
+            dedupModal: { visible: false, resolving: false },
             pageDeleteModal: {
                 visible: false, slug: '', title: '', deleting: false
             },
@@ -267,6 +334,12 @@ const KnowledgeBase = {
         };
     },
     computed: {
+        pendingDedupReviews() {
+            return this.dedupReviews.filter(r => r.status === 'pending');
+        },
+        resolvingDedupReviews() {
+            return this.dedupReviews.filter(r => r.status === 'resolving');
+        },
         categories() {
             const cats = {};
             for (const p of this.pages) {
@@ -297,7 +370,7 @@ const KnowledgeBase = {
             return true;
         }
     },
-    created() { this.loadPages(); this.loadCategoryDefs(); },
+    created() { this.loadPages(); this.loadCategoryDefs(); this.loadDedupReviews(); },
     methods: {
         async loadPages() {
             try {
@@ -415,6 +488,42 @@ const KnowledgeBase = {
                 alert('删除页面失败: ' + e.message);
             }
             this.pageDeleteModal.deleting = false;
+        },
+
+        // --- 去重审核 ---
+        async loadDedupReviews() {
+            try {
+                this.dedupReviews = await API.listDedupReviews();
+            } catch (e) {
+                console.error('加载去重审核列表失败', e);
+            }
+        },
+        async resolveDedupReview(id, action) {
+            try {
+                await API.resolveDedupReview(id, action);
+                // 立即将本地状态标记为 resolving
+                const review = this.dedupReviews.find(r => r.id === id);
+                if (review) review.status = 'resolving';
+                // 没有更多 pending 的就关闭弹窗
+                if (this.pendingDedupReviews.length === 0) {
+                    this.dedupModal.visible = false;
+                }
+                // 轮询等待后台处理完成
+                this.pollDedupCompletion();
+            } catch (e) {
+                alert('提交审核决策失败: ' + e.message);
+            }
+        },
+        pollDedupCompletion() {
+            if (this._dedupPollTimer) return;
+            this._dedupPollTimer = setInterval(async () => {
+                await this.loadDedupReviews();
+                if (this.resolvingDedupReviews.length === 0) {
+                    clearInterval(this._dedupPollTimer);
+                    this._dedupPollTimer = null;
+                    await this.loadPages();
+                }
+            }, 3000);
         },
 
         async doDeleteCategory() {

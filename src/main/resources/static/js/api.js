@@ -97,6 +97,22 @@ const API = {
         });
     },
 
+    // 去重审核
+    listDedupReviews() {
+        return fetch('/api/dedup-reviews').then(r => r.json());
+    },
+
+    resolveDedupReview(id, action) {
+        return fetch(`/api/dedup-reviews/${id}/resolve`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action })
+        }).then(r => {
+            if (!r.ok) return r.json().then(e => { throw new Error(e.error || '操作失败'); });
+            return r.json();
+        });
+    },
+
     // 知识页面
     listPages() {
         return fetch('/api/pages').then(r => r.json());

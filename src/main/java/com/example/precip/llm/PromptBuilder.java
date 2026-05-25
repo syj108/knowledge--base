@@ -115,20 +115,59 @@ public class PromptBuilder {
 
     // --- 去重判定 ---
 
-    public String buildDeduplicationPrompt(String existingSummary, String newSummary) {
+    public String buildDeduplicationPrompt(String existingTitle, String existingSummary,
+                                            String newTitle, String newSummary) {
         return """
-                现有知识页面摘要（前 500 字）：
+                已有知识页面：
+                标题：""" + existingTitle + """
+
+                内容摘要（前 500 字）：
                 """ + existingSummary + """
 
-                新生成的知识页面摘要（前 500 字）：
+                新生成的知识页面：
+                标题：""" + newTitle + """
+
+                内容摘要（前 500 字）：
                 """ + newSummary + """
 
-                请判断这两个页面是否描述同一知识点。返回以下 JSON 之一：
-                {"decision": "merge"}         // 完全是同一实体，合并内容
-                {"decision": "new_version"}   // 同一实体但新版本覆盖旧版本
-                {"decision": "keep_both"}     // 不同实体，恰好同名，保留两者
+                请判断这两个页面是否描述同一知识主体，是否应该合并为同一篇文档。
+                判断依据：如果两篇文档的核心主题是同一个产品/技术/系统，且内容可以互补整合，则应合并。
+                如果它们虽然有关联但描述的是不同维度的知识（如一篇是产品介绍、另一篇是 API 文档），则应独立保存。
+
+                请返回严格的 JSON，包含 decision 和 reason 两个字段：
+                - decision: "merge"（应合并，两篇内容描述同一主体且互补）
+                - decision: "separate"（应独立保存，内容维度不同）
+                - decision: "uncertain"（不确定，需人工判断）
+                - reason: 具体说明判断依据（根据两篇内容的实际关系动态生成，不要使用模板化表述）
+
+                示例格式：
+                {"decision": "merge", "reason": "两篇文档都是关于XX产品的介绍，前者侧重功能概览，后者补充了架构细节，合并后信息更完整"}
 
                 只返回 JSON，不要有其他文字。
+                """;
+    }
+
+    // --- 内容合并 ---
+
+    public String buildMergePrompt(String existingContent, String newContent) {
+        return """
+                请将以下两份知识文档合并为一份更完整、结构更清晰的文档。
+
+                合并原则：
+                1. 保留两份文档中各自的有价值信息
+                2. 去除重复内容，避免冗余
+                3. 保持 Markdown 格式，使用二级标题（##）组织章节
+                4. 如果两份内容对同一知识点有不同描述，选择更准确、更详细的版本
+                5. 不要输出一级标题（# 开头），系统会自动添加
+                6. 保留 [[slug|title]] 格式的 wiki 链接
+
+                --- 已有文档 ---
+                """ + existingContent + """
+
+                --- 新文档 ---
+                """ + newContent + """
+
+                请输出合并后的完整 Markdown 内容（不含一级标题）：
                 """;
     }
 

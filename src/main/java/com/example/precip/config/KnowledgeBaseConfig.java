@@ -145,4 +145,8 @@ public class KnowledgeBaseConfig {
     public Path categoriesFile() {
         return baseDir.resolve("categories.json");
     }
+
+    public Path dedupReviewsFile() {
+        return baseDir.resolve("dedup-reviews.json");
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,6 +88,25 @@ public class StateService {
             state.setUpdatedAt(Instant.now());
             kbService.writeState(state);
             log.info("源 {} 建议拆分", sourceId);
+        }
+    }
+
+    public synchronized void appendGeneratedPage(String sourceId, String slug) throws IOException {
+        AgentState state = kbService.readState();
+        SourceRecord record = state.getSources().get(sourceId);
+        if (record != null) {
+            List<String> pages = record.getGeneratedPages();
+            if (pages == null) {
+                pages = new ArrayList<>();
+                record.setGeneratedPages(pages);
+            }
+            if (!pages.contains(slug)) {
+                pages.add(slug);
+            }
+            state.setUpdatedAt(Instant.now());
+            updateStats(state);
+            kbService.writeState(state);
+            log.info("源 {} 追加生成页面: {}", sourceId, slug);
         }
     }
 

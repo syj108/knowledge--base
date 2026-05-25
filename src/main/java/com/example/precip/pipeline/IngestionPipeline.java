@@ -17,6 +17,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import com.example.precip.pipeline.DeduplicationService.DeduplicationResult;
+
 /**
  * 主编排器：接收 SourceIngestedEvent，按顺序调用 Map → Reduce → Post 各阶段。
  */
@@ -29,6 +31,7 @@ public class IngestionPipeline {
     private final ExtractionService extractionService;
     private final GenerationService generationService;
     private final DeduplicationService deduplicationService;
+    private final DedupReviewService dedupReviewService;
     private final CategoryResolver categoryResolver;
     private final PostProcessService postProcessService;
     private final TemplateLoader templateLoader;
@@ -38,6 +41,7 @@ public class IngestionPipeline {
     public IngestionPipeline(ExtractionService extractionService,
                              GenerationService generationService,
                              DeduplicationService deduplicationService,
+                             DedupReviewService dedupReviewService,
                              CategoryResolver categoryResolver,
                              PostProcessService postProcessService,
                              TemplateLoader templateLoader,
@@ -46,6 +50,7 @@ public class IngestionPipeline {
         this.extractionService = extractionService;
         this.generationService = generationService;
         this.deduplicationService = deduplicationService;
+        this.dedupReviewService = dedupReviewService;
         this.categoryResolver = categoryResolver;
         this.postProcessService = postProcessService;
         this.templateLoader = templateLoader;
@@ -101,7 +106,19 @@ public class IngestionPipeline {
 
             // --- Reduce: 去重 + 分类 ---
             stateService.updateSourceStatus(sourceId, "reducing");
-            List<KnowledgePage> resolvedPages = deduplicationService.deduplicate(pages);
+            DeduplicationResult dedupResult = deduplicationService.deduplicate(pages);
+
+            // 存储需用户审核的记录
+            for (DedupReview review : dedupResult.pendingReviews()) {
+                dedupReviewService.addReview(review);
+            }
+            if (!dedupResult.pendingReviews().isEmpty()) {
+                log.info("源 {} 有 {} 个页面需用户审核去重",
+                        sourceId, dedupResult.pendingReviews().size());
+            }
+
+            // 只对已确认的页面继续后处理
+            List<KnowledgePage> resolvedPages = dedupResult.resolvedPages();
             categoryResolver.resolve(resolvedPages);
 
             // --- Post-processing ---
