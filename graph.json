@@ -18,6 +18,12 @@
       "category" : "DDoS-service",
       "file" : "pages/DDoS-service/ddos-ji-chu-fang-hu.md",
       "description" : null
+    },
+    "knowledgeBase/weknora" : {
+      "title" : "WeKnora",
+      "category" : "knowledgeBase",
+      "file" : "pages/knora/weknora.md",
+      "description" : null
     }
   },
   "edges" : [ ]

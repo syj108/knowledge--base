@@ -54,14 +54,36 @@
       "generated_pages" : [ ],
       "split_suggested" : false,
       "assigned_category" : "IDaaS"
+    },
+    "049e36ce-8e08-420b-8bea-b82ab17a9761" : {
+      "title" : "https://github.com/Tencent/WeKnora.git",
+      "type" : "CODE_REPO",
+      "status" : "completed",
+      "content_hash" : "sha256:0451aff31cdc06e0fc151e13cfe5c15f66d5f167971e0b5382a71559372ff19a",
+      "file_path" : "https://github.com/Tencent/WeKnora.git",
+      "last_ingested_at" : "2026-05-25T07:46:19.034729Z",
+      "generated_pages" : [ "knowledgeBase/weknora" ],
+      "split_suggested" : false,
+      "assigned_category" : null
+    },
+    "05e3ed8c-1a0f-4372-832e-810550357d88" : {
+      "title" : "https://github.com/Tencent/WeKnora.git",
+      "type" : "CODE_REPO",
+      "status" : "completed",
+      "content_hash" : "sha256:0451aff31cdc06e0fc151e13cfe5c15f66d5f167971e0b5382a71559372ff19a",
+      "file_path" : "https://github.com/Tencent/WeKnora.git",
+      "last_ingested_at" : "2026-05-25T07:46:34.144655Z",
+      "generated_pages" : [ ],
+      "split_suggested" : false,
+      "assigned_category" : null
     }
   },
   "stats" : {
-    "total_sources" : 5,
-    "total_pages" : 3,
+    "total_sources" : 7,
+    "total_pages" : 4,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-25T07:02:44.285743Z",
-  "updated_at" : "2026-05-25T07:17:05.550300Z"
+  "updated_at" : "2026-05-25T09:37:40.935669Z"
 }
