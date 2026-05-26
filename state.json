@@ -1,0 +1,34 @@
+{
+  "sources" : {
+    "a1f20be3-cc00-4ff3-a1a1-c40c6df8c5c4" : {
+      "title" : "CIAM.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:6759b8c1382fe877a65a8f27a3f373d33e8773d53bd516fbaa171b47f84ae355",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/a1f20be3-cc00-4ff3-a1a1-c40c6df8c5c4",
+      "last_ingested_at" : "2026-05-26T02:19:52.233170Z",
+      "generated_pages" : [ "IDaaS/CIAM/产品对外文档/服务介绍", "IDaaS/CIAM/方案支撑文档/横向研发文档" ],
+      "split_suggested" : false,
+      "assigned_category" : "IDaaS"
+    },
+    "617fe7af-fb29-47f6-99c1-d7fcd525987d" : {
+      "title" : "CIAM白皮书.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:ff5f25d785d3b5b136b55d559e7b05a90fb5b0d5c824a2fc1df9d0d572db3722",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/617fe7af-fb29-47f6-99c1-d7fcd525987d",
+      "last_ingested_at" : "2026-05-26T03:16:23.372336Z",
+      "generated_pages" : [ "IDaaS/CIAM/产品对外文档/服务介绍", "IDaaS/CIAM/产品对外文档/QA（高频问答）" ],
+      "split_suggested" : false,
+      "assigned_category" : "IDaaS"
+    }
+  },
+  "stats" : {
+    "total_sources" : 2,
+    "total_pages" : 4,
+    "total_links" : 0
+  },
+  "kb_version" : 1,
+  "created_at" : "2026-05-26T02:18:43.871503Z",
+  "updated_at" : "2026-05-26T03:16:23.372336Z"
+}
