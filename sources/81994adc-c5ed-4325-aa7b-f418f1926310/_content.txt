@@ -1,0 +1,551 @@
+# 项目代码结构分析报告
+
+项目名称：https://github.com/Tencent/WeKnora.git
+分析文件数：1450
+总代码行数：379636
+
+## 语言分布
+
+- go: 1000 个文件
+- sql: 111 个文件
+- markdown: 108 个文件
+- typescript: 78 个文件
+- python: 49 个文件
+- yaml: 42 个文件
+- json: 31 个文件
+- shell: 18 个文件
+- javascript: 12 个文件
+- ruby: 1 个文件
+
+## 模块层次
+
+- `./` (12 files, 4 classes)
+- `.github/` (2 files)
+- `.github/ISSUE_TEMPLATE/` (4 files)
+- `.github/workflows/` (4 files)
+- `Formula/` (1 files)
+- `cli/` (4 files)
+- `cli/acceptance/` (1 files)
+- `cli/acceptance/contract/` (3 files, 1 classes)
+- `cli/acceptance/e2e/` (1 files)
+- `cli/acceptance/testdata/wire/` (14 files)
+- `cli/cmd/` (3 files)
+- `cli/cmd/agent/` (17 files, 29 classes)
+- `cli/cmd/api/` (2 files, 3 classes)
+- `cli/cmd/auth/` (14 files, 17 classes)
+- `cli/cmd/chat/` (2 files, 4 classes)
+- `cli/cmd/chunk/` (7 files, 14 classes)
+- `cli/cmd/context/` (9 files, 7 classes)
+- `cli/cmd/doc/` (15 files, 27 classes)
+- `cli/cmd/doctor/` (2 files, 8 classes)
+- `cli/cmd/kb/` (19 files, 29 classes)
+- `cli/cmd/link/` (4 files, 4 classes)
+- `cli/cmd/mcp/` (2 files)
+- `cli/cmd/search/` (10 files, 13 classes)
+- `cli/cmd/session/` (7 files, 14 classes)
+- `cli/internal/cmdutil/` (23 files, 12 classes)
+- `cli/internal/compat/` (6 files, 4 classes)
+- `cli/internal/config/` (2 files, 2 classes)
+- `cli/internal/format/` (7 files)
+- `cli/internal/iostreams/` (2 files, 1 classes)
+- `cli/internal/mcp/` (3 files, 26 classes)
+- `cli/internal/projectlink/` (2 files, 1 classes)
+- `cli/internal/prompt/` (3 files, 3 classes)
+- `cli/internal/secrets/` (4 files, 4 classes)
+- `cli/internal/sse/` (3 files, 3 classes)
+- `cli/internal/testutil/` (2 files, 1 classes)
+- `cli/internal/text/` (12 files)
+- `cli/internal/xdg/` (2 files)
+- `client/` (25 files, 173 classes)
+- `cmd/desktop/` (6 files, 4 classes)
+- `cmd/download/duckdb/` (1 files)
+- `cmd/server/` (4 files)
+- `config/` (3 files)
+- `config/prompt_templates/` (11 files)
+- `dataset/` (2 files, 1 classes)
+- `docker/searxng/` (1 files)
+- `docreader/` (4 files, 3 classes)
+- `docreader/client/` (3 files, 4 classes)
+- `docreader/models/` (3 files, 2 classes)
+- `docreader/parser/` (15 files, 24 classes)
+- `docreader/proto/` (4 files, 15 classes)
+- `docreader/scripts/` (1 files)
+- `docreader/splitter/` (2 files, 3 classes)
+- `docreader/testdata/` (1 files)
+- `docreader/tests/` (2 files, 2 classes)
+- `docreader/utils/` (5 files, 4 classes)
+- `docs/` (25 files)
+- `docs/api/` (22 files)
+- `docs/cloud-image/` (2 files)
+- `docs/wiki/` (1 files)
+- `docs/wiki/API参考/` (1 files)
+- `docs/wiki/安全认证/` (3 files)
+- `docs/wiki/开发部署/` (2 files)
+- `docs/wiki/核心功能/` (6 files)
+- `docs/wiki/运维排障/` (1 files)
+- `docs/wiki/集成扩展/` (4 files)
+- `docs/wiki/项目概述/` (2 files)
+- `docs/zh/` (1 files)
+- `examples/skills/` (1 files)
+- `examples/skills/pdf-processing/` (2 files)
+- `examples/skills/pdf-processing/scripts/` (2 files)
+- `frontend/` (9 files)
+- `frontend/public/` (1 files)
+- `frontend/public/tdesign-icons/0.4.1/fonts/` (1 files)
+- `frontend/src/` (1 files)
+- `frontend/src/api/` (7 files)
+- `frontend/src/api/agent/` (1 files)
+- `frontend/src/api/auth/` (1 files)
+- `frontend/src/api/chat/` (2 files)
+- `frontend/src/api/chunker/` (1 files)
+- `frontend/src/api/datasource/` (1 files)
+- `frontend/src/api/initialization/` (1 files)
+- `frontend/src/api/knowledge-base/` (1 files)
+- `frontend/src/api/model/` (1 files)
+- `frontend/src/api/organization/` (1 files)
+- `frontend/src/api/skill/` (1 files)
+- `frontend/src/api/system/` (1 files)
+- `frontend/src/api/tenant/` (4 files)
+- `frontend/src/api/wiki/` (1 files)
+- `frontend/src/components/` (2 files)
+- `frontend/src/components/GlobalCommandPalette/` (4 files)
+- `frontend/src/components/settings/` (1 files)
+- `frontend/src/composables/` (6 files)
+- `frontend/src/hooks/` (2 files)
+- `frontend/src/i18n/` (1 files)
+- `frontend/src/i18n/locales/` (4 files)
+- `frontend/src/router/` (1 files)
+- `frontend/src/stores/` (7 files)
+- `frontend/src/types/` (2 files)
+- `frontend/src/utils/` (18 files)
+- `frontend/src/views/knowledge/settings/` (1 files)
+- `frontend/src/wailsjs/go/main/` (2 files)
+- `frontend/src/wailsjs/runtime/` (3 files)
+- `helm/` (3 files)
+- `helm/templates/` (10 files)
+- `internal/agent/` (13 files, 13 classes)
+- `internal/agent/approval/` (2 files, 10 classes)
+- `internal/agent/memory/` (2 files, 2 classes)
+- `internal/agent/skills/` (5 files, 7 classes)
+- `internal/agent/token/` (3 files, 1 classes)
+- `internal/agent/tools/` (54 files, 67 classes)
+- `internal/application/repository/` (33 files, 31 classes)
+- `internal/application/repository/memory/neo4j/` (1 files, 1 classes)
+- `internal/application/repository/retriever/doris/` (7 files, 10 classes)
+- `internal/application/repository/retriever/elasticsearch/` (1 files, 2 classes)
+- `internal/application/repository/retriever/elasticsearch/v7/` (1 files, 1 classes)
+- `internal/application/repository/retriever/elasticsearch/v8/` (1 files, 1 classes)
+- `internal/application/repository/retriever/milvus/` (4 files, 6 classes)
+- `internal/application/repository/retriever/neo4j/` (1 files, 1 classes)
+- `internal/application/repository/retriever/postgres/` (2 files, 3 classes)
+- `internal/application/repository/retriever/qdrant/` (2 files, 3 classes)
+- `internal/application/repository/retriever/sqlite/` (1 files, 3 classes)
+- `internal/application/repository/retriever/tencentvectordb/` (3 files, 2 classes)
+- `internal/application/repository/retriever/weaviate/` (2 files, 3 classes)
+- `internal/application/service/` (92 files, 104 classes)
+- `internal/application/service/chat_pipeline/` (27 files, 26 classes)
+- `internal/application/service/file/` (13 files, 10 classes)
+- `internal/application/service/memory/` (1 files, 3 classes)
+- `internal/application/service/metric/` (13 files, 11 classes)
+- `internal/application/service/retriever/` (9 files, 12 classes)
+- `internal/assets/` (1 files)
+- `internal/common/` (2 files, 1 classes)
+- `internal/config/` (2 files, 25 classes)
+- `internal/container/` (3 files, 1 classes)
+- `internal/database/` (1 files, 1 classes)
+- `internal/datasource/` (6 files, 7 classes)
+- `internal/datasource/connector/feishu/` (4 files, 17 classes)
+- `internal/datasource/connector/notion/` (8 files, 17 classes)
+- `internal/datasource/connector/yuque/` (6 files, 17 classes)
+- `internal/errors/` (2 files, 2 classes)
+- `internal/event/` (8 files, 28 classes)
+- `internal/handler/` (47 files, 119 classes)
+- `internal/handler/dto/` (8 files, 10 classes)
+- `internal/handler/session/` (11 files, 19 classes)
+- `internal/im/` (21 files, 35 classes)
+- `internal/im/dingtalk/` (3 files, 7 classes)
+- `internal/im/feishu/` (4 files, 11 classes)
+- `internal/im/mattermost/` (5 files, 5 classes)
+- `internal/im/slack/` (4 files, 4 classes)
+- `internal/im/telegram/` (4 files, 10 classes)
+- `internal/im/wechat/` (5 files, 14 classes)
+- `internal/im/wecom/` (8 files, 10 classes)
+- `internal/infrastructure/chunker/` (20 files, 17 classes)
+- `internal/infrastructure/docparser/` (15 files, 31 classes)
+- `internal/infrastructure/web_fetch/` (1 files)
+- `internal/infrastructure/web_search/` (11 files, 22 classes)
+- `internal/logger/` (3 files, 6 classes)
+- `internal/mcp/` (4 files, 14 classes)
+- `internal/middleware/` (16 files, 15 classes)
+- `internal/middleware/asynqdl/` (2 files, 2 classes)
+- `internal/models/asr/` (4 files, 6 classes)
+- `internal/models/chat/` (16 files, 27 classes)
+- `internal/models/embedding/` (15 files, 41 classes)
+- `internal/models/provider/` (28 files, 30 classes)
+- `internal/models/rerank/` (12 files, 36 classes)
+- `internal/models/utils/` (2 files)
+- `internal/models/utils/ollama/` (1 files, 2 classes)
+- `internal/models/vlm/` (7 files, 12 classes)
+- `internal/router/` (5 files, 7 classes)
+- `internal/runtime/` (2 files, 1 classes)
+- `internal/sandbox/` (9 files, 13 classes)
+- `internal/searchutil/` (4 files, 3 classes)
+- `internal/stream/` (3 files, 3 classes)
+- `internal/tracing/` (1 files, 1 classes)
+- `internal/tracing/langfuse/` (12 files, 16 classes)
+- `internal/types/` (69 files, 326 classes)
+- `internal/types/interfaces/` (40 files, 84 classes)
+- `internal/utils/` (17 files, 8 classes)
+- `mcp-server/` (14 files, 1 classes)
+- `migrations/mysql/` (1 files)
+- `migrations/paradedb/` (2 files)
+- `migrations/sqlite/` (2 files)
+- `migrations/versioned/` (106 files)
+- `miniprogram/` (6 files)
+- `miniprogram/pages/chat/` (2 files)
+- `miniprogram/pages/index/` (2 files)
+- `miniprogram/pages/settings/` (2 files)
+- `miniprogram/utils/` (3 files)
+- `misc/` (1 files)
+- `scripts/` (12 files)
+- `scripts/cloud-image/` (4 files)
+- `skills/preloaded/citation-generator/` (1 files)
+- `skills/preloaded/data-processor/` (1 files)
+- `skills/preloaded/data-processor/scripts/` (3 files)
+- `skills/preloaded/doc-coauthoring/` (1 files)
+- `skills/preloaded/document-analyzer/` (1 files)
+- `skills/preloaded/openmaic-classroom/` (1 files)
+- `skills/preloaded/openmaic-classroom/references/` (2 files)
+- `skills/preloaded/openmaic-classroom/scripts/` (2 files)
+- `testdata/` (1 files)
+- `testdata/wiki_test/` (3 files)
+- `tests/miniprogram/` (1 files)
+
+## 核心类/接口定义
+
+- **WeKnoraClient** — `mcp-server/weknora_mcp_server.py`, 26 个方法
+- **Docx** — `docreader/parser/docx_parser.py`, 21 个方法
+- **DocParser** — `docreader/parser/doc_parser.py`, 9 个方法
+- **TextSplitter** — `docreader/splitter/splitter.py`, 8 个方法
+- **ParserEngineRegistry** — `docreader/parser/registry.py`, 5 个方法
+- **Chunk** — `docreader/models/document.py`, 4 个方法
+- **ed images from Ma** — `docreader/parser/markdown_parser.py`, 4 个方法
+- **ParserConcurrencyTest** — `docreader/tests/test_parser_concurrency.py`, 4 个方法
+- **
+        self, qu** — `dataset/qa_dataset.py`, 3 个方法
+- **DocReaderServicer** — `docreader/main.py`, 3 个方法
+- **Document** — `docreader/models/document.py`, 3 个方法
+- **SandboxExecutor** — `docreader/parser/doc_parser.py`, 3 个方法
+- **DocxParser** — `docreader/parser/docx_parser.py`, 3 个方法
+- **Parser** — `docreader/parser/parser.py`, 3 个方法
+- **StdWebParser** — `docreader/parser/web_parser.py`, 3 个方法
+- **DocReaderConfigTest** — `docreader/tests/test_config.py`, 3 个方法
+- **TempFileContext** — `docreader/utils/tempfile.py`, 3 个方法
+- **TempDirContext** — `docreader/utils/tempfile.py`, 3 个方法
+- **er token"
+     ** — `docreader/auth.py`, 2 个方法
+- **BaseParser** — `docreader/parser/base_parser.py`, 2 个方法
+- **FirstParser** — `docreader/parser/chain_parser.py`, 2 个方法
+- **PipelineParser** — `docreader/parser/chain_parser.py`, 2 个方法
+- **MarkdownTableUtil** — `docreader/parser/markdown_parser.py`, 2 个方法
+- ** tables in the
+    doc** — `docreader/parser/markdown_parser.py`, 2 个方法
+- **with path reference** — `docreader/parser/markdown_parser.py`, 2 个方法
+- **StdMarkitdownParser** — `docreader/parser/markitdown_parser.py`, 2 个方法
+- **DocReaderServicer** — `docreader/proto/docreader_pb2_grpc.py`, 2 个方法
+- **n self.header** — `docreader/splitter/header_hook.py`, 2 个方法
+- **ExcelParser** — `docreader/parser/excel_parser.py`, 1 个方法
+- **ImageParser** — `docreader/parser/image_parser.py`, 1 个方法
+- ... 其余 1853 个类省略
+
+## 继承/实现关系
+
+- Credentials]:
+ extends    """构建 ser
+- er token"
+      extends           )
+          
+- DocReaderServicer extends docreader_pb2_grpc.DocReaderServicer
+- Chunk extends BaseModel
+- Document extends BaseModel
+- BaseParser extends ABC
+- FirstParser extends BaseParser
+- PipelineParser extends BaseParser
+- DocParser extends Docx2Parser
+- Docx2Parser extends FirstParser
+- DocxParser extends BaseParser
+- ExcelParser extends BaseParser
+- ImageParser extends BaseParser
+-  tables in the
+    doc extends ment to en
+- with path reference extends ,
+    and 
+- ultiple stages extends 
+    1. Markdo
+- StdMarkitdownParser extends BaseParser
+-   _parser_cls =  extends StdMarkitdownP
+- PDFScannedParser extends BaseParser
+- PDFParser extends FirstParser
+- StdWebParser extends BaseParser
+- WebParser extends PipelineParser
+- DocReaderStub extends object
+- DocReaderServicer extends object
+- DocReader extends object
+- HeaderTrackerHook extends BaseModel
+- n self.header extends hook_conf
+- TextSplitter extends BaseModel implements Generic[T]
+- DocReaderConfigTest extends unittest.TestCase
+- ParserConcurrencyTest extends unittest.TestCase
+- 秒级时间戳(3位数字)而不是微秒(6位) extends ""
+
+    def forma
+- t_id:
+          extends           # 尝试
+- ents: List[st extends ]
+
+# --- 
+- re" 字段重命名为 " extends core"
+cla
+- 结构，其 "results" extends 列表包含的是 Te
+-  "cpu")
+print(f"使 extends 的设备: {dev
+
+## 核心方法签名
+
+- `TestAllReferencedCodesAreRegistered(t *testing.T)` — `cli/acceptance/contract/errorcodes_test.go`
+- `scanCmdDir(t *testing.T, dir string)` — `cli/acceptance/contract/errorcodes_test.go`
+- `walkAndScan(t *testing.T, fset *token.FileSet, root string, out map[cmdutil.ErrorCode][]token.Position)` — `cli/acceptance/contract/errorcodes_test.go`
+- `collectErrorCodes(fset *token.FileSet, f *ast.File, out map[cmdutil.ErrorCode][]token.Position)` — `cli/acceptance/contract/errorcodes_test.go`
+- `identToErrorCode(name string, cmdutil.ErrorCode, bool)` — `cli/acceptance/contract/errorcodes_test.go`
+- `Main(m *(esting.M) {)` — `cli/acceptance/contract/helpers_test.go`
+- `estFactory(t *(esting.T, mo, Server *httptest.Server, mo, Client *sdk.Client) *c)` → util.Factory {
+	 — `cli/acceptance/contract/helpers_test.go`
+- `md(t *(esting.T, f, mdutil.Factory, ar, ...string) (s, ut, stderr string, ex, Code int) {)` — `cli/acceptance/contract/helpers_test.go`
+- `rtGolden(t *(esting.T, go, []byte, pa, string) {)` — `cli/acceptance/contract/helpers_test.go`
+- `pCR(b [(byte) [])` → te {
+	 — `cli/acceptance/contract/helpers_test.go`
+- `reGolden(t *te(ting.T) {
+	f)` — `cli/acceptance/contract/wire_test.go`
+- `OK(w htt(.ResponseWriter, r *h, p.Request) {
+	i)` — `cli/acceptance/contract/wire_test.go`
+- `401(w htt(.ResponseWriter, _ *h, p.Request) {
+	w)` — `cli/acceptance/contract/wire_test.go`
+- `403(w htt(.ResponseWriter, _ *h, p.Request) {
+	w)` — `cli/acceptance/contract/wire_test.go`
+- `404(w htt(.ResponseWriter, _ *h, p.Request) {
+	w)` — `cli/acceptance/contract/wire_test.go`
+- `ServerError(w htt(.ResponseWriter, _ *h, p.Request) {
+	/)` — `cli/acceptance/contract/wire_test.go`
+- `Reachable(w htt(.ResponseWriter, _ *h, p.Request) {
+	w)` — `cli/acceptance/contract/wire_test.go`
+- `Two(w htt(.ResponseWriter, r *h, p.Request) {
+	i)` — `cli/acceptance/contract/wire_test.go`
+- `Empty(w htt(.ResponseWriter, r *h, p.Request) {
+	i)` — `cli/acceptance/contract/wire_test.go`
+- `ne(w htt(.ResponseWriter, r *h, p.Request) {
+	i)` — `cli/acceptance/contract/wire_test.go`
+- `TwoResults(w htt(.ResponseWriter, r *h, p.Request) {
+	i)` — `cli/acceptance/contract/wire_test.go`
+- `TestRAGFullLoop(t *testing.T)` — `cli/acceptance/e2e/e2e_test.go`
+- `t *test(ng.T, key st, ng) string)` → 
+	t.He — `cli/acceptance/e2e/e2e_test.go`
+- `y, fa(lback string) string)` → 
+	if v — `cli/acceptance/e2e/e2e_test.go`
+- `ary(t *test(ng.T) string)` → 
+	t.He — `cli/acceptance/e2e/e2e_test.go`
+- `textYAML(t *test(ng.T, xdg, h, t, token string) {
+	t.H)` — `cli/acceptance/e2e/e2e_test.go`
+- `pleDoc(t *test(ng.T) string)` → 
+	t.He — `cli/acceptance/e2e/e2e_test.go`
+- `w().Add(time(ut)
+	tick :=, * time.Se, nd
+	for time, ow().Before(deadli, ) {
+		var docs []stru)` — `cli/acceptance/e2e/e2e_test.go`
+- `err(bytes.Buff, cmd.Stdout, &stdout
+	cmd., err =, tderr)` — `cli/acceptance/e2e/e2e_test.go`
+- `	if err != (il {
+		t.Fat, f("%v", er, }
+	if err, json.U, arshal(stdout,)` — `cli/acceptance/e2e/e2e_test.go`
+- `NewCmd(f *cmdutil.Factory)` → *cobra.Command — `cli/cmd/agent/agent.go`
+- `NewCmdCheck(f *cmdutil.Factory)` → *cobra.Command — `cli/cmd/agent/check.go`
+- `ntCheck(ctx c(ntext.Context, svc, entCheckService, id s, ing) (*Ag, CheckResult, erro, {
+	a)` — `cli/cmd/agent/check.go`
+- `entCheck(res *(gentCheckResult, fopt, *cmdutil.FormatOptions, w io, riter) erro)` → {
+	sw — `cli/cmd/agent/check.go`
+- `gentCheckText(w io.(riter, res, gentCheckResult) erro)` → {
+	fm — `cli/cmd/agent/check.go`
+- `tAgent(_(*fakeAgentCheckSvc), context.Context,, string), dk.Agent,, ror))` — `cli/cmd/agent/check_test.go`
+- `tKnowledgeBase(_(*fakeAgentCheckSvc), context.Context,, string), dk.KnowledgeBase,, ror))` — `cli/cmd/agent/check_test.go`
+- `stRunAgentCheck_AllReachable(t(*testing.T))` — `cli/cmd/agent/check_test.go`
+- `stRunAgentCheck_OneKBFails(t(*testing.T))` — `cli/cmd/agent/check_test.go`
+- `stRunAgentCheck_Unreachable(t(*testing.T))` — `cli/cmd/agent/check_test.go`
+- `stRunAgentCheck_NilConfig(t(*testing.T))` — `cli/cmd/agent/check_test.go`
+- `stEmitAgentCheck_JSON(t(*testing.T))` — `cli/cmd/agent/check_test.go`
+- `stEmitAgentCheck_TextHuman(t(*testing.T))` — `cli/cmd/agent/check_test.go`
+- `wCmdCreate(f(*cmdutil.Factory))` → obra.Command { — `cli/cmd/agent/create.go`
+- `reate(ctx(context.Context, op, *CreateOptions, fo, s *cmdutil.FormatOptions, sv, CreateService) er)` → r {
+	 — `cli/cmd/agent/create.go`
+- `reateOverrides(base (sdk.AgentConfig, opts, CreateOptions) *sdk)` → gentConfig {
+	ov — `cli/cmd/agent/create.go`
+- `nfigFile(path (tring) (io., der, stri, , erro, {
+	r)` — `cli/cmd/agent/create.go`
+- `ent(fopts(*cmdutil.FormatOptions, ag *, k.Agent) erro)` → {
+	if — `cli/cmd/agent/create.go`
+- `CreateAgent(f *fakeCreateSvc, _ context.Context, req *sdk.CreateAgentRequest, *sdk.Agent, error)` — `cli/cmd/agent/create_test.go`
+- `CopyAgent(f *fakeCreateSvc, _ context.Context, id string, *sdk.Agent, error)` — `cli/cmd/agent/create_test.go`
+
+## 包/模块依赖关系
+
+- `.` 依赖:
+  - `fastapi`
+  - `gc`
+  - `pydantic`
+  - `torch`
+  - `transformers`
+  - `typing`
+  - `uvicorn`
+- `contract_test` 依赖:
+  - `"bytes"
+	"context"
+	"flag"
+	"net/http/httptest"
+	"os"
+	"path/filepath"
+	"testing"
+
+	"github.com/Tencent/WeKnora/cli/cmd"
+	"github.com/Tencent/WeKnora/cli/cmd/doctor"
+	"github.com/Tencent/WeKnora/cli/internal/cmdutil"
+	"github.com/Tencent/WeKnora/cli/internal/iostreams"
+	"github.com/Tencent/WeKnora/cli/internal/secrets"
+	sdk "github`
+  - `"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"path/filepath"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/Tencent/WeKnora/cli/internal/config"
+	sdk "github`
+  - `"go/ast"
+	"go/parser"
+	"go/token"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+
+	"github`
+- `e2e_test` 依赖:
+  - `json"`
+- `agentcmd` 依赖:
+  - `"bytes"
+	"context"
+	"encoding/json"
+	"errors"
+	"os"
+	"strings"
+	"testing"
+
+	"github.com/Tencent/WeKnora/cli/internal/cmdutil"
+	"github.com/Tencent/WeKnora/cli/internal/iostreams"
+	sdk "github`
+  - `"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"strings"
+	"testing"
+
+	"github.com/Tencent/WeKnora/cli/internal/cmdutil"
+	sdk "github`
+  - `"bytes"
+	"context"
+	"fmt"
+	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"github.com/Tencent/WeKnora/cli/internal/cmdutil"
+	"github.com/Tencent/WeKnora/cli/internal/iostreams"
+	sdk "github`
+  - `"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"strings"
+
+	"github.com/spf13/cobra"
+
+	"github.com/Tencent/WeKnora/cli/internal/cmdutil"
+	"github.com/Tencent/WeKnora/cli/internal/format"
+	"github.com/Tencent/WeKnora/cli/internal/iostreams"
+	"github.com/Tencent/WeKnora/cli/internal/sse"
+	sdk "github`
+  - `"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/Tencent/WeKnora/cli/internal/cmdutil"
+	"github.com/Tencent/WeKnora/cli/internal/iostreams"
+	sdk "github`
+  - `"context"
+	"encoding/json"
+	"errors"
+	"slices"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/Tencent/WeKnora/cli/internal/cmdutil"
+	"github.com/Tencent/WeKnora/cli/internal/iostreams"
+	sdk "github`
+  - `"context"
+	"fmt"
+	"io"
+	"path/filepath"
+	"strings"
+
+	"github.com/spf13/cobra"
+
+	"github.com/Tencent/WeKnora/cli/internal/cmdutil"
+	"github.com/Tencent/WeKnora/cli/internal/iostreams"
+	sdk "github`
+  - `"context"
+	"fmt"
+	"io"
+	"sort"
+	"strings"
+
+	"github.com/spf13/cobra"
+
+	"github.com/Tencent/WeKnora/cli/internal/cmdutil"
+	"github.com/Tencent/WeKnora/cli/internal/iostreams"
+	sdk "github`
+  - `"context"
+	"fmt"
+	"io"
+	"strings"
+
+	"github.com/spf13/cobra"
+
+	"github.com/Tencent/WeKnora/cli/internal/cmdutil"
+	"github.com/Tencent/WeKnora/cli/internal/iostreams"
+	"github.com/Tenc
+
+[... 摘要已截断 ...]
+
+---
+
+# 关键代码片段
+
+... 其余 1450 个文件省略（按重要性已截断）
