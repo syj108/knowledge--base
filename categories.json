@@ -6,4 +6,8 @@
   "key" : "DDoS",
   "name" : "DDoS防护",
   "description" : ""
+}, {
+  "key" : "WAF",
+  "name" : "Web应用防火墙",
+  "description" : ""
 } ]
