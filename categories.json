@@ -2,4 +2,8 @@
   "key" : "IDaaS",
   "name" : "应用身份服务",
   "description" : ""
+}, {
+  "key" : "DDoS",
+  "name" : "DDoS防护",
+  "description" : ""
 } ]

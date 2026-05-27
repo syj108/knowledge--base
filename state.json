@@ -51,14 +51,66 @@
       "assigned_category" : null,
       "last_commit_sha" : "500c8218179240e5aab67973cd8c4f627696c68c",
       "git_branch" : "main"
+    },
+    "b705c8c9-4a8b-40f5-b2fe-f2c52e0693c6" : {
+      "title" : "EIAM.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:81d09c75f4cb799c6ba6f8b9d7c5441a47f847d3773fceac40b35e77bd11e4b3",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/b705c8c9-4a8b-40f5-b2fe-f2c52e0693c6",
+      "last_ingested_at" : "2026-05-26T08:14:41.023669Z",
+      "generated_pages" : [ "IDaaS/IDaaS EIAM/产品对外文档/服务介绍" ],
+      "split_suggested" : false,
+      "assigned_category" : "IDaaS",
+      "last_commit_sha" : null,
+      "git_branch" : null
+    },
+    "e344321a-1850-4295-8afb-f83f3f706c65" : {
+      "title" : "CIAM核心价值.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:c4c365c56a259bf03805cc888b7e88382c9d09cb417862ab36958c7a6eaa2b1f",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/e344321a-1850-4295-8afb-f83f3f706c65",
+      "last_ingested_at" : "2026-05-27T02:13:13.973899Z",
+      "generated_pages" : [ "IDaaS/CIAM/产品对外文档/服务介绍", "IDaaS/CIAM/产品对外文档/QA（高频问答）", "IDaaS/CIAM/产品对内文档/完整架构图" ],
+      "split_suggested" : false,
+      "assigned_category" : "IDaaS",
+      "last_commit_sha" : null,
+      "git_branch" : null
+    },
+    "ce749bb9-598f-440f-bc17-9d84b3907031" : {
+      "title" : "DDoS基础防护.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:42d65f75449c1488e242058f89dee6ba068d894ce2260128d079fc55319376ff",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/ce749bb9-598f-440f-bc17-9d84b3907031",
+      "last_ingested_at" : "2026-05-27T02:33:32.526470Z",
+      "generated_pages" : [ "DDoS/DDoS基础防护/产品对外文档/服务介绍", "DDoS/DDoS基础防护/产品对外文档/QA（高频问答）", "DDoS/DDoS基础防护/方案支撑文档/紧急场景止血与恢复手册", "DDoS/DDoS基础防护/方案支撑文档/横向研发文档", "DDoS/DDoS基础防护/产品对内文档/完整架构图", "DDoS/DDoS基础防护/产品对内文档/业务逻辑时序图" ],
+      "split_suggested" : false,
+      "assigned_category" : "DDoS",
+      "last_commit_sha" : null,
+      "git_branch" : null
+    },
+    "ecbe2cab-e9b5-4cc6-b14f-43c84e579ce9" : {
+      "title" : "DDoS高防.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:66069d63d73ed7e637ec9469bb4896f7753e07d0ec0bf2cac4018654079cc807",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/ecbe2cab-e9b5-4cc6-b14f-43c84e579ce9",
+      "last_ingested_at" : "2026-05-27T02:35:39.699494Z",
+      "generated_pages" : [ "DDoS/DDoS高防/产品对外文档/服务介绍", "DDoS/DDoS高防/产品对外文档/QA（高频问答）", "DDoS/DDoS高防/方案支撑文档/横向研发文档", "DDoS/DDoS高防/产品对内文档/完整架构图", "DDoS/DDoS高防/产品对内文档/业务逻辑时序图" ],
+      "split_suggested" : false,
+      "assigned_category" : "DDoS",
+      "last_commit_sha" : null,
+      "git_branch" : null
     }
   },
   "stats" : {
-    "total_sources" : 4,
-    "total_pages" : 11,
+    "total_sources" : 8,
+    "total_pages" : 26,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-26T07:03:23.316688Z"
+  "updated_at" : "2026-05-27T02:35:39.699495Z"
 }

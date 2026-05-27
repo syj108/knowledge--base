@@ -42,7 +42,97 @@
       "category" : "backend",
       "file" : "pages/backend/WeKnora/产品对内文档/代码仓库.md",
       "description" : null
+    },
+    "IDaaS/IDaaS EIAM/产品对外文档/服务介绍" : {
+      "title" : "服务介绍：",
+      "category" : "IDaaS",
+      "file" : "pages/IDaaS/IDaaS EIAM/产品对外文档/服务介绍.md",
+      "description" : null
+    },
+    "IDaaS/CIAM/产品对内文档/完整架构图" : {
+      "title" : "完整架构图：",
+      "category" : "IDaaS",
+      "file" : "pages/IDaaS/CIAM/产品对内文档/完整架构图.md",
+      "description" : null
+    },
+    "DDoS/DDoS基础防护/产品对外文档/服务介绍" : {
+      "title" : "服务介绍：",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS基础防护/产品对外文档/服务介绍.md",
+      "description" : null
+    },
+    "DDoS/DDoS基础防护/产品对外文档/QA（高频问答）" : {
+      "title" : "QA（高频问答）：",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS基础防护/产品对外文档/QA（高频问答）.md",
+      "description" : null
+    },
+    "DDoS/DDoS基础防护/方案支撑文档/紧急场景止血与恢复手册" : {
+      "title" : "紧急场景止血与恢复手册：",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS基础防护/方案支撑文档/紧急场景止血与恢复手册.md",
+      "description" : null
+    },
+    "DDoS/DDoS基础防护/方案支撑文档/横向研发文档" : {
+      "title" : "横向研发文档：",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS基础防护/方案支撑文档/横向研发文档.md",
+      "description" : null
+    },
+    "DDoS/DDoS基础防护/产品对内文档/完整架构图" : {
+      "title" : "完整架构图：",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS基础防护/产品对内文档/完整架构图.md",
+      "description" : null
+    },
+    "DDoS/DDoS基础防护/产品对内文档/业务逻辑时序图" : {
+      "title" : "业务逻辑时序图",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS基础防护/产品对内文档/业务逻辑时序图.md",
+      "description" : null
+    },
+    "DDoS/DDoS高防/产品对外文档/服务介绍" : {
+      "title" : "服务介绍：",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS高防/产品对外文档/服务介绍.md",
+      "description" : null
+    },
+    "DDoS/DDoS高防/产品对外文档/QA（高频问答）" : {
+      "title" : "QA（高频问答）：",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS高防/产品对外文档/QA（高频问答）.md",
+      "description" : null
+    },
+    "DDoS/DDoS高防/方案支撑文档/横向研发文档" : {
+      "title" : "横向研发文档：",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS高防/方案支撑文档/横向研发文档.md",
+      "description" : null
+    },
+    "DDoS/DDoS高防/产品对内文档/完整架构图" : {
+      "title" : "完整架构图：",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS高防/产品对内文档/完整架构图.md",
+      "description" : null
+    },
+    "DDoS/DDoS高防/产品对内文档/业务逻辑时序图" : {
+      "title" : "业务逻辑时序图",
+      "category" : "DDoS",
+      "file" : "pages/DDoS/DDoS高防/产品对内文档/业务逻辑时序图.md",
+      "description" : null
     }
   },
-  "edges" : [ ]
+  "edges" : [ {
+    "source" : "IDaaS/CIAM/产品对外文档/服务介绍",
+    "target" : "IDaaS/CIAM/index",
+    "type" : "LINK"
+  }, {
+    "source" : "IDaaS/CIAM/产品对外文档/QA（高频问答）",
+    "target" : "IDaaS/CIAM/index",
+    "type" : "LINK"
+  }, {
+    "source" : "IDaaS/CIAM/产品对内文档/完整架构图",
+    "target" : "IDaaS/CIAM/index",
+    "type" : "LINK"
+  } ]
 }
