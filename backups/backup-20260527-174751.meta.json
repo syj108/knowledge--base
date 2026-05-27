@@ -1,0 +1,8 @@
+{
+  "id" : "backup-20260527-174751",
+  "createdAt" : "2026-05-27T09:47:51.718074Z",
+  "description" : "test",
+  "fileCount" : 43,
+  "totalSizeBytes" : 169988,
+  "files" : [ "categories.json", "state.json", ".gitignore", "index.md", "graph.json", "templates/knowledgeBaseOutput.md", "pages/DDoS/DDoS基础防护/index.md", "pages/DDoS/DDoS基础防护/方案支撑文档/紧急场景止血与恢复手册.md", "pages/DDoS/DDoS基础防护/方案支撑文档/横向研发文档.md", "pages/DDoS/DDoS基础防护/产品对内文档/完整架构图.md", "pages/DDoS/DDoS基础防护/产品对内文档/业务逻辑时序图.md", "pages/DDoS/DDoS基础防护/产品对外文档/QA（高频问答）.md", "pages/DDoS/DDoS基础防护/产品对外文档/服务介绍.md", "pages/DDoS/DDoS高防/index.md", "pages/DDoS/DDoS高防/方案支撑文档/横向研发文档.md", "pages/DDoS/DDoS高防/产品对内文档/完整架构图.md", "pages/DDoS/DDoS高防/产品对内文档/业务逻辑时序图.md", "pages/DDoS/DDoS高防/产品对外文档/QA（高频问答）.md", "pages/DDoS/DDoS高防/产品对外文档/服务介绍.md", "pages/backend/WeKnora/index.md", "pages/backend/WeKnora/方案支撑文档/横向研发文档.md", "pages/backend/WeKnora/产品对内文档/代码仓库.md", "pages/backend/WeKnora/产品对内文档/完整架构图.md", "pages/backend/WeKnora/产品对外文档/服务介绍.md", "pages/key/密钥管理服务KMS/index.md", "pages/key/密钥管理服务KMS/方案支撑文档/横向研发文档.md", "pages/key/密钥管理服务KMS/产品对内文档/完整架构图.md", "pages/key/密钥管理服务KMS/产品对内文档/业务逻辑时序图.md", "pages/key/密钥管理服务KMS/产品对外文档/QA（高频问答）.md", "pages/key/密钥管理服务KMS/产品对外文档/服务介绍.md", "pages/WAF/Web应用防火墙/index.md", "pages/WAF/Web应用防火墙/方案支撑文档/横向研发文档.md", "pages/WAF/Web应用防火墙/产品对内文档/完整架构图.md", "pages/WAF/Web应用防火墙/产品对内文档/业务逻辑时序图.md", "pages/WAF/Web应用防火墙/产品对外文档/QA（高频问答）.md", "pages/WAF/Web应用防火墙/产品对外文档/服务介绍.md", "pages/IDaaS/CIAM/index.md", "pages/IDaaS/CIAM/方案支撑文档/横向研发文档.md", "pages/IDaaS/CIAM/产品对内文档/完整架构图.md", "pages/IDaaS/CIAM/产品对外文档/QA（高频问答）.md", "pages/IDaaS/CIAM/产品对外文档/服务介绍.md", "pages/IDaaS/IDaaS EIAM/index.md", "pages/IDaaS/IDaaS EIAM/产品对外文档/服务介绍.md" ]
+}
