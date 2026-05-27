@@ -129,14 +129,27 @@
       "assigned_category" : "WAF",
       "last_commit_sha" : null,
       "git_branch" : null
+    },
+    "69d5fb57-79e3-4169-a06f-702267c75030" : {
+      "title" : "KMS.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:dd4fcd5c3494efa76b2687c893edac0be994d5f4b009a7b7fe56e5f735fc0ca1",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/69d5fb57-79e3-4169-a06f-702267c75030",
+      "last_ingested_at" : "2026-05-27T07:21:50.592119Z",
+      "generated_pages" : [ "key/密钥管理服务KMS/产品对外文档/服务介绍", "key/密钥管理服务KMS/产品对外文档/QA（高频问答）", "key/密钥管理服务KMS/方案支撑文档/横向研发文档", "key/密钥管理服务KMS/产品对内文档/完整架构图", "key/密钥管理服务KMS/产品对内文档/业务逻辑时序图" ],
+      "split_suggested" : false,
+      "assigned_category" : "key",
+      "last_commit_sha" : null,
+      "git_branch" : null
     }
   },
   "stats" : {
-    "total_sources" : 10,
-    "total_pages" : 36,
+    "total_sources" : 11,
+    "total_pages" : 41,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-27T06:54:11.156993Z"
+  "updated_at" : "2026-05-27T07:21:50.592119Z"
 }

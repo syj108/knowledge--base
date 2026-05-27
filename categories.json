@@ -10,4 +10,8 @@
   "key" : "WAF",
   "name" : "Web应用防火墙",
   "description" : ""
+}, {
+  "key" : "key",
+  "name" : "密钥管理服务",
+  "description" : ""
 } ]

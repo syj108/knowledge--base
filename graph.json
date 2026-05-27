@@ -150,6 +150,36 @@
       "category" : "WAF",
       "file" : "pages/WAF/Web应用防火墙/产品对内文档/业务逻辑时序图.md",
       "description" : null
+    },
+    "key/密钥管理服务KMS/产品对外文档/服务介绍" : {
+      "title" : "服务介绍：",
+      "category" : "key",
+      "file" : "pages/key/密钥管理服务KMS/产品对外文档/服务介绍.md",
+      "description" : null
+    },
+    "key/密钥管理服务KMS/产品对外文档/QA（高频问答）" : {
+      "title" : "QA（高频问答）：",
+      "category" : "key",
+      "file" : "pages/key/密钥管理服务KMS/产品对外文档/QA（高频问答）.md",
+      "description" : null
+    },
+    "key/密钥管理服务KMS/方案支撑文档/横向研发文档" : {
+      "title" : "横向研发文档：",
+      "category" : "key",
+      "file" : "pages/key/密钥管理服务KMS/方案支撑文档/横向研发文档.md",
+      "description" : null
+    },
+    "key/密钥管理服务KMS/产品对内文档/完整架构图" : {
+      "title" : "完整架构图：",
+      "category" : "key",
+      "file" : "pages/key/密钥管理服务KMS/产品对内文档/完整架构图.md",
+      "description" : null
+    },
+    "key/密钥管理服务KMS/产品对内文档/业务逻辑时序图" : {
+      "title" : "业务逻辑时序图",
+      "category" : "key",
+      "file" : "pages/key/密钥管理服务KMS/产品对内文档/业务逻辑时序图.md",
+      "description" : null
     }
   },
   "edges" : [ {
@@ -191,6 +221,10 @@
   }, {
     "source" : "WAF/Web应用防火墙/产品对内文档/完整架构图",
     "target" : "DDoS/DDoS高防/index",
+    "type" : "LINK"
+  }, {
+    "source" : "key/密钥管理服务KMS/产品对内文档/完整架构图",
+    "target" : "DDoS/DDoS基础防护/产品对内文档/完整架构图",
     "type" : "LINK"
   } ]
 }
