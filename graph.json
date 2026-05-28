@@ -240,6 +240,12 @@
       "category" : "PCM",
       "file" : "pages/PCM/平台凭证管理服务/产品对内文档/代码仓库.md",
       "description" : null
+    },
+    "PCM/平台凭证管理服务/产品对内文档/数据表结构" : {
+      "title" : "数据表结构",
+      "category" : "PCM",
+      "file" : "pages/PCM/平台凭证管理服务/产品对内文档/数据表结构.md",
+      "description" : null
     }
   },
   "edges" : [ {
@@ -292,6 +298,10 @@
     "type" : "LINK"
   }, {
     "source" : "PCM/平台凭证管理服务/产品对外文档/QA（高频问答）",
+    "target" : "PCM/平台凭证管理服务/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/平台凭证管理服务/产品对外文档/告警-风险-异常汇总表",
     "target" : "PCM/平台凭证管理服务/index",
     "type" : "LINK"
   }, {
