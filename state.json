@@ -254,7 +254,7 @@
       "content_hash" : "sha256:81eac60510107d372cb9c4f8ef70a0bed692aeed81379375772c5d08f223487c",
       "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/fd3c8c40-ca09-417f-8967-1a396273ead7",
       "last_ingested_at" : "2026-05-28T06:58:07.376674Z",
-      "generated_pages" : [ "PCM/平台凭证管理服务/产品对外文档/服务介绍", "PCM/平台凭证管理服务/产品对外文档/告警-风险-异常汇总表", "PCM/平台凭证管理服务/方案支撑文档/运维指导-运维手册", "PCM/平台凭证管理服务/方案支撑文档/紧急场景止血与恢复手册", "PCM/平台凭证管理服务/方案支撑文档/横向研发文档", "PCM/平台凭证管理服务/产品对内文档/完整架构图", "PCM/平台凭证管理服务/产品对内文档/业务逻辑时序图", "PCM/平台凭证管理服务/产品对内文档/代码仓库" ],
+      "generated_pages" : [ ],
       "split_suggested" : false,
       "assigned_category" : "PCM",
       "last_commit_sha" : null,
@@ -263,10 +263,10 @@
   },
   "stats" : {
     "total_sources" : 20,
-    "total_pages" : 49,
+    "total_pages" : 41,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-28T06:58:07.376674Z"
+  "updated_at" : "2026-05-28T07:45:11.248971Z"
 }
