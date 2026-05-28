@@ -341,11 +341,11 @@
     "b6c3da71-0d35-425d-93f6-b18a0520f392" : {
       "title" : "PCM应急处置.md",
       "type" : "DOCUMENT",
-      "status" : "extracting",
+      "status" : "completed",
       "content_hash" : "sha256:fbc8d244e068379e3021cab37d0b465c8f98945827723b177366a814f6093640",
       "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/b6c3da71-0d35-425d-93f6-b18a0520f392",
-      "last_ingested_at" : "2026-05-28T09:24:50.835919Z",
-      "generated_pages" : [ ],
+      "last_ingested_at" : "2026-05-28T10:06:39.411535Z",
+      "generated_pages" : [ "PCM/平台凭证管理服务/产品对外文档/告警-风险-异常汇总表", "PCM/平台凭证管理服务/方案支撑文档/运维指导-运维手册", "PCM/平台凭证管理服务/方案支撑文档/典型问题排查解决方案", "PCM/平台凭证管理服务/方案支撑文档/紧急场景止血与恢复手册", "PCM/平台凭证管理服务/产品对内文档/数据表结构" ],
       "split_suggested" : false,
       "assigned_category" : "PCM",
       "last_commit_sha" : null,
@@ -367,10 +367,10 @@
   },
   "stats" : {
     "total_sources" : 28,
-    "total_pages" : 67,
+    "total_pages" : 72,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-28T09:58:30.792640Z"
+  "updated_at" : "2026-05-28T10:06:39.411535Z"
 }
