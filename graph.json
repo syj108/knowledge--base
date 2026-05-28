@@ -287,8 +287,36 @@
     "target" : "DDoS/DDoS基础防护/产品对内文档/完整架构图",
     "type" : "LINK"
   }, {
+    "source" : "PCM/平台凭证管理服务/产品对外文档/服务介绍",
+    "target" : "PCM/平台凭证管理服务/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/平台凭证管理服务/产品对外文档/QA（高频问答）",
+    "target" : "PCM/平台凭证管理服务/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/平台凭证管理服务/方案支撑文档/典型问题排查解决方案",
+    "target" : "PCM/平台凭证管理服务/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/平台凭证管理服务/方案支撑文档/紧急场景止血与恢复手册",
+    "target" : "PCM/平台凭证管理服务/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/平台凭证管理服务/方案支撑文档/横向研发文档",
+    "target" : "PCM/平台凭证管理服务/index",
+    "type" : "LINK"
+  }, {
     "source" : "PCM/平台凭证管理服务/产品对内文档/完整架构图",
     "target" : "DDoS/DDoS基础防护/产品对内文档/完整架构图",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/平台凭证管理服务/产品对内文档/完整架构图",
+    "target" : "PCM/平台凭证管理服务/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/平台凭证管理服务/产品对内文档/业务逻辑时序图",
+    "target" : "PCM/平台凭证管理服务/index",
     "type" : "LINK"
   }, {
     "source" : "PCM/平台凭证管理服务/产品对内文档/业务逻辑时序图",
