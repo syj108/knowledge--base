@@ -14,4 +14,8 @@
   "key" : "key",
   "name" : "密钥管理服务",
   "description" : ""
+}, {
+  "key" : "PCM",
+  "name" : "平台凭证管理服务",
+  "description" : ""
 } ]

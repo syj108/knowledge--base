@@ -285,14 +285,92 @@
       "assigned_category" : "PCM",
       "last_commit_sha" : null,
       "git_branch" : null
+    },
+    "6056e9d7-bc0d-40b1-8d92-b96aa8ad62fa" : {
+      "title" : "不同网关拦截日志示例.md",
+      "type" : "DOCUMENT",
+      "status" : "extracting",
+      "content_hash" : "sha256:7c323b618c55824ca6f0bd7fc265e5b30ab7eae6cfbaf763fa02a07e1370429f",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/6056e9d7-bc0d-40b1-8d92-b96aa8ad62fa",
+      "last_ingested_at" : "2026-05-28T09:24:50.786061Z",
+      "generated_pages" : [ ],
+      "split_suggested" : false,
+      "assigned_category" : "PCM",
+      "last_commit_sha" : null,
+      "git_branch" : null
+    },
+    "c0708c0a-4145-4ff9-968a-6d8231a6826a" : {
+      "title" : "工具.md",
+      "type" : "DOCUMENT",
+      "status" : "extracting",
+      "content_hash" : "sha256:6842bef685e502f6cf9fb1f4f3aa30bc62947042666f025037ded757e45e5034",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/c0708c0a-4145-4ff9-968a-6d8231a6826a",
+      "last_ingested_at" : "2026-05-28T09:24:50.802865Z",
+      "generated_pages" : [ ],
+      "split_suggested" : false,
+      "assigned_category" : "PCM",
+      "last_commit_sha" : null,
+      "git_branch" : null
+    },
+    "359efddf-38de-4a38-ad04-2c8baab1f2b9" : {
+      "title" : "平台凭证管理服务（PCM）介绍 .md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:81eac60510107d372cb9c4f8ef70a0bed692aeed81379375772c5d08f223487c",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/359efddf-38de-4a38-ad04-2c8baab1f2b9",
+      "last_ingested_at" : "2026-05-28T09:28:24.538558Z",
+      "generated_pages" : [ "PCM/平台凭证管理服务/产品对外文档/服务介绍", "PCM/平台凭证管理服务/方案支撑文档/紧急场景止血与恢复手册", "PCM/平台凭证管理服务/方案支撑文档/横向研发文档", "PCM/平台凭证管理服务/产品对内文档/完整架构图", "PCM/平台凭证管理服务/产品对内文档/业务逻辑时序图", "PCM/平台凭证管理服务/产品对内文档/代码仓库" ],
+      "split_suggested" : false,
+      "assigned_category" : "PCM",
+      "last_commit_sha" : null,
+      "git_branch" : null
+    },
+    "ea56b38c-d350-4d88-bcaa-60b2e6a2a0d6" : {
+      "title" : "PCM排查思路&常见问题.md",
+      "type" : "DOCUMENT",
+      "status" : "extracting",
+      "content_hash" : "sha256:1a768ffb5676b1d76f29b05da411e402abf40952e9db69235a72a8ba179cf977",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/ea56b38c-d350-4d88-bcaa-60b2e6a2a0d6",
+      "last_ingested_at" : "2026-05-28T09:24:50.825897Z",
+      "generated_pages" : [ ],
+      "split_suggested" : false,
+      "assigned_category" : "PCM",
+      "last_commit_sha" : null,
+      "git_branch" : null
+    },
+    "b6c3da71-0d35-425d-93f6-b18a0520f392" : {
+      "title" : "PCM应急处置.md",
+      "type" : "DOCUMENT",
+      "status" : "extracting",
+      "content_hash" : "sha256:fbc8d244e068379e3021cab37d0b465c8f98945827723b177366a814f6093640",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/b6c3da71-0d35-425d-93f6-b18a0520f392",
+      "last_ingested_at" : "2026-05-28T09:24:50.835919Z",
+      "generated_pages" : [ ],
+      "split_suggested" : false,
+      "assigned_category" : "PCM",
+      "last_commit_sha" : null,
+      "git_branch" : null
+    },
+    "36e2a65e-8bc1-431a-aeb8-7e4ce4e2426f" : {
+      "title" : "PCM运维手册.md",
+      "type" : "DOCUMENT",
+      "status" : "extracting",
+      "content_hash" : "sha256:e68047072e008a07feeb1c7fa5d737764efc17b8f9ad2cb756d819d718dbd85c",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/36e2a65e-8bc1-431a-aeb8-7e4ce4e2426f",
+      "last_ingested_at" : "2026-05-28T09:24:50.846106Z",
+      "generated_pages" : [ ],
+      "split_suggested" : false,
+      "assigned_category" : "PCM",
+      "last_commit_sha" : null,
+      "git_branch" : null
     }
   },
   "stats" : {
-    "total_sources" : 22,
-    "total_pages" : 41,
+    "total_sources" : 28,
+    "total_pages" : 47,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-28T09:16:41.108628Z"
+  "updated_at" : "2026-05-28T09:28:24.538558Z"
 }
