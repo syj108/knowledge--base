@@ -272,14 +272,27 @@
       "assigned_category" : "PCM",
       "last_commit_sha" : null,
       "git_branch" : null
+    },
+    "a7265446-0ded-4757-8018-fc4c2f5a4d49" : {
+      "title" : "不同网关拦截日志示例.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:7c323b618c55824ca6f0bd7fc265e5b30ab7eae6cfbaf763fa02a07e1370429f",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/a7265446-0ded-4757-8018-fc4c2f5a4d49",
+      "last_ingested_at" : "2026-05-28T08:02:00.189723Z",
+      "generated_pages" : [ "PCM/PCM/产品对外文档/告警-风险-异常汇总表", "PCM/PCM/方案支撑文档/运维指导-运维手册", "PCM/PCM/方案支撑文档/典型问题排查解决方案", "PCM/PCM/方案支撑文档/紧急场景止血与恢复手册", "PCM/PCM/产品对内文档/业务逻辑时序图" ],
+      "split_suggested" : false,
+      "assigned_category" : "PCM",
+      "last_commit_sha" : null,
+      "git_branch" : null
     }
   },
   "stats" : {
-    "total_sources" : 21,
-    "total_pages" : 50,
+    "total_sources" : 22,
+    "total_pages" : 55,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-28T07:50:06.675423Z"
+  "updated_at" : "2026-05-28T08:02:00.189724Z"
 }

@@ -234,6 +234,12 @@
       "category" : "PCM",
       "file" : "pages/PCM/PCM/产品对内文档/代码仓库.md",
       "description" : null
+    },
+    "PCM/PCM/方案支撑文档/典型问题排查解决方案" : {
+      "title" : "典型问题排查解决方案",
+      "category" : "PCM",
+      "file" : "pages/PCM/PCM/方案支撑文档/典型问题排查解决方案.md",
+      "description" : null
     }
   },
   "edges" : [ {
@@ -279,6 +285,26 @@
   }, {
     "source" : "key/密钥管理服务KMS/产品对内文档/完整架构图",
     "target" : "DDoS/DDoS基础防护/产品对内文档/完整架构图",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/PCM/产品对外文档/告警-风险-异常汇总表",
+    "target" : "PCM/PCM/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/PCM/方案支撑文档/运维指导-运维手册",
+    "target" : "PCM/PCM/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/PCM/方案支撑文档/典型问题排查解决方案",
+    "target" : "PCM/PCM/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/PCM/方案支撑文档/紧急场景止血与恢复手册",
+    "target" : "PCM/PCM/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/PCM/产品对内文档/业务逻辑时序图",
+    "target" : "PCM/PCM/index",
     "type" : "LINK"
   } ]
 }
