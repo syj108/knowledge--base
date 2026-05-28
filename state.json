@@ -354,11 +354,11 @@
     "36e2a65e-8bc1-431a-aeb8-7e4ce4e2426f" : {
       "title" : "PCM运维手册.md",
       "type" : "DOCUMENT",
-      "status" : "extracting",
+      "status" : "completed",
       "content_hash" : "sha256:e68047072e008a07feeb1c7fa5d737764efc17b8f9ad2cb756d819d718dbd85c",
       "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/36e2a65e-8bc1-431a-aeb8-7e4ce4e2426f",
-      "last_ingested_at" : "2026-05-28T09:24:50.846106Z",
-      "generated_pages" : [ ],
+      "last_ingested_at" : "2026-05-28T09:58:30.792640Z",
+      "generated_pages" : [ "PCM/平台凭证管理服务/产品对外文档/服务介绍", "PCM/平台凭证管理服务/产品对外文档/告警-风险-异常汇总表", "PCM/平台凭证管理服务/方案支撑文档/运维指导-运维手册", "PCM/平台凭证管理服务/方案支撑文档/典型问题排查解决方案", "PCM/平台凭证管理服务/方案支撑文档/紧急场景止血与恢复手册", "PCM/平台凭证管理服务/产品对内文档/完整架构图" ],
       "split_suggested" : false,
       "assigned_category" : "PCM",
       "last_commit_sha" : null,
@@ -367,10 +367,10 @@
   },
   "stats" : {
     "total_sources" : 28,
-    "total_pages" : 61,
+    "total_pages" : 67,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-28T09:47:42.495971Z"
+  "updated_at" : "2026-05-28T09:58:30.792640Z"
 }
