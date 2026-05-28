@@ -295,6 +295,18 @@
     "target" : "PCM/PCM/index",
     "type" : "LINK"
   }, {
+    "source" : "PCM/平台凭证管理服务/产品对内文档/业务逻辑时序图",
+    "target" : "PCM/PCM/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/平台凭证管理服务/产品对外文档/服务介绍",
+    "target" : "PCM/平台凭证管理服务/index",
+    "type" : "LINK"
+  }, {
+    "source" : "PCM/平台凭证管理服务/产品对外文档/服务介绍",
+    "target" : "PCM/PCM/index",
+    "type" : "LINK"
+  }, {
     "source" : "PCM/平台凭证管理服务/方案支撑文档/运维指导-运维手册",
     "target" : "PCM/PCM/index",
     "type" : "LINK"
@@ -307,8 +319,8 @@
     "target" : "PCM/PCM/index",
     "type" : "LINK"
   }, {
-    "source" : "PCM/平台凭证管理服务/产品对内文档/业务逻辑时序图",
-    "target" : "PCM/PCM/index",
+    "source" : "PCM/平台凭证管理服务/方案支撑文档/紧急场景止血与恢复手册",
+    "target" : "backend/WeKnora/产品对内文档/代码仓库",
     "type" : "LINK"
   } ]
 }

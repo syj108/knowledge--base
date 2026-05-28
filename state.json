@@ -302,11 +302,11 @@
     "c0708c0a-4145-4ff9-968a-6d8231a6826a" : {
       "title" : "工具.md",
       "type" : "DOCUMENT",
-      "status" : "extracting",
+      "status" : "completed",
       "content_hash" : "sha256:6842bef685e502f6cf9fb1f4f3aa30bc62947042666f025037ded757e45e5034",
       "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/c0708c0a-4145-4ff9-968a-6d8231a6826a",
-      "last_ingested_at" : "2026-05-28T09:24:50.802865Z",
-      "generated_pages" : [ ],
+      "last_ingested_at" : "2026-05-28T09:47:42.495969Z",
+      "generated_pages" : [ "PCM/平台凭证管理服务/产品对外文档/服务介绍", "PCM/平台凭证管理服务/方案支撑文档/运维指导-运维手册", "PCM/平台凭证管理服务/方案支撑文档/典型问题排查解决方案", "PCM/平台凭证管理服务/方案支撑文档/紧急场景止血与恢复手册" ],
       "split_suggested" : false,
       "assigned_category" : "PCM",
       "last_commit_sha" : null,
@@ -367,10 +367,10 @@
   },
   "stats" : {
     "total_sources" : 28,
-    "total_pages" : 57,
+    "total_pages" : 61,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-28T09:41:05.467181Z"
+  "updated_at" : "2026-05-28T09:47:42.495971Z"
 }
