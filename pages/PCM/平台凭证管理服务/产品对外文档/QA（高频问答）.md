@@ -16,9 +16,16 @@
 
 ### 调用接口（容器中执行脚本）
 
-当白屏不可用时，采用此方案。
+当白屏不可用时，采用此方案。通过底表 AK 黑屏操作工具调用接口实现。
 
-参考：[《工具》](https://alidocs.dingtalk.com/i/nodes/7NkDwLng8Za7QYkeHxdzN0A7JKMEvZBY?utm_scene=team_space&iframeQuery=anchorId%3Duu_mocpgly2iwborsrkk7e)
+- **运行位置**：进入 PcmController 容器（Product: baseServiceAll → sn: platform-credential-management → sr：PcmController#），在任意一台容器操作即可。
+- **执行命令**：
+  ```bash
+  # 启用单个 AK
+  python3 manage_ak_status.py enable --ak <AK_ID>
+  ```
+
+> 工具源码及详细说明参考：[《工具》](https://alidocs.dingtalk.com/i/nodes/7NkDwLng8Za7QYkeHxdzN0A7JKMEvZBY?utm_scene=team_space&iframeQuery=anchorId%3Duu_mocpgly2iwborsrkk7e)
 
 ### 数据库操作
 
@@ -41,7 +48,16 @@ update accesskey_table set enabled_flag=1 where access_id = {akid};
 
 ### 调用接口（容器中执行脚本）
 
-参考：[《工具》](https://alidocs.dingtalk.com/i/nodes/7NkDwLng8Za7QYkeHxdzN0A7JKMEvZBY?utm_scene=team_space&iframeQuery=anchorId%3Duu_mocpgly2iwborsrkk7e)
+当白屏不可用时，采用此方案。通过底表 AK 黑屏操作工具调用接口实现。
+
+- **运行位置**：进入 PcmController 容器（Product: baseServiceAll → sn: platform-credential-management → sr：PcmController#），在任意一台容器操作即可。
+- **执行命令**：
+  ```bash
+  # 启用全部底表 AK
+  python3 manage_ak_status.py enable-all
+  ```
+
+> 工具源码及详细说明参考：[《工具》](https://alidocs.dingtalk.com/i/nodes/7NkDwLng8Za7QYkeHxdzN0A7JKMEvZBY?utm_scene=team_space&iframeQuery=anchorId%3Duu_mocpgly2iwborsrkk7e)
 
 ### 数据库操作
 
@@ -59,7 +75,7 @@ update accesskey_table set enabled_flag=1 where access_id = {akid};
      ```sql
      select access_key_id from init_ak_info where umm_ak_status = 0;
      ```
-2. 在 UMMAK 中启用全量底表 AK（注：源文档此处标题误写为“禁用”，实为启用操作）：
+2. 在 UMMAK 中启用全量底表 AK：
    - service：baseService-umm-ak
    - db实例：ummak
    - 数据库：ummak
@@ -125,3 +141,56 @@ update accesskey_table set enabled_flag=1 where access_id = {akid};
 ```sql
 update accesskey_table set enabled_flag = 0, deleted_flag = 1 , modified_time = UNIX_TIMESTAMP() where access_id in (xxxxx);
 ```
+
+## 如何查询网关日志中的 AK 使用情况？
+
+**适用场景**：需要通过网关和事件 ID 查询日志详细信息，或者在网关日志中扫描底表 AK 的使用情况。
+
+### 工具配置
+
+将配置文件与 CLI 工具放在相同目录下。配置示例如下：
+
+```yaml
+# 服务端简化配置
+sls:
+  # 访问凭证（此处未自动适配pcm轮转，直接填 PCM 轮转后的 AK，通过pcm控制台手动获取派生AK）
+  credentials:
+    sls:   # test1000000004@aliyun.com 对应的派生AK                  
+      access_key_id: "RONVzQyJJR2kRoLP" 
+      access_key_secret: "hvZ8oi0vWJXjWERK9VVe3j3qm2IYwK" 
+    defaultUser:  # aliyuntest 对应的派生ak           
+      access_key_id: "beF7AyHhnIjY3eGy"  
+      access_key_secret: "2R838QLvk0wjkGxL9mTPMlL1xWFX4q"
+
+  # Endpoint 配置
+  inner_endpoint: "data.cn-wulan-env17e-d01.sls.inter.env17e.shuguang.com"        # slsinner
+  pub_endpoint: "data.cn-wulan-env17e-d01.sls-pub.inter.env17e.shuguang.com"      # slspub
+
+scan:
+  hours_back: 10       # 扫描周期
+  page_size: 1000      # 默认 可不修改
+  max_workers: 20      # 默认 可不修改 
+  auto_create_index: false  # 发现无索引时是否自动创建（true=自动创建，false=跳过）
+
+output:
+  path: "./output"
+  format: "all"  # 可选: print, json, csv, all
+```
+
+### 上传与运行
+
+将工具上传到 OPS1 服务运行（或可以解析 slsinner 的环境）。
+
+### 使用指南
+
+1. **根据事件 ID 查询使用 AK**
+   ```bash
+   ./main query --gateway <网关代码> --keyword "<事件ID或关键字>"
+   ```
+   *示例：`./main query --gateway OSS --keyword "tzRzgmefjFjXBC4C"`*
+
+2. **遍历网关中底表 AK 调用记录**
+   ```bash
+   ./main scan
+   ```
+   扫描记录将自动存储在相对路径的 `output/scan_result_{时间戳}.csv`（或 json 等配置格式）中。
