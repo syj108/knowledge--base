@@ -36,8 +36,11 @@ graph TD
      ![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/oJGq75k4LxgGzlAK/img/2fd7cf34-2df5-4f17-9e5e-693a440fa80f.png)
    - **派生 AK**：控制台仅可查询每个队列最近 14 把派生 AK。
      ![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/oJGq75k4LxgGzlAK/img/38f3918a-5682-46ea-bdfd-ef66d94b16e4.png)
-     若未查到，可进入 `clm_db` 实例的 `pcm_db` 数据库查询：
+     若未查到，可进入数据库查询：
      ```sql
+     -- service：certificate-lifecycle-manager-server
+     -- db实例：clm_db
+     -- 数据库：pcm_db
      use pcm_db;
      select * from ak_info where access_key_id='****';
      ```
@@ -63,6 +66,8 @@ graph TD
 ## PCM Controller 磁盘打满或产生大量日志如何处理？
 
 **现象**：Controller 日志目录 `/home/admin/pcm_controller/logs/api/logs/` 下出现超大文件，磁盘空间不足。
+
+**EOCC 参考**：https://eocc.aliyun-inc.com/kbscene/emergencyDetail/EC9EE9AE20?Jump=2
 
 **处理步骤**：
 1. 确认磁盘使用情况：`df -h`
@@ -174,6 +179,13 @@ graph TD
 - 2507 版本 PCM 服务端尚未部署时，部分适配了 PCM 的产品可能访问 PCM 报错，但因降级返回了原始底表 AK，**不影响业务调用**。如果调用非常频繁，可能产生大量错误日志。
 - 部分产品升级至 3186-2510 及以上版本，但 baseServiceAll 未升级，可能同样出现以上问题。
 
+## SDK 超时日志中毫秒数显示为 null 是否有影响？
+
+**现象**：SDK 超时日志中毫秒数字段显示为 null。
+
+**解答**：
+未设置 `PCM_TASK_DELAY` 时默认 1s 超时，日志字段显示 null。这是已知的日志格式问题，**不影响实际功能**。
+
 ## 如何判断底表 AK 是否禁用？
 
 **解答**：可通过运维手册 [《PCM运维手册》](https://alidocs.dingtalk.com/i/nodes/amweZ92PV6DbOdgzUK4on0qD8xEKBD6p?utm_scene=team_space&iframeQuery=anchorId%3Duu_mo8cms9ciyzk8jo83x) 中的方法进行查询。
@@ -241,160 +253,17 @@ update accesskey_table set enabled_flag=1 where access_id = {akid};
 - **执行命令**：
   ```bash
   # 启用全部底表 AK
-  python3 manage_ak_status.py enable-all
+  python3 manage_ak_status.py enable --all
   ```
 
-> 工具源码及详细说明参考：[《工具》](https://alidocs.dingtalk.com/i/nodes/7NkDwLng8Za7QYkeHxdzN0A7JKMEvZBY?utm_scene=team_space&iframeQuery=anchorId%3Duu_mocpgly2iwborsrkk7e)
+## PCM 接入存在哪些潜在风险与注意事项？
 
-### 数据库操作
-
-当容器不可访问时，采用此方案。
-
-1. 先获取全量底表 AK，PCM 托管的底表 AK 存储在 clm_db 实例的 pcm 数据库中：
-   - service：certificate-lifecycle-manager-server
-   - db实例：clm_db
-   - 数据库：pcm_db
-   - 进入 clm_db 实例数据库后切换到 pcm_db：
-     ```sql
-     use pcm_db;
-     ```
-   - 检索已经禁用的 initAK：
-     ```sql
-     select access_key_id from init_ak_info where umm_ak_status = 0;
-     ```
-2. 在 UMMAK 中启用全量底表 AK：
-   - service：baseService-umm-ak
-   - db实例：ummak
-   - 数据库：ummak
-   - 执行 SQL（执行前，将 `access_id` 字段参数改成步骤一中检索到的底表 AK 信息）：
-     ```sql
-     update accesskey_table set enabled_flag=1 where access_id in ('qNNm2yFXF70Zy6Hx','qNNm2yFXF70Zy6Hx2','qNNm2yFXF70Zy6Hx3');
-     ```
-
-## 如何启用派生 AK？
-
-**适用场景**：确认某把派生 AK 被禁用影响业务。
-
-### 白屏操作
-
-白屏支持查询派生 AK，查询后可通过启用操作恢复。
-
-![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/Lk3lbmbxZoXdJOm9/img/610ebe22-d389-44fe-a31b-cce2b4c221c2.png)
-
-> **注意事项**：
-> 每个派生队列中通过白屏仅可以查询最近 14 把派生 AK，如果超过 14 把 AK 后，会在 ummak 侧执行删除操作，但 pcm 数据库会保留派生 AK 记录。当通过白屏未查询到该 AK，有可能是 14 天前派生的 AK，可通过 pcm 数据库进行查询。
-
-### 数据库操作
-
-1. 查询派生 AK：
-   - service：certificate-lifecycle-manager-server
-   - db实例：clm_db
-   - 数据库：pcm_db
-   - 进入 clm_db 实例数据库后切换到 pcm_db：
-     ```sql
-     use pcm_db;
-     ```
-2. 在 UMMAK 中启用：
-   - 如果存在，直接更新启用状态：
-     ```sql
-     update accesskey_table set enabled_flag=1,hidden_flag=0,deleted_flag=0 where access_id='qNNm2yFXF70Zy6Hx';
-     ```
-   - 如果已经删除，创建 AK（说明：`access_id` 为 akid，`access_key` 为 sk，`user_id` 为账号）：
-     ```sql
-     INSERT INTO `ummak`.`accesskey_table` (`access_id`, `access_key`, `user_id`) VALUES ('000cFXr3DBPZHxML11', 'XE5sP5dF6asjJsCkxL4QYifS7rRU11', '999999999');
-     ```
-
-## 如何处理容量告警场景？
-
-**适用场景**：UMMAK 侧每个 uid 下最大 1000 把有效 AK，当达到 1000 把以后会出现派生失败的情况（家里测试环境出现过，现场暂未出现）。
-
-参考：[《容量问题数据处理》](https://alidocs.dingtalk.com/i/nodes/QG53mjyd800agdlKHbek2aXQ86zbX04v)
-
-### 查询
-
-1. 检查特定 uid 下（如 1000000047）的 AK 数量：
-   ```sql
-   SELECT user_id, COUNT(access_id) AS access_count FROM accesskey_table where user_id = '1000000047' GROUP BY user_id;
-   ```
-2. 查询是否有 uid 下的 AK 超过 1000：
-   ```sql
-   SELECT user_id, COUNT(access_id) AS access_count FROM accesskey_table GROUP BY user_id HAVING access_count >= 1000;
-   ```
-
-### 清理
-
-分析出环境内已经无用的 AK，在 ummak 中置成删除状态：
-
-```sql
-update accesskey_table set enabled_flag = 0, deleted_flag = 1 , modified_time = UNIX_TIMESTAMP() where access_id in (xxxxx);
-```
-
-## 如何查询网关日志中的 AK 使用情况？
-
-**适用场景**：需要通过网关和事件 ID 查询日志详细信息，或者在网关日志中扫描底表 AK 的使用情况。
-
-### 工具配置
-
-将配置文件与 CLI 工具放在相同目录下。配置示例如下：
-
-```yaml
-# 服务端简化配置
-sls:
-  # 访问凭证（此处未自动适配pcm轮转，直接填 PCM 轮转后的 AK，通过pcm控制台手动获取派生AK）
-  credentials:
-    sls:   # test1000000004@aliyun.com 对应的派生AK                  
-      access_key_id: "RONVzQyJJR2kRoLP" 
-      access_key_secret: "hvZ8oi0vWJXjWERK9VVe3j3qm2IYwK" 
-    defaultUser:  # aliyuntest 对应的派生ak           
-      access_key_id: "beF7AyHhnIjY3eGy"  
-      access_key_secret: "2R838QLvk0wjkGxL9mTPMlL1xWFX4q"
-
-  # Endpoint 配置
-  inner_endpoint: "data.cn-wulan-env17e-d01.sls.inter.env17e.shuguang.com"        # slsinner
-  pub_endpoint: "data.cn-wulan-env17e-d01.sls-pub.inter.env17e.shuguang.com"      # slspub
-
-scan:
-  hours_back: 10       # 扫描周期
-  page_size: 1000      # 默认 可不修改
-  max_workers: 20      # 默认 可不修改 
-  auto_create_index: false  # 发现无索引时是否自动创建（true=自动创建，false=跳过）
-
-output:
-  path: "./output"
-  format: "all"  # 可选: print, json, csv, all
-```
-
-### 上传与运行
-
-将工具上传到 OPS1 服务运行（或可以解析 slsinner 的环境）。
-
-### 使用指南
-
-1. **根据事件 ID 查询使用 AK**
-   ```bash
-   ./main query --gateway <网关代码> --keyword "<事件ID或关键字>"
-   ```
-   *示例：`./main query --gateway OSS --keyword "tzRzgmefjFjXBC4C"`*
-
-2. **遍历网关中底表 AK 调用记录**
-   ```bash
-   ./main scan
-   ```
-   扫描记录将自动存储在相对路径的 `output/scan_result_{时间戳}.csv`（或 json 等配置格式）中。
-
-## PCM 存在哪些潜在风险与已知限制？
-
-### 架构与机制风险
-- **Core 限流基于 IP，存在误伤可能**：PCM Core 的限流策略基于客户端 IP。当同一台机器上运行多个产品组件，一个高频产品的请求可能耗尽该 IP 的限流配额，导致同 IP 下其他产品被连带返回 502。
-- **链路增加延迟**：对时间敏感业务有影响。
-- **半轮转模式首次获取失败导致后续持续异常**：部分产品采用半自动轮转模式（仅在启动时获取一次派生 AK，后续不再主动刷新）。如果该唯一一次获取请求恰好失败（Core 限流、网络抖动、服务未就绪），产品将持续使用底表 AK 或无有效凭据运行，且不会自动恢复。
-- **底表禁用后 PCM 可用性和禁用状态联动**：底表 AK 被 PCM 禁用后，产品的凭据供给完全依赖 PCM 链路（Core + Controller）。对于本地有缓存的运行中服务暂时无影响，但重启的服务如果此时 PCM 不可用，将拿不到任何有效凭据（底表已禁、派生获取失败、本地无缓存），业务直接中断。
-
-### 日志与排查限制
-- **部分 SDK 未打印关键日志，排查困难**：Java WARN 过多，部分产品屏蔽了报错日志，无请求 PCM 的 requestid 等信息，增加排查难度。
-- **SDK 超时日志毫秒数为 null**：未设置 `PCM_TASK_DELAY` 时默认 1s 超时，日志字段显示 null。已知日志格式问题，不影响功能。
-
-### 存量旧版本已知问题
-- **CLI 服务端返回异常不降级（ResponseParseFailure）**：2025-12-23 更新修复，旧版本 CLI 直接不可用。
-- **Java SDK 线程阻塞（/dev/random 熵值问题）**：`credprovider.plugin >= 1.0.8` 修复，旧版本应用线程卡死。
-- **Go SDK 日志文件不轮转**：SDK >= 2512 版本修复，旧版本磁盘打满。
+**解答**：
+1. **Core 限流基于 IP，存在误伤可能**：PCM Core 的限流策略基于客户端 IP。当同一台机器上运行多个产品组件时，一个高频产品的请求可能耗尽该 IP 的限流配额，导致同 IP 下其他产品被连带返回 502。
+2. **部分 SDK 未打印关键日志，排查困难**：Java WARN 日志过多，部分产品屏蔽了报错日志，导致无请求 PCM 的 RequestID 等关键信息，增加排查难度。
+3. **半轮转模式首次获取失败导致后续持续异常**：部分产品采用半自动轮转模式（仅在启动时获取一次派生 AK，后续不再主动刷新）。如果该唯一一次获取请求恰好失败（如 Core 限流、网络抖动、服务未就绪），产品将持续使用底表 AK 或无有效凭据运行，且不会自动恢复。
+4. **底表禁用后 PCM 可用性和禁用状态联动**：底表 AK 被 PCM 禁用后，产品的凭据供给完全依赖 PCM 链路（Core + Controller）。对于本地有缓存的运行中服务暂时无影响，但重启的服务如果此时 PCM 不可用，将拿不到任何有效凭据（底表已禁、派生获取失败、本地无缓存），导致业务直接中断。
+5. **已知问题已修复但环境中存量版本旧**：
+   - CLI 服务端返回异常不降级（ResponseParseFailure）：修复版本 2025-12-23 更新，风险为 CLI 直接不可用。
+   - Java SDK 线程阻塞（/dev/random 熵值问题）：修复版本 `credprovider.plugin >= 1.0.8`，风险为应用线程卡死。
+   - Go SDK 日志文件不轮转：修复版本 `SDK >= 2512`，风险为磁盘打满。

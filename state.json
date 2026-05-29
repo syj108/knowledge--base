@@ -493,14 +493,27 @@
       "assigned_category" : "PCM",
       "last_commit_sha" : null,
       "git_branch" : null
+    },
+    "f3caed95-27df-48c8-ae2c-18f12204418c" : {
+      "title" : "PCM排查思路&常见问题.md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:1a768ffb5676b1d76f29b05da411e402abf40952e9db69235a72a8ba179cf977",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/f3caed95-27df-48c8-ae2c-18f12204418c",
+      "last_ingested_at" : "2026-05-29T08:39:56.663611Z",
+      "generated_pages" : [ "PCM/平台凭证管理服务/产品对外文档/服务介绍", "PCM/平台凭证管理服务/产品对外文档/QA（高频问答）", "PCM/平台凭证管理服务/产品对外文档/告警-风险-异常汇总表", "PCM/平台凭证管理服务/方案支撑文档/运维指导-运维手册", "PCM/平台凭证管理服务/方案支撑文档/典型问题排查解决方案", "PCM/平台凭证管理服务/方案支撑文档/紧急场景止血与恢复手册", "PCM/平台凭证管理服务/方案支撑文档/横向研发文档", "PCM/平台凭证管理服务/产品对内文档/完整架构图", "PCM/平台凭证管理服务/产品对内文档/业务逻辑时序图", "PCM/平台凭证管理服务/产品对内文档/代码仓库", "PCM/平台凭证管理服务/产品对内文档/数据表结构" ],
+      "split_suggested" : false,
+      "assigned_category" : "PCM",
+      "last_commit_sha" : null,
+      "git_branch" : null
     }
   },
   "stats" : {
-    "total_sources" : 38,
-    "total_pages" : 114,
+    "total_sources" : 39,
+    "total_pages" : 125,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-29T07:49:26.229203Z"
+  "updated_at" : "2026-05-29T08:39:56.663611Z"
 }
