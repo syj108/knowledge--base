@@ -1,0 +1,298 @@
+# 工具
+
+# 网关日志查询工具
+
+## 基本介绍
+
+*   支持通过网关+事件ID，查询日志详细信息
+    
+*   支持在网关日志中扫描底表AK使用情况
+    
+
+源码：
+
+CLI下载地址：
+
+## 工具使用
+
+### 配置说明 
+
+默认与cli工具放在相同文件下就可以
+
+```http
+# 服务端简化配置
+sls:
+  # 访问凭证（此处未自动适配pcm轮转，直接填 PCM 轮转后的 AK，通过pcm控制台手动获取派生AK）
+  credentials:
+    sls:   #test1000000004@aliyun.com 对应的派生AK                  
+      access_key_id: "RONVzQyJJR2kRoLP" 
+      access_key_secret: "hvZ8oi0vWJXjWERK9VVe3j3qm2IYwK" 
+    defaultUser:  #aliyuntest 对应的派生ak           
+      access_key_id: "beF7AyHhnIjY3eGy"  
+      access_key_secret: "2R838QLvk0wjkGxL9mTPMlL1xWFX4q"
+
+  # Endpoint 配置
+  inner_endpoint: "data.cn-wulan-env17e-d01.sls.inter.env17e.shuguang.com"        # slsinner
+  pub_endpoint: "data.cn-wulan-env17e-d01.sls-pub.inter.env17e.shuguang.com"          # slspub
+
+scan:
+  hours_back: 10       #扫描周期
+  page_size: 1000      #默认 可不修改
+  max_workers: 20      #默认 可不修改 
+  auto_create_index: false  # 发现无索引时是否自动创建（true=自动创建，false=跳过）
+
+output:
+  path: "./output"
+  format: "all"  # 可选: print, json, csv, all
+```
+
+### 上传到OPS1服务运行（或可以解析slsinner的环境）
+
+### 使用指南
+
+```http
+#./main -h
+usage: main [-h] [--config CONFIG] [--ak-file AK_FILE] [--gateway GATEWAY] [--keyword KEYWORD] [--hours HOURS] [--format {print,json,csv,all}] {scan,query}
+
+服务端 AK 扫描工具
+
+positional arguments:
+  {scan,query}          运行模式: scan=全量扫描, query=关键字查询
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG       配置文件路径
+  --ak-file AK_FILE     AK 列表文件路径
+  --gateway GATEWAY     查询模式：网关代码
+  --keyword KEYWORD     查询模式：关键字
+  --hours HOURS         时间范围（小时）
+  --format {print,json,csv,all}
+                        输出格式
+```
+
+#### 根据事件ID查询使用AK
+
+```http
+#./main query --gateway OSS --keyword "tzRzgmefjFjXBC4C"
+```
+
+![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/8K4nyeZYMJPgVnLb/img/f664fc8c-9abe-4f46-964c-53b8f0262f60.png)
+
+### 遍历网关中底表AK调用记录
+
+```http
+./main scan
+```
+
+扫描记录将自动存储在相对路径的 output/scan\_result\_{时间戳}.csv
+
+![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/8K4nyeZYMJPgVnLb/img/9942156f-2c4d-4885-bfa8-d430ea8394c9.png)
+
+csv示例
+
+![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/8K4nyeZYMJPgVnLb/img/d54812d2-bf0a-4f27-8f1f-a4b38d37fa2e.png)
+
+json示例
+
+![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/8K4nyeZYMJPgVnLb/img/1e9ecd6a-61ee-47ba-a66b-19d9027d6bce.png)
+
+# 底表AK黑屏操作工具
+
+## 基本介绍
+
+*   **支持启用/禁用指定AK**
+    
+*   **支持启用/禁用全量AK**
+    
+
+**工具源码**
+
+```http
+import time
+import hashlib
+import requests
+import os
+import sys
+import argparse
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# 通过PcmController服务注册变量或环境中的env中获取
+pcm_ctrl_domain = os.getenv('pcm_ctrl_domain')
+pcm_rs = os.getenv('pcm_rs')
+
+
+def get_pcm_headers():
+    """获取签名headers"""
+    millis_timestamp = int(time.time() * 1000)
+    raw_str = f"{pcm_rs}\u00a7{millis_timestamp}"
+    md5_signature = hashlib.md5(raw_str.encode('utf-8')).hexdigest()
+    headers = {
+        "X-ASO-Inner-Request-Signature": md5_signature,
+        "X-ASO-Inner-Request-Timestamp": str(millis_timestamp)
+    }
+    return headers
+
+
+def update_ak_status(ak_id, status, headers):
+    """更新单个 AK 状态
+    
+    Args:
+        ak_id: AK ID
+        status: True=启用, False=禁用
+        headers: 请求签名headers
+    """
+    status_str = 'true' if status else 'false'
+    action = '启用' if status else '禁用'
+    url = f'http://{pcm_ctrl_domain}:8093/pcm/controller/operation/updateAkStatus?akId={ak_id}&status={status_str}'
+    try:
+        resp = requests.get(url, headers=headers)
+        result = resp.json()
+        code = result.get('code', '')
+        if str(code) == '200':
+            print(f"{ak_id} 已{action}")
+        else:
+            print(f"{ak_id} {action}失败: {result.get('message', resp.text)}")
+        return str(code) == '200'
+    except Exception as e:
+        print(f"{ak_id} {action}异常: {e}")
+        return False
+
+
+def get_default_keys(headers):
+    """从 PCM 获取全部底表 AK 列表"""
+    ak_list = []
+    url = f"http://{pcm_ctrl_domain}:8093/pcm/controller/initAK/queryInitAkList"
+    data = {"pageNum": 1, "pageSize": 200}
+    try:
+        response = requests.post(url, json=data, headers=headers)
+        response.raise_for_status()
+        result = response.json()
+        code = result.get('code', 0)
+        if str(code) == '200':
+            resp_data = result.get('data', {})
+            ak_info_list = resp_data.get('list', [])
+            for ak in ak_info_list:
+                if ak.get('akType', 0) == 0:
+                    accessKeyId = ak.get('accessKeyId', '')
+                    if accessKeyId:
+                        ak_list.append(accessKeyId)
+            print(f"获取到底表 AK 共 {len(ak_list)} 个")
+        else:
+            logger.error(f"获取底表 AK 列表失败: {result}")
+    except Exception as e:
+        logger.error(f"获取底表 AK 列表异常: {e}")
+    return ak_list
+
+
+def get_accountid_keys(accountid, headers):
+    """通过账号ID获取 AK"""
+    url = f"http://{pcm_ctrl_domain}:8093/pcm/controller/initAK/queryInitAkList"
+    data = {"pageNum": 1, "pageSize": 200}
+    try:
+        response = requests.post(url, json=data, headers=headers)
+        response.raise_for_status()
+        result = response.json()
+        code = result.get('code', 0)
+        if str(code) == '200':
+            resp_data = result.get('data', {})
+            ak_info_list = resp_data.get('list', [])
+            for ak in ak_info_list:
+                if accountid == ak.get('accountId', ''):
+                    return ak.get('accessKeyId', '')
+            print(f"未找到账号 {accountid} 对应的 AK")
+            return None
+        else:
+            logger.error(f"查询失败: {result}")
+            return None
+    except Exception as e:
+        logger.error(f"查询异常: {e}")
+        return None
+
+
+def main():
+    parser = argparse.ArgumentParser(description='AK 状态管理工具')
+    parser.add_argument('action', choices=['enable', 'disable', 'enable-all', 'disable-all', 'query'],
+                        help='操作: enable=启用AK, disable=禁用AK, enable-all=启用全部, disable-all=禁用全部, query=查询账号AK')
+    parser.add_argument('--ak', help='指定 AK ID（enable/disable 时必填）')
+    parser.add_argument('--account-id', help='指定账号ID（query 时必填）')
+
+    args = parser.parse_args()
+
+    # 检查环境变量
+    if not pcm_ctrl_domain or not pcm_rs:
+        print("错误: 缺少环境变量 pcm_ctrl_domain 和 pcm_rs")
+        return 1
+
+    headers = get_pcm_headers()
+
+    if args.action in ('enable', 'disable'):
+        if not args.ak:
+            parser.error(f"{args.action} 操作必须指定 --ak")
+        status = args.action == 'enable'
+        update_ak_status(args.ak, status, headers)
+
+    elif args.action == 'enable-all':
+        ak_list = get_default_keys(headers)
+        if not ak_list:
+            print("无 AK 需要启用")
+            return 0
+        success = 0
+        for ak in ak_list:
+            if update_ak_status(ak, True, headers):
+                success += 1
+        print(f"启用完成: {success}/{len(ak_list)}")
+
+    elif args.action == 'disable-all':
+        ak_list = get_default_keys(headers)
+        if not ak_list:
+            print("无 AK 需要禁用")
+            return 0
+        success = 0
+        for ak in ak_list:
+            if update_ak_status(ak, False, headers):
+                success += 1
+        print(f"禁用完成: {success}/{len(ak_list)}")
+
+    elif args.action == 'query':
+        if not args.account_id:
+            parser.error("query 操作必须指定 --account-id")
+        ak = get_accountid_keys(args.account_id, headers)
+        if ak:
+            print(f"账号 {args.account_id} 的 AK: {ak}")
+        else:
+            print(f"未找到账号 {args.account_id} 的 AK")
+
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
+```
+
+## 工具使用
+
+**运行位置：**PcmController**容器**：Product: baseServiceAll → sn: platform-credential-management → sr：PcmController#，进入任意一台容器操作即可
+
+![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/8K4nyeZYMJPgVnLb/img/217f11ef-bd9a-40c2-ace4-ed74a1d787e4.png)
+
+```http
+# 启用单个
+$ python3 manage_ak_status.py enable --ak LTAI5txxxxxx
+
+# 禁用单个
+$ python3 manage_ak_status.py disable --ak LTAI5txxxxxx
+
+
+# 启用全部
+$ python3 manage_ak_status.py enable-all
+
+# 禁用全部
+$ python3 manage_ak_status.py disable-all
+
+```
