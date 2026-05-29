@@ -419,11 +419,11 @@
     "1f621d66-a908-4ac2-8f55-f520d3a6f6c0" : {
       "title" : "不同网关拦截日志示例.md",
       "type" : "DOCUMENT",
-      "status" : "extracting",
+      "status" : "completed",
       "content_hash" : "sha256:7c323b618c55824ca6f0bd7fc265e5b30ab7eae6cfbaf763fa02a07e1370429f",
       "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/1f621d66-a908-4ac2-8f55-f520d3a6f6c0",
-      "last_ingested_at" : "2026-05-29T06:55:34.861742Z",
-      "generated_pages" : [ ],
+      "last_ingested_at" : "2026-05-29T07:24:41.369532Z",
+      "generated_pages" : [ "PCM/平台凭证管理服务/产品对外文档/服务介绍", "PCM/平台凭证管理服务/产品对外文档/QA（高频问答）", "PCM/平台凭证管理服务/产品对外文档/告警-风险-异常汇总表", "PCM/平台凭证管理服务/方案支撑文档/运维指导-运维手册", "PCM/平台凭证管理服务/方案支撑文档/典型问题排查解决方案", "PCM/平台凭证管理服务/方案支撑文档/紧急场景止血与恢复手册", "PCM/平台凭证管理服务/方案支撑文档/横向研发文档", "PCM/平台凭证管理服务/产品对内文档/完整架构图", "PCM/平台凭证管理服务/产品对内文档/业务逻辑时序图", "PCM/平台凭证管理服务/产品对内文档/代码仓库", "PCM/平台凭证管理服务/产品对内文档/数据表结构" ],
       "split_suggested" : false,
       "assigned_category" : "PCM",
       "last_commit_sha" : null,
@@ -484,10 +484,10 @@
   },
   "stats" : {
     "total_sources" : 37,
-    "total_pages" : 81,
+    "total_pages" : 92,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-29T07:16:43.103769Z"
+  "updated_at" : "2026-05-29T07:24:41.369532Z"
 }
