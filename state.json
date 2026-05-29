@@ -376,14 +376,27 @@
       "assigned_category" : "PCM",
       "last_commit_sha" : null,
       "git_branch" : null
+    },
+    "24e04d89-c13a-4956-85b1-c30344d735cb" : {
+      "title" : "平台凭证管理服务（PCM）介绍 .md",
+      "type" : "DOCUMENT",
+      "status" : "completed",
+      "content_hash" : "sha256:81eac60510107d372cb9c4f8ef70a0bed692aeed81379375772c5d08f223487c",
+      "file_path" : "/Users/syj/IdeaProjects/knowledgeAgent/knowledge-base/sources/24e04d89-c13a-4956-85b1-c30344d735cb",
+      "last_ingested_at" : "2026-05-29T02:48:24.032211Z",
+      "generated_pages" : [ "PCM/平台凭证管理服务/产品对外文档/服务介绍", "PCM/平台凭证管理服务/产品对外文档/QA（高频问答）", "PCM/平台凭证管理服务/产品对外文档/告警-风险-异常汇总表", "PCM/平台凭证管理服务/方案支撑文档/紧急场景止血与恢复手册", "PCM/平台凭证管理服务/方案支撑文档/横向研发文档", "PCM/平台凭证管理服务/产品对内文档/完整架构图", "PCM/平台凭证管理服务/产品对内文档/业务逻辑时序图", "PCM/平台凭证管理服务/产品对内文档/代码仓库" ],
+      "split_suggested" : false,
+      "assigned_category" : "PCM",
+      "last_commit_sha" : null,
+      "git_branch" : null
     }
   },
   "stats" : {
-    "total_sources" : 29,
-    "total_pages" : 75,
+    "total_sources" : 30,
+    "total_pages" : 83,
     "total_links" : 0
   },
   "kb_version" : 1,
   "created_at" : "2026-05-26T02:18:43.871503Z",
-  "updated_at" : "2026-05-29T02:41:08.418230Z"
+  "updated_at" : "2026-05-29T02:48:24.032211Z"
 }
