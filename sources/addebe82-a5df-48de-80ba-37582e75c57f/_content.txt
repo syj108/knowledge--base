@@ -1,0 +1,331 @@
+# PCM排查思路&常见问题
+
+# 排查总览
+
+本文档以**问题现象**作为入口，引导排查思路。
+
+```mermaid
+graph TD
+    Start[运行时问题现象] --> P1[AK调用网关被拦截]
+    Start --> P2[客户端产生大量PCM相关WARN日志]
+    Start --> P3[Controller磁盘打满/大量日志]
+    Start --> P4[Go SDK日志文件持续增长]
+    Start --> P5[RPM包安装失败]
+    Start --> P6[Java应用线程阻塞]
+    Start --> P7[CLI工具报错ResponseParseFailure]
+
+    P1 --> S1[§2.1 核心排查场景]
+    P2 --> S2[§2.2]
+    P3 --> S3[§2.3]
+    P4 --> S4[§2.4]
+    P5 --> S5[§2.5]
+    P6 --> S6[§2.6]
+    P7 --> S7[§2.7]
+
+```
+---
+
+# 已知问题与排查
+
+## AK 调用网关被拦截
+
+这是 PCM 接入后最核心的排查场景，首先需判断是否是PCM禁用AK导致，产品调用网关时可能报 AK 被禁用/AK 无效/AK 不存在。
+
+*   情况1: 底表被禁用
+    
+*   情况2: 派生AK被禁用
+    
+
+**第一步：从网关日志中取出被拦截的 AK ID，在控制台查询是底表 AK 还是派生 AK。**
+
+*   **底表AK判定：可以直接通过控制台查询**
+    
+
+![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/oJGq75k4LxgGzlAK/img/2fd7cf34-2df5-4f17-9e5e-693a440fa80f.png)
+
+*   **派生AK判定：**
+    
+    *   **控制台仅可以查询每个队列最近14把派生ak**
+        
+        ![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/oJGq75k4LxgGzlAK/img/38f3918a-5682-46ea-bdfd-ef66d94b16e4.png)
+        
+    *   数据库查询
+        
+
+service：certificate-lifecycle-manager-server
+
+db实例：clm\_db
+
+数据库：pcm\_db
+
+**进入clm\_db实例数据库后切换到pcm\_db**
+
+:::
+use pcm\_db;
+:::
+
+**在派生ak数据库中检查是否存在**
+
+:::
+select \* from ak\_info where access\_key\_id='\*\*\*\*';
+:::
+
+### 分支一：底表 AK 被拦截
+
+**核心判断**：
+
+是产品在使用底表 AK，说明 SDK 没有成功获取派生 AK，
+
+*   走了降级逻辑。排查方向是**为什么 SDK 没拿到派生 AK**。
+    
+*   使用底表AK未适配
+    
+
+**排查步骤：**
+
+1.  **先恢复** — 在 PCM 控制台启用该底表 AK，恢复业务；
+    
+2.  **查 SDK 日志 code** — 确认是哪种降级场景，参见：**Core 错误码快速定位**
+    
+
+### 分支二：派生 AK 被拦截
+
+**核心判断**：产品已经在使用派生 AK，但这把派生 AK 已被轮转禁用。排查方向是**为什么产品没有及时更新到最新的派生 AK**。
+
+**恢复步骤：**
+
+1.  **通常重启服务会刷新ak导致可用，然后停止该队列的轮转**
+    
+    ![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/oJGq75k4LxgGzlAK/img/d4de6c7b-0ccf-4072-97a2-f3076bedea7c.png)
+    
+2.  **无法重新服务，需要启用AK，**
+    
+
+**参见：**[《PCM应急处置》](https://alidocs.dingtalk.com/i/nodes/MNDoBb60VLYDGNPytBomBqkPJlemrZQ3?utm_scene=team_space&iframeQuery=anchorId%3Duu_mogmd4kosy5jbbqysjf)
+
+**排查步骤：**
+
+最可能原因为：仅获取一次，未持续轮转
+
+如果有sdk有报错，参见：**Core 错误码快速定位**
+
+## 客户端产生大量 PCM相关WARN 日志
+
+**现象**：产品日志中大量 `Failed to refresh credential, pcm server is xxx`
+
+**关键判断**：这类 WARN 日志**不影响业务**（SDK 已降级返回原始凭证），主要影响是客户端告警监控被触发。
+
+## PCM Controller 磁盘打满 / 产生大量日志
+
+**现象**：Controller 日志目录 `/home/admin/pcm_controller/logs/api/logs/` 下出现超大文件，磁盘空间不足
+
+**EOCC 参考**：https://eocc.aliyun-inc.com/kbscene/emergencyDetail/EC9EE9AE20?Jump=2
+
+**处理方式**：
+
+1.  确认磁盘使用情况：`df -h`
+    
+2.  查看日志目录大小：`du -sh /home/admin/pcm_controller/logs/api/logs/`
+    
+3.  清理历史日志文件（保留最近日志）
+    
+4.  排查产生大量日志的原因：
+    
+    *   是否有大量异常请求持续打到 Controller
+        
+    *   是否有定时任务异常导致循环报错
+        
+5.  确认日志轮转配置是否正常
+    
+
+## Go SDK 日志文件持续增长
+
+**现象**：Go SDK 产生的日志文件不断增大，未按预期轮转
+
+**原因**：Go SDK 在 2512 之前版本存在日志轮转 Bug
+
+**解决方案**：升级 Go SDK 至 2512 及以上版本
+
+**临时处理**：`> logfile` 截断日志文件（不要 rm 正在写入的文件）
+
+## Python SDK RPM 包安装失败
+
+**现象**：安装 `pcm-python2-sdk-rpm-with-no-six` 报错
+
+**关键字**：`pytz/zoneinfo`、`cpio: File from package already exists as a directory`
+
+**原因**：系统已有 `/home/tops/lib/python2.7/site-packages/pytz/` 目录，与 RPM 包冲突
+
+**解决方式**：
+
+```bash
+mv /home/tops/lib/python2.7/site-packages/pytz /home/tops/lib/python2.7/site-packages/pytz_bak
+sudo yum install pcm-python2-sdk-rpm-with-no-six -y
+
+```
+---
+
+## Java 应用线程阻塞
+
+**现象**：线程 dump 中出现阻塞堆栈：
+
+```plaintext
+java.lang.Thread.State: BLOCKED (on object monitor)
+  at sun.security.provider.NativePRNG$RandomIO.implNextBytes(NativePRNG.java:543)
+  at ...PcmSecretCredentialManager.persistCredentials(...)
+
+```
+
+**原因**：SDK 默认使用 `/dev/random` 阻塞模式获取随机数，系统熵值低（< 100）时线程被卡住
+
+**解决方案**：
+
+*   升级 SDK 至 `credprovider.plugin >= 1.0.8`
+    
+*   临时规避：JVM 参数 `-Djava.security.egd=file:/dev/./urandom`
+    
+
+## CLI 工具报错 ResponseParseFailure
+
+**现象**：
+
+```json
+{"code": "ResponseParseFailure", "data": "", "message": "xxxxxxx"}
+
+```
+
+**原因**：pcm\_endpoint 地址不对，该地址响应 200 但格式非预期，CLI 解析失败且未走降级
+
+**排查**：确认 CLI 的 pcm\_endpoint 指向正确的 PCM Core 地址，手动 curl 确认返回格式
+
+> 后续版本会优化解析异常的降级处理，已经解决
+
+# Core 错误码快速定位
+
+当排查过程中从 SDK 报错信息中拿到了具体错误码，按此表辅助定位：
+
+## HTTP 400 — 请求参数错误
+
+| 返回 Msg | 报错原因 | 排查方向 |
+| --- | --- | --- |
+| `SecretName or x_acs_bearer_token is nil` | SecretName 或 token 为空 | SDK 侧 initakid 和 pcm\_endpoint 是否正确 |
+| `SecretName parse fail, SecretName:xxxx` | SecretName 格式错误 | appName 是否正确以 `:` 分隔 |
+| `The access key (AK) is not administered by the PCM service, AK:xxxx` | akid 非底表 AK | initakid 是否填写正确的底表 akid |
+| `genJwtKey fail` | 计算 token\_key 失败 | Core 内部问题，与 SDK 无关 |
+| `Error in AK rotation led to unsuccessful request to the controller...` | 请求 Controller 派生失败 | 1. 派生 AK 容量达上限<br>2. IAMID 非法且关闭了非标开关 |
+
+## HTTP 403 — 认证失败
+
+| 返回 Msg | 报错原因 | 排查方向 |
+| --- | --- | --- |
+| `reason: signature error` | 签名验证失败 | 见 §3.3 |
+| `reason: "nbf" claim not valid until` | 时钟不同步 | 见 §3.4 |
+| `token_arn not same with arn...` | ARN 不一致 | SDK 内部问题，基本不出现 |
+
+## signature error 排查
+
+```mermaid
+graph TD
+    S["Core返回403<br/>reason: signature error"] --> INFO["签名key = sha256(initSK || IKM)<br/>IKM = endpoint去https://→取域名→去掉-regionid"]
+
+    INFO --> Q1{报错范围？}
+
+    Q1 -->|单元region报错<br/>中心region正常| R1["99%是regionid传错<br/>导致两端IKM计算不同"]
+    Q1 -->|中心和单元同时报错| R2[initAK/initSK值本身错误]
+    Q1 -->|个别产品报错| R3["pcm_endpoint配置错误<br/>（域名拼写/多了路径）"]
+    Q1 -->|都确认正确仍403| R4["环境中SK是加密存储的<br/>产品未解密就传给了SDK → §3.5"]
+
+```
+
+### 3.4 nbf 时钟偏差
+
+*   SDK 生成 JWT 的 `nbf` 使用客户端 `time.Now()`
+    
+*   版本 3186-2605 / 320-2607 后已增加 5 分钟容错
+    
+*   仍出现则检查 SDK 所在机器 NTP 同步状态
+    
+
+### 3.5 SK 加密未解密导致 403
+
+部分环境中底表 SK 是加密存储的。产品未解密就传给 SDK → 签名 key 两端不一致 → 必然 403。确认产品侧调用 SDK 前已解密 SK。
+
+### 3.6 HTTP 502
+
+大概率限流触发，见下方限流相关说明。
+
+**限流排查**：
+
+1.  检查 access.log 中 `limit_req_status` 字段
+    
+2.  `tsar -l -i 1 --nginx` 查看 QPS
+    
+3.  调整限流配置：`/services/platform-credential-management/user/pcm_conf/pcm_core.json`
+    
+4.  阈值参考（单核）：x86=200r/s, aarch64=189r/s, sw64=80r/s
+    
+
+---
+
+# 其他已知问题
+
+| 问题 | 说明 | 处理 |
+| --- | --- | --- |
+| SDK 超时日志毫秒数为 null | 未设置 `PCM_TASK_DELAY` 时默认 1s 超时，日志字段显示 null | 已知日志格式问题，不影响功能 |
+| Core 返回 502 | 大概率限流 | 见 §3.6 |
+
+# 高频问题 FAQ
+
+1.  接入PCM后出现大量报错日志，是否有影响
+    
+    2507版本PCM服务端尚未部署，部分适配了PCM的产品可能访问PCM报错，但因降级返回了原始底表AK，不影响业务调用，如果调用非常频繁，可能产生大量错误日志
+    
+    部分产品升级至3186-2510及以上版本，baseServiceAll未升级，可能同样出现以上问题
+    
+2.  如何判断底表AK是否禁用
+    
+    运维手册[《PCM运维手册》](https://alidocs.dingtalk.com/i/nodes/amweZ92PV6DbOdgzUK4on0qD8xEKBD6p?utm_scene=team_space&iframeQuery=anchorId%3Duu_mo8cms9ciyzk8jo83x)中查询
+    
+3.  如何判断派生AK禁用
+    
+    当前输出版本3186、320默认均不禁用派生AK
+    
+4.  时间敏感服务
+    
+
+接入pcm后可导致部分时间敏感服务延迟加大，且网络可能出现延迟，对于时间敏感服务，增加了1s炒熟策略
+
+| 1.13-SNAPSHOT | 20250908 | 支持PCM\_TASK\_DELAY环境变量，用于设置访问PCM最大超时时间，单位是ms。默认1000ms，即1s。 |
+| --- | --- | --- |
+
+# 潜在风险清单
+
+## Core 限流基于 IP，存在误伤可能
+
+PCM Core 的限流策略基于客户端 IP。当同一台机器上运行多个产品组件，一个高频产品的请求可能耗尽该 IP 的限流配额，导致同 IP 下其他产品被连带返回 502
+
+## 链路增加延迟，对时间敏感业务有影响
+
+## 无服务端时 SDK 频繁调用产生大量日志
+
+当环境中 PCM 服务（Core）未部署或不可达时，SDK 无法生成缓存，仍然会按配置的间隔持续尝试连接，每次失败产生 WARN 级别日志。
+
+## 部分 SDK 未打印关键日志，排查困难
+
+java WARN 过多，部分产品屏蔽了报错日志，无请求pm的requsetid等信息，增加排查难度
+
+## 已知问题已修复但环境中存量版本旧
+
+| 问题 | 修复版本 | 风险 |
+| --- | --- | --- |
+| CLI 服务端返回异常不降级（ResponseParseFailure） | **2025-12-23更新** | CLI 直接不可用 |
+| Java SDK 线程阻塞（/dev/random 熵值问题） | credprovider.plugin >= 1.0.8 | 应用线程卡死 |
+| Go SDK 日志文件不轮转 | SDK >= 2512版本 | 磁盘打满 |
+
+## 半轮转模式首次获取失败导致后续持续异常
+
+部分产品采用半自动轮转模式——仅在启动时获取一次派生 AK，后续不再主动刷新。如果该唯一一次获取请求恰好失败（Core 限流、网络抖动、服务未就绪），产品将持续使用底表 AK 或无有效凭据运行，且不会自动恢复
+
+## 底表禁用后 PCM 可用性和禁用状态联动
+
+底表 AK 被 PCM 禁用后，产品的凭据供给完全依赖 PCM 链路（Core + Controller）。对于本地有缓存的运行中服务暂时无影响，但重启的服务如果此时 PCM 不可用，将拿不到任何有效凭据——底表已禁、派生获取失败、本地无缓存——业务直接中断。
