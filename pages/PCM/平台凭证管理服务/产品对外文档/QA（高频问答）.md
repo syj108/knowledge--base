@@ -260,56 +260,93 @@ output:
    - **原因**：产品已使用派生 AK，但该 AK 已被轮转禁用。最可能原因为仅获取一次，未持续轮转。
    - **处理**：通常重启服务会刷新 AK 导致可用，然后停止该队列的轮转。
      ![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/oJGq75k4LxgGzlAK/img/d4de6c7b-0ccf-4072-97a2-f3076bedea7c.png)
-     若无法重启，需手动启用 AK（参考 [《PCM应急处置》](https://alidocs.dingtalk.com/i/nodes/MNDoBb60VLYDGNPytBomBqkPJlemrZQ3?utm_scene=team_space&iframeQuery=anchorId%3Duu_mo)）。
+     若无法重启，需手动启用 AK（参考 [《PCM应急处置》](https://alidocs.dingtalk.com/i/nodes/MNDoBb60VLYDGNPytBomBqkPJlemrZQ3?utm_scene=team_space&iframeQuery=anchorId%3Duu_mo8cms9ciyzk8jo83x)）。
 
-## 常见网关 AK 拦截日志特征及示例
+## 如何手动创建临时派生 AK？
 
-当遇到访问报错，怀疑是 PCM 禁用 AK 导致的，优先通过拦截日志判定。提取日志中的请求 AK，并通过 PCM 服务查询 AK 状态，如果已经禁用，采用应急处置方案进行处置，并反馈研发侧排查原因。
+**适用场景**：当某个应用需要使用临时 AK 登录或者使用的 initAK 被禁用时，可以创建临时 AK 使用。
 
-下面是常见网关 AK 被禁用示例，可做参考：
+### 操作步骤
 
-### OSS
+1. 进入派生 AK 管理标签页，点击**创建临时 AK** 按钮。
+   ![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/Lk3lbmbxZoXdJOm9/img/dad710b4-9011-4e5c-a529-f4460748de57.png)
+2. 输入申请者、initAKID、有效天数、申请派生 AK 原因等相关信息创建临时 AK。
+   ![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/Lk3lbmbxZoXdJOm9/img/66a153fd-c7d3-4df5-99f2-c38acc29d6b3.png)
+   **注意事项**：
+   - initAKID 是托管到 PCM 的基线或底表 AK（要与所使用账号的原始 AK 对应）。
+   - 申请者 ID 即为 IAMID，是服务的身份标识（常规为 `集群 + : + sr` 拼接而成，如 `StandardCloudCluster-A-20250906-00bf:PcmController`。如果系统中提示已存在，可在后面拼接任意字符串）。
+   - AK 类型默认使用临时类型。
+   - 有效天数范围限制在 1~365 天。
+   - 申请者类型分为：ApsaraStackProduct、Other。
+   - CloudID、ProductName、ClusterName、ServiceName 分别为使用该 AK 的应用归属的信息（非必填，但建议准确填写以便判断使用方）。
+3. 复制 AK、SK 保存使用。
+   ![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/Lk3lbmbxZoXdJOm9/img/3287f4e7-8607-4d2a-9137-08d6db0b5650.png)
+   **注意**：该 AK 对应的 SK 明文只会在创建成功后弹窗内展示，关闭弹窗后系统内不再显示。如果不慎关闭弹窗，需重新创建，系统不对外提供 SK 明文信息能力。
 
-**拦截特征**：
-- `"error_code": "InvalidAccessKeyId"`
-- `"status": "403"`
+## 派生 AK 轮转状态显示“已停止”是什么原因？
 
-**日志示例**：
-```json
-{"__tag__:__hostname__": "c25g07018.cloud.g07.amtest17", "__tag__:__pack_id__": "B06A0AF67C8DC2DB-1EF", "__tag__:__path__": "/apsara/module_logs/oss_tengine/access_log.2026042415", "__topic__": "", "acc_src_oms_region": "-", "access_id": "5hN1RkUhRn43iNfw", "bucket_enable": "-", "bucket_storage_type": "standard", "bucket_version": "1774332774", "bucketname": "cn-wulan-env17e-d01-as-console-cdn", "content_length_in": "-", "content_length_out": "476", "delta": "-", "error_code": "InvalidAccessKeyId", "host": "cn-wulan-env17e-d01-as-console-cdn.oss-cn-wulan-env17e-d01-a.intra.env17e.shuguang.com", "http_referer": "-", "in_length": "335", "ip": "10.17.46.36", "length": "476", "method": "GET", "objectname": "-", "objectsize": "-", "operation": "GetBucketAcl", "oss_acc_linetype": "-", "oss_data_location": "-", "oss_location": "oss-cn-wulan-env17e-d01-a", "oss_request_type": "-", "owner": "999999999", "process_type": "-", "ref_url": "aliyun-sdk-java/3.8.0(Linux/4.19.91-007.ali4000.alios7.x86_64/amd64;1.8.0_172)", "remote_port": "58066", "remote_user": "-", "request_id": "69EB1A0A3E6DA93539F3A4CE", "request_payer_account": "-", "requester": "-", "response_time": "0", "scheme": "http", "select_real_ip": "-", "sign_type": "-", "status": "403", "sync_direction": "-", "sync_source_bucket": "-", "sync_transfer_type": "-", "target_object_storage_class": "-", "time": "24/Apr/2026:15:21:46", "turn_around_time": "0", "url": "/?acl", "vpcaddr": "978325770", "vpcid": "0"}
-```
+**适用场景**：在 AK 申请详情中查看派生 AK 申请记录时，发现轮转状态为“已停止”。（注：认证状态失败仅表示 IAMID 不规范，不影响申请结果）。
 
-### SLS_INNER
+### 原因排查
 
-**日志示例**：
-```json
-{"APIVersion": "0.6.0", "AccessKeyId": "cmchJQg057pBelHD", "Acl": "0", "AliUid": "", "CallerType": "Parent", "ClientIP": "10.17.160.103", "ConsumerGroup": "suspicous_group", "ExOutFlow": "0", "InFlow": "0", "Latency": "292", "Lines": "0", "LogStore": "big_data_event", "Method": "GetConsumerGroupCheckPoint", "NetFlow": "0", "OutFlow": "88", "ProjectId": "136", "ProjectName": "k8sblink", "RequestId": "69EB0C444B76F491098A2F35", "Source": "10.17.160.103", "Status": "401", "TunnelId": "0", "UserAgent": "aliyun-log-sdk-java-0.6.64/1.8.0_412", "UserId": "-2", "__THREAD__": "2418", "__tag__:__hostname__": "c25h05123.cloud.h06.amtest17", "__tag__:__pack_id__": "8ADDDFFBE647F7C-5", "__tag__:__path__": "/apsara/fcgi_agent/ols_operation_2.LOG", "__topic__": "", "microtime": "1777011780130296"}
-```
+1. IAMID 中有 `CLOSE_AUTO_ROTATE` 状态，表示该队列默认不轮转。
+2. 使用该产品的队列，有产品未及时更新《[[PCM/平台凭证管理服务/index|平台凭证管理服务]]（PCM）介绍》。
+3. 使用该队列的产品中，有产品仍在第 7 把 AK（参考《平台凭证管理服务（PCM）介绍》）。
 
-### SLS_PUB
+## 如何排查和查看 PCM Core 日志？
 
-**日志示例**：
-```json
-{"__THREAD__": "80679", "Method": "ListShards", "Status": "401", "ClientIP": "10.17.31.30", "Latency": "70", "TunnelId": "", "NetFlow": "0", "UserId": "-2", "AliUid": "", "Acl": "0", "AccessKeyId": "Khz7a1kmKMZDCBXj", "Owner": "1000000004", "CallerType": "Parent", "ProjectName": "ali-cdsslshybridcluster-a-20260323-015f-sls-admin", "ProjectId": "2", "UserAgent": "aliyun-log-sdk-java-0.6.64/1.8.0_352", "APIVersion": "0.6.0", "RequestId": "69D6169B34510383396636E7", "Source": "10.17.31.30", "OutFlow": "87", "ExOutFlow": "0", "NetworkType": "intranet", "InFlow": "0", "LogStore": "sls_operation_agg_log", "RequestType": "unknown", "ErrorCode": "Unauthorized", "ErrorMsg": "AccessKeyId is disabled: Khz7a1kmKMZDCBXj", "microtime": "1775638171568514", "__topic__": "", "__tag__:__hostname__": "c25g09017.cloud.g09.amtest17", "__tag__:__path__": "/apsara/sls/fcgi_agent/ols_operation.LOG", "__tag__:__pack_id__": "6C68CE91F5F727CA-12A"}
-```
+**注意事项**：PCM 部署在两个 Docker 上，日志排查需两个 Docker 都去查询。
 
-### ASAPI
+### 排查 error 日志（确定是否 pcm-core 报错返回）
 
-**日志示例**：
-```json
-{"EagleeyeRpcId": "0.1.1", "EagleeyeTraceId": "0a11243f17770122001463084d0062", "LocalIp": "10.17.36.63", "__tag__:__hostname__": "vm010017036063", "__tag__:__pack_id__": "890EE1DC2FE689D1-774", "__tag__:__path__": "/apsara/cloud/data/asapi/ApiServer#/api-server/logs/asapi-logger/audit.log", "__topic__": "", "accessKeyId": "VidKjhddRaas4tMA", "apiId": "", "apiName": "ListAllLevel1Orgs", "apiVersion": "2019-05-10", "app": "api-server", "asapiHandleTime": "2026-04-24T06:30:00Z", "callerIp": "10.17.32.38", "callerRequestTime": "2026-04-24T06:30:00Z", "callerSource": "aso-ecsops", "category": "PassThrough", "cost": "148ms", "costMs": "148", "doForward": "", "domain": "internal.asapi.cn-wulan-env17e-d01.intra.env17e.shuguang.com", "endTime": "1777012200296", "errorCode": "asapi.server.request.parameter.accesskeyid.error", "errorMessage": "The specified AccessKey ID (VidKjhddRaas4tMA) is invalid. Details: (The Access Key is disabled.).", "errorSuggestion": "Check whether the AccessKey pair exists and is enabled.", "errorTitle": "The AccessKey pair in the request is invalid.", "errorType": "Business", "headers": "{\"x-acs-caller-sdk-language\":\"java\",\"x-acs-caller-sdk-version\":\"1.0.7.3-RELEASE\",\"User-Agent\":\"AlibabaCloud (Linux; amd64) Java/1.8.0_412-b0 Core/1.0.7.3-RELEASE\",\"Host\":\"internal.asapi.cn-wulan-env17e-d01.intra.env17e.shuguang.com\",\"Accept-Encoding\":\"gzip,deflate\",\"X-Tunnel-Id\":\"0\",\"x-acs-caller-sdk-source\":\"aso-ecsops\",\"x-acs-caller-ip\":\"10.17.32.38\",\"Version\":\"2019-05-10\",\"Signature\":\"yYR8ABsJ0HdFvrIP+cR+3aMhh2pIgA3Pdxjt1kTrBYU=\",\"X-Forwarded-For\":\"10.17.32.38\",\"request-source-domain\":\"internal.asapi.cn-wulan-env17e-d01.intra.env17e.shuguang.com\",\"request-source-type\":\"internal\",\"Content-Length\":\"284\",\"x-acs-content-sha256\":\"9f65af4562de665feb8671613e202f7657ed96edcdc13ca89bba634602a467a6\",\"eagleeye-rpcid\":\"0.1\",\"X-Real-IP\":\"10.17.32.38\",\"Content-Type\":\"application/json; charset=UTF-8\"}", "httpCode": "0", "httpMethod": "POST", "isPublic": "true", "language": "-", "message": "Failed to invoke ListAllLevel1Orgs/2019-05-10/ascm ", "organizationId": "1", "organizationTreeParse": "0.1.", "parameters": "{\"SignatureVersion\":\"2.1\",\"Action\":\"ListAllLevel1Orgs\",\"SignatureNonce\":\"9ad7af25-91d9-4bbd-af00-b49a1b715fc9\",\"Version\":\"2019-05-10\",\"AccessKeyId\":\"VidKjhddRaas4tMA\",\"Product\":\"ascm\",\"SignatureMethod\":\"HMAC-SHA256\",\"RegionId\":\"cn-wulan-env17e-d01\",\"Timestamp\":\"2026-04-24T06:30:00Z\"}", "passthroughMode": "", "productName": "ascm", "realIp": "10.17.32.38", "regionId": "cn-wulan-env17e-d01", "requestId": "0a11243f17770122001463084d0062", "requestSourceDomain": "internal.asapi.cn-wulan-env17e-d01.intra.env17e.shuguang.com", "response": "{\"openapiFullResult\":{\"data\":{\"eagleEyeTraceId\":\"0a11243f17770122001463084d0062\",\"asapiSuccess\":false,\"product\":\"ascm\",\"code\":\"asapi.server.request.parameter.accesskeyid.error\",\"cost\":0,\"errorType\":\"Business\",\"dynamicMessages\":[\"VidKjhddRaas4tMA\",\"The Access Key is disabled.\"],\"suggestion\":\"Check whether the AccessKey pair exists and is enabled.\",\"errorCode\":\"asapi.server.request.parameter.accesskeyid.error\",\"asapiVersion\":\"v4\",\"message\":\"The specified AccessKey ID (VidKjhddRaas4tMA) is invalid. Details: (The Access Key is disabled.).\",\"extInfo\":{\"exArgs\":[\"VidKjhddRaas4tMA\",\"The Access Key is disabled.\"]},\"serverRole\":\"asapi.ApiServer#\",\"asapiRequestId\":\"0a11243f17770122001463084d0062\",\"innerCall\":true,\"success\":false,\"domain\":\"internal.asapi.cn-wulan-env17e-d01.intra.env17e.shuguang.com\",\"asapiErrorMessage\":\"The AccessKey pair in the request is invalid.\",\"diagnose\":\"\",\"api\":\"ascm:ListAllLevel1Orgs:2019-05-10\",\"asapiErrorCode\":\"asapi.server.request.parameter.accesskeyid.error\"},\"success\":false,\"host\":\"internal.asapi.cn-wulan-env17e-d01.intra.env17e.shuguang.com\",\"asapiRequestId\":\"0a11243f17770122001463084d0062\",\"status\":500}}", "roleId": "", "serverRole": "asapi.ApiServer#", "sourceIp": "10.17.32.38", "starTime": "1777012200148", "status": "failed", "time": "2026-04-24 14:30:00:296", "userName": "NotAscmUser"}
-```
+- 如果有具体 requestid，可直接查询对应日期的 error 日志：
+  ```bash
+  grep -rn "0ae6084f17767043979091019e659c" /opt/tengine/logs/error.2026-04-20.log
+  ```
+- 如果没有具体 requestid，可根据 akid、iamid 和时间段进行复合筛选，查询对应日期的 error 日志：
+  ```bash
+  grep "eMG9sv4bKvToGKKR" /opt/tengine/logs/error.2026-04-20.log | grep "yundun-oem" | awk '$1 >= "2026/04/20" && $2 >= "23:59:57" && $2 <= "23:59:58"'
+  ```
 
-### KMS
+### 排查 access 日志（确定是否 pcm-core 接收到请求）
 
-**日志示例**：
-```json
-{"URL": "ListKeys", "__FILE__": "logger.(*LoggerWrapper).Infof.func1", "__LEVEL__": "INFO", "__tag__:__hostname__": "c25h09107.cloud.h10.amtest17", "__tag__:__pack_id__": "328CDB3A9762DD42-BD9F", "__tag__:__path__": "/cloud/log/kms/KmsHost#/kms_host/audit.log", "__topic__": "", "accessroot": "1000000056", "accessuid": "1000000056", "action_trail": "{\"event_source\":\"kms-intranet.cn-wulan-env17e-d01.intra.env17e.shuguang.com\",\"useragent\":\"Python-urllib/3.6\",\"accesskeyid\":\"bpzC7chEgkHAFlsn\",\"callertype\":\"customer\",\"calleruid\":\"1000000056\",\"ip\":\"10.17.4.31\"}", "alias_name": "", "api_name": "ListKeys", "api_version": "2016-01-20", "cluster": "KmsCluster-A-20260323-018b", "cmkid": "", "cost": "7", "dest_alias_name": "", "dest_cmkid": "", "dest_encrypt_context": "", "dest_key_state": "", "dest_keyowner": "", "domain_id": "", "domain_type": "Intranet", "duration": "7678", "encrypt_context": "", "error_code": "Forbidden.AccessKey", "error_message": "This AccessKey is not enabled.", "expected_code": "403", "failed_status_code": "4XX", "host": "c25h09107.cloud.h10.amtest17", "host_0": "c25h09107.cloud.h10.amtest17", "initiatior_ip": "10.17.1.1", "ip": "10.17.4.31", "key_state": "", "keyowner": "", "log_type": "opr_log", "microtime": "1777017038585372", "protocol_version": "Ipv4", "protocol_vpc_id": "", "region_id": "cn-wulan-env17e-d01", "request": "{\"PageNumber\":\"1\",\"PageSize\":\"100\"}", "request_id": "0efdb6f6-ae55-445e-b1e9-f514351d287b", "response": "", "role": "customer", "server_type": "Nginx", "serverrole": "kms.KmsHost#", "status_code": "403", "tengine_conn_id": "681701", "tengine_tunnel_id": "0", "tls_cipher_suite": "ECDHE-RSA-AES128-GCM-SHA256", "tls_version": "TLSv1.2", "user_bid": "26842", "user_player": "", "user_type": "customer", "utc_time": "2026-04-24T07:50:38Z"}
-```
+- 如果有具体 requestid，可直接查询对应日期的 access 日志：
+  ```bash
+  grep -rn "0ae6084f17767043992011025e659c" /opt/tengine/logs/access.2026-04-20.log
+  ```
+- 如果没有具体 requestid，可根据 akid、iamid 和时间段进行复合筛选：
+  ```bash
+  grep -E '"time_local": "(20/Apr/2026:22:59|20/Apr/2026:03:0[0-1])' /opt/tengine/logs/access.2026-04-20.log | grep "UFskQ84ZitYgBacU"
+  grep "UFskQ84ZitYgBacU" /opt/tengine/logs/access.2026-04-20.log | grep -E '"time_local": "20/Apr/2026:23:59:5[8-9]'
+  ```
 
-### ODPS
+### access 日志参数说明
 
-**日志示例**：
-```json
-{"__tag__:__hostname__": "vm010017037223", "__tag__:__pack_id__": "C36006E9E9CCCA0B-26F", "__tag__:__path__": "/cloud/log/odps-service-frontend/FrontendServer#/frontend_server/tengine/logs/aggregated_log.log", "__topic__": "", "count": "2", "execution_end_time": "2026-04-24T06:37:03.348203", "execution_start_time": "2026-04-24T06:37:01.586769", "log_earliest_time": "2026-04-24T06:35:00+08:00", "log_latest_time": "2026-04-24T06:35:00+08:00", "metadata": "{\"access_id\":\"fXWvhmRkMeER5QI6\",\"network_client_ip\":\"10.17.37.83\",\"vpc_id\":\"0\"}", "requests": "{\"url\":[\"/api/logview/host?curr_project=admin_task_project\",\"/api/projects?expectmarker=true&curr_project=admin_task_project\"]}"}
-```
+| 参数名称 | 参数含义 |
+| --- | --- |
+| remote_addr | 请求源地址 |
+| Gateway-POP-Tunnel-ID | tunnel-id |
+| X-Aliyun-Vpc-Id | vpc-id |
+| remote_port | 请求端口 |
+| time_local | 请求完成的时间 |
+| request_uri | 请求的uri，包含imaid、secretname、endpoint等信息 |
+| request_method | 请求方法 |
+| status | http返回码 |
+| http_user_agent | 请求代理客户端信息 |
+| request_time | tengine 收到请求到发完响应的总耗时 |
+| SecretName | secretname，包含initakid和pcm_endpoint信息 |
+| IamId | 表示请求服务身份，对应sdk填写的appname，当http报错时可能会为空 |
+| x_acs_bearer_token | 请求发送jwt |
+| x_sdk_client | pcm-sdk版本 |
+| limit_req_status | 限流状态，未限流显示"PASSED"，限流显示"-" |
+| eagleeye_traceid | 即requestid，可根据此查询对应error_log是否有错误日志 |
+
+## 如何查看 AK 申请日志和平台 AK 访问日志？
+
+### AK 申请日志
+
+记录每个 IAMID 申请派生 AK 记录，通过 pcm-core 获取。pcm-core 中针对每个 IAMID 的底表 secretARN 的缓存时间为 12 小时，对于一直在用派生 AK 的产品，理论上每 12 小时会有一条记录。
+
+### 平台 AK 访问日志
+
+在网关侧记录使用底表 AK 的使用情况（当前不完整，可作为辅助查询手段）。
